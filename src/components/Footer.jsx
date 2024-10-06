@@ -7,9 +7,8 @@ const Footer = () => {
   // Quick Links and Contact Info Data
   const quickLinks = ['Home', 'About Us', 'Leaderboard', 'Projects'];
   const contactInfo = {
-    phone1: '8595745106',
-    phone2: '8596456987',
-    email: 'algo@nsut.ac.in'
+    phone: '9891403568',
+    email: 'sarthak.sharma.ug22@nsut.ac.in'
   };
   
   const socialLinks = [
@@ -36,11 +35,7 @@ const Footer = () => {
           <h2 className="text-2xl font-bold mb-2">Contact Info</h2>
           <div className="flex items-center mb-1">
             <FontAwesomeIcon icon={faPhone} className="mr-2" />
-            <p className="text-gray-400">{contactInfo.phone1}</p>
-          </div>
-          <div className="flex items-center mb-1">
-            <FontAwesomeIcon icon={faPhone} className="mr-2" />
-            <p className="text-gray-400">{contactInfo.phone2}</p>
+            <p className="text-gray-400">{contactInfo.phone}</p>
           </div>
           <div className="flex items-center mb-4">
             <FontAwesomeIcon icon={faEnvelope} className="mr-2" />
@@ -69,7 +64,7 @@ const Footer = () => {
       <hr className="border-t border-gray-700 my-4" />
 
       {/* Social Media Icons */}
-      <div className="container mx-auto flex flex-col md:flex-row justify-between items-center px-5 md:px-[100px] text-center md:text-left">
+      <div className="container mx-auto mt-10 flex flex-col md:flex-row justify-between items-center px-5 md:px-[100px] text-center md:text-left">
         <h2 className="text-lg mb-4">Copyright © 2024 All Rights Reserved by Algorithm Society, NSUT.</h2>
         <div className="flex justify-center space-x-4">
           {socialLinks.map((social, index) => (

@@ -3,14 +3,17 @@ import { Link } from 'react-router-dom'; // Importing Link from react-router-dom
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const navLinks = ['Home', 'About', 'Leaderboard', 'Projects', 'Contact Us'];
+  const navLinks = ['Home', 'About', 'Leaderboard', 'Projects', 'News'];
 
   return (
     <nav style={{ backgroundColor: '#10111f' }} className="text-white p-4 sticky top-0 z-50 py-3 backdrop-blur-sm">
       <div className="container mx-auto flex justify-between items-center h-22">
         
         <div className="flex-shrink-0">
+        <Link to={'/home'}>  
           <img src="src/assets/logo.png" alt="Algorithm" className="h-16" />
+        
+        </Link>
         </div>
 
         <div className="hidden md:flex space-x-10 text-lg justify-center flex-grow">

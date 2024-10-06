@@ -7,7 +7,6 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Define routes individually */}
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
         <Route path="/about" element={<AboutPage />} />
