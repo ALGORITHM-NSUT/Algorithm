@@ -16,12 +16,12 @@ const coreTeamMembers = [
     imageUrl: "https://via.placeholder.com/150", // Replace with actual image URL
   },
   {
-    name: "Nitish Mishra",
+    name: "Raj Soni",
     designation: "Secretary",
     imageUrl: "https://via.placeholder.com/150", // Replace with actual image URL
   },
    {
-    name: "Raj Soni",
+    name: "Nitish Mishra",
     designation: "joint Secretary",
     imageUrl: "https://via.placeholder.com/150", // Replace with actual image URL
   },
@@ -36,8 +36,13 @@ const coreTeamMembers = [
     imageUrl: "https://via.placeholder.com/150", // Replace with actual image URL
   },
   {
-    name: "Mishita Jain",
-    designation: "Women in Tech Head",
+    name: "Raunak Rathee",
+    designation: "Operations head",
+    imageUrl: "https://via.placeholder.com/150", // Replace with actual image URL
+  },
+   {
+    name: "Chavvi Dhiman",
+    designation: "Operations head",
     imageUrl: "https://via.placeholder.com/150", // Replace with actual image URL
   }
 ];

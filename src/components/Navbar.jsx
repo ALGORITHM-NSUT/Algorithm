@@ -9,12 +9,10 @@ const Navbar = () => {
     <nav style={{ backgroundColor: '#10111f' }} className="text-white p-4 sticky top-0 z-50 py-3 backdrop-blur-sm">
       <div className="container mx-auto flex justify-between items-center h-22">
         
-        {/* Logo */}
         <div className="flex-shrink-0">
           <img src="src/assets/logo.png" alt="Algorithm" className="h-16" />
         </div>
 
-        {/* Navigation Links (visible on medium+ screens, centered) */}
         <div className="hidden md:flex space-x-10 text-lg justify-center flex-grow">
           {navLinks.map((link, index) => (
             <Link key={index} to={`/${link.toLowerCase().replace(/\s+/g, '')}`} className="hover:text-gray-300">
@@ -23,7 +21,6 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* Hamburger Icon for small screens */}
         <div className="md:hidden">
           <button onClick={() => setIsOpen(!isOpen)} className="focus:outline-none">
             {/* Hamburger icon */}
@@ -39,10 +36,6 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Sign In Link */}
-        <div className="hidden md:flex">
-          <Link to="/signin">Sign In</Link>
-        </div>
       </div>
 
       {/* Dropdown Menu for small screens */}
