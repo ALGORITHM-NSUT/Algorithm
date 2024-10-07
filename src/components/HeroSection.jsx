@@ -20,7 +20,7 @@ const HeroSection = () => {
                 alt="Logo" 
                 className="w-50 h-36 mr-4" 
             />
-            <h1 className="text-[250px] text-gray-200 font-bold">Algorithm</h1> {/* Increased font size */}
+            <h1 className="text-[250px] text-gray-200 font-bold">Algorithm</h1> 
         </div>
         <div className='flex items-center text-5xl text-gray-300 justify-center font-bold mb-4'>
             <p>Code . Set . Go</p>
