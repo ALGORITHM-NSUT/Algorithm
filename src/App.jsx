@@ -5,6 +5,7 @@ import AboutPage from "./pages/AboutPage";
 import Tech_news from "./pages/Tech_news"
 import Projects from "./pages/Projects";
 
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -14,6 +15,7 @@ const App = () => {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/technews" element={<Tech_news />} />
         <Route path="/projects" element={<Projects />} />
+
       </Routes>
     </BrowserRouter>
   );
