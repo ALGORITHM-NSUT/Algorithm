@@ -37,12 +37,6 @@ const coreTeamMembers = [
     linkedinUrl: "https://www.linkedin.com/in/mishita-jain-282257257/", // Replace with actual LinkedIn URL
   },
   {
-    name: "Shrey RajShekhar",
-    designation: "Web Development Head",
-    imageUrl: "src/assets/shrey_resized.jpg", // Replace with actual image URL
-    linkedinUrl: "https://www.linkedin.com/in/shrey-rajshekhar-b1102226b/", // Replace with actual LinkedIn URL
-  },
-  {
     name: "Raunak Rathee",
     designation: "Operations Head",
     imageUrl: "src/assets/raunak_resized.jpg", // Replace with actual image URL
@@ -53,6 +47,42 @@ const coreTeamMembers = [
     designation: "PR Head",
     imageUrl: "src/assets/chhavi_resized.jpg", // Replace with actual image URL
     linkedinUrl: "#", // Replace with actual LinkedIn URL
+  },
+  {
+    name: "Shrey RajShekhar",
+    designation: "Web Development Head - 1",
+    imageUrl: "src/assets/shrey_resized.jpg", // Replace with actual image URL
+    linkedinUrl: "https://www.linkedin.com/in/shrey-rajshekhar-b1102226b/", // Replace with actual LinkedIn URL
+  },
+  {
+    name: "Jagrit Jain",
+    designation: "Web Development Head - 2",
+    imageUrl: "src/assets/shrey_resized.jpg", // Replace with actual image URL
+    linkedinUrl: "https://www.linkedin.com/in/shrey-rajshekhar-b1102226b/", // Replace with actual LinkedIn URL
+  },
+  {
+    name: "-",
+    designation: "ML Head",
+    imageUrl: "src/assets/shrey_resized.jpg", // Replace with actual image URL
+    linkedinUrl: "https://www.linkedin.com/in/shrey-rajshekhar-b1102226b/", // Replace with actual LinkedIn URL
+  },
+  {
+    name: "-",
+    designation: "Web3 Head",
+    imageUrl: "src/assets/shrey_resized.jpg", // Replace with actual image URL
+    linkedinUrl: "https://www.linkedin.com/in/shrey-rajshekhar-b1102226b/", // Replace with actual LinkedIn URL
+  },
+  {
+    name: "-",
+    designation: "App Develpoment Head",
+    imageUrl: "src/assets/shrey_resized.jpg", // Replace with actual image URL
+    linkedinUrl: "https://www.linkedin.com/in/shrey-rajshekhar-b1102226b/", // Replace with actual LinkedIn URL
+  },
+  {
+    name: "-",
+    designation: "DSA Head",
+    imageUrl: "src/assets/shrey_resized.jpg", // Replace with actual image URL
+    linkedinUrl: "https://www.linkedin.com/in/shrey-rajshekhar-b1102226b/", // Replace with actual LinkedIn URL
   }
 ];
 
