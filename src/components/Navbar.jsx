@@ -1,18 +1,42 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Importing Link from react-router-dom
+// components/Navbar.jsx
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { signOut } from 'firebase/auth'; // Import signOut
+import { auth } from '../utils/firebase_sdk'; // Import your auth object
+import { handleLogin } from '../controllers/auth';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
   const navLinks = ['Home', 'About', 'Leaderboard', 'Projects', 'TechNews'];
+  const navigate = useNavigate();
+
+  // Function to handle sign out
+  const handleLogout = async () => {
+    try {
+      await signOut(auth); // Sign out using Firebase auth
+      setIsLoggedIn(false); // Update login status
+      console.log("User signed out");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
+  // Check user authentication status on component mount
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      setIsLoggedIn(!!user); // Update login status based on user state
+    });
+
+    return () => unsubscribe(); // Cleanup subscription on unmount
+  }, []);
 
   return (
     <nav style={{ backgroundColor: '#10111f' }} className="text-white p-4 sticky top-0 z-50 py-3 backdrop-blur-sm">
       <div className="container mx-auto flex justify-between items-center h-22">
-
         <div className="flex-shrink-0">
           <Link to={'/home'}>
             <img src="src/assets/logo.png" alt="Algorithm" className="h-16" />
-
           </Link>
         </div>
 
@@ -22,6 +46,25 @@ const Navbar = () => {
               {link}
             </Link>
           ))}
+        </div>
+
+        {/* Conditional Sign In / Sign Out button */}
+        <div className="hidden md:block">
+          {isLoggedIn ? (
+            <button 
+              onClick={handleLogout} // Call handleLogout on click
+              className="bg-red-600 hover:bg-red-500 text-white py-2 px-4 rounded transition duration-300"
+            >
+              Sign Out
+            </button>
+          ) : (
+            <button 
+              onClick={() => handleLogin(navigate)} // Call handleLogin
+              className="bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded transition duration-300"
+            >
+              Sign In
+            </button>
+          )}
         </div>
 
         <div className="md:hidden">
@@ -38,7 +81,6 @@ const Navbar = () => {
             </svg>
           </button>
         </div>
-
       </div>
 
       {/* Dropdown Menu for small screens */}
@@ -54,6 +96,21 @@ const Navbar = () => {
                 {link}
               </Link>
             ))}
+            {isLoggedIn ? (
+              <button 
+                onClick={handleLogout} // Call handleLogout
+                className="block text-center bg-red-600 hover:bg-red-500 text-white py-2 px-4 rounded transition duration-300"
+              >
+                Sign Out
+              </button>
+            ) : (
+              <button 
+                onClick={() => handleLogin(navigate)} // Call handleLogin
+                className="block text-center bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded transition duration-300"
+              >
+                Sign In
+              </button>
+            )}
           </div>
         </div>
       )}
