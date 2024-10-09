@@ -24,7 +24,7 @@ const Core = () => {
             className="flex flex-col items-center bg-[#292f45] p-6 rounded-lg transition-transform duration-200 hover:scale-105 aspect-w-1 aspect-h-1"
           >
             <img
-              src={member.imageUrl}
+              src={ "https://res.cloudinary.com/dh9bdtauy/image/upload/v1728515516/" + member.imageUrl}
               alt={`${member.name} profile`}
               className="h-52 w-full object-cover object-end rounded-lg" // Set fixed width/height and object-cover
             />
