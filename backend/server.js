@@ -13,12 +13,11 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors({
-    origin: 'http://localhost:5173', 
+    origin: 'http://localhost:5173',
     methods: 'GET,POST',
     credentials: true
 }));
 
-// MongoDB connection
 mongoose.connect(process.env.MONGO_URI, {
     dbName: `Algorithm`,
     useNewUrlParser: true,
