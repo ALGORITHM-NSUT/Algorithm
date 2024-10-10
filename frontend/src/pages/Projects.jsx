@@ -26,7 +26,7 @@ const Projects = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-polygon bg-cover bg-center bg-no-repeat">
       <Navbar />
 
       <div className="flex flex-col items-center bg-[#191e2e] min-h-screen text-white py-10 w-full">
@@ -36,7 +36,7 @@ const Projects = () => {
 
       <Footer />
 
-     
+
     </div>
   );
 };

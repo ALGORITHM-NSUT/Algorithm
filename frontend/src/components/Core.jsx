@@ -6,7 +6,8 @@ const Core = () => {
   const techheads = coreTeamMembers.slice(8, 13);
 
   return (
-    <div className='flex flex-col items-center bg-[#191e2e] min-h-screen text-white py-10 w-full'>
+
+    <div className='flex flex-col items-center min-h-screen text-white py-10 w-full'>
       <div className='mt-10 flex flex-col items-center'>
         <h1 className="text-[10vw] md:text-[100px] font-bold mb-20">Core Team '24</h1>
 
