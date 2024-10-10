@@ -19,7 +19,7 @@ app.use(cors({
 }));
 
 mongoose.connect(process.env.MONGO_URI, {
-    dbName: Algorithm,
+    dbName: `Algorithm`,
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
