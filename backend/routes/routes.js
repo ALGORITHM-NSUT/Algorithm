@@ -8,7 +8,8 @@ const router = express.Router();
 
 // get
 router.get('/', home)
-router.get('/project', getOngoingProjects)
+router.get('/ongoingProjects', getOngoingProjects)
+
 
 
 // post

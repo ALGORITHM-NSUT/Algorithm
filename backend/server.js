@@ -3,7 +3,8 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import formRoutes from './routes/formRoutes.js';
+import routes from './routes/routes.js';
+import userRoutes from './routes/userRoutes.js'
 
 dotenv.config();
 
@@ -20,8 +21,6 @@ app.use(cors({
 
 mongoose.connect(process.env.MONGO_URI, {
     dbName: `Algorithm`,
-    useNewUrlParser: true,
-    useUnifiedTopology: true
 }).then(() => {
     console.log("Connected to MongoDB");
 }).catch((e) => {
@@ -31,7 +30,9 @@ mongoose.connect(process.env.MONGO_URI, {
 
 
 // Routes
-app.use('/', formRoutes);
+app.use('/', routes);
+app.use('/', userRoutes);
+
 
 app.listen(process.env.PORT || 5000, () => {
     console.log(`Server is listening at port : ${process.env.PORT}`);
