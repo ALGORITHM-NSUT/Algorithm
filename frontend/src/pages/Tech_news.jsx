@@ -5,9 +5,9 @@ import Articles from '../components/Newsarticles'
 
 const Tech_news = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-polygon bg-cover bg-center bg-no-repeat">
+    <div className="flex flex-col min-h-screen ">
       <Navbar />
-      <div className="flex-grow">
+      <div className="flex-grow bg-polygon bg-cover bg-center  bg-no-repeat">
         <Articles />
       </div>
       <Footer />

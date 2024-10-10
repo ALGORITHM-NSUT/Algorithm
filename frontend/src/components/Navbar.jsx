@@ -1,34 +1,50 @@
-// components/Navbar.jsx
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { signOut } from 'firebase/auth'; // Import signOut
-import { auth } from '../utils/firebase_sdk'; // Import your auth object
-import { handleLogin } from '../controllers/auth';
+import { signOut, signInWithEmailAndPassword } from 'firebase/auth'; 
+import { auth } from '../utils/firebase_sdk'; // Import your Firebase auth config
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
+  const [isOpen, setIsOpen] = useState(false); // Hamburger menu state
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Login status state
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
+  const [email, setEmail] = useState(''); // Email input
+  const [password, setPassword] = useState(''); // Password input
+  const [error, setError] = useState(null); // Error handling
+
   const navLinks = ['Home', 'About', 'Leaderboard', 'Projects', 'TechNews'];
   const navigate = useNavigate();
 
-  // Function to handle sign out
+  // Handle sign-in
+  const handleSignIn = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      setIsLoggedIn(true); // Update login state
+      setIsModalOpen(false); // Close modal after successful sign-in
+      setEmail(''); // Reset email field
+      setPassword(''); // Reset password field
+    } catch (error) {
+      setError('Invalid email or password'); // Handle login error
+      console.error("Error signing in:", error);
+    }
+  };
+
+  // Handle logout
   const handleLogout = async () => {
     try {
-      await signOut(auth); // Sign out using Firebase auth
-      setIsLoggedIn(false); // Update login status
+      await signOut(auth);
+      setIsLoggedIn(false); // Update login state
       console.log("User signed out");
     } catch (error) {
       console.error("Error signing out:", error);
     }
   };
 
-  // Check user authentication status on component mount
+  // Check user authentication status
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
-      setIsLoggedIn(!!user); // Update login status based on user state
+      setIsLoggedIn(!!user); // Set login state based on user
     });
-
-    return () => unsubscribe(); // Cleanup subscription on unmount
+    return () => unsubscribe();
   }, []);
 
   return (
@@ -48,18 +64,18 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* Conditional Sign In / Sign Out button */}
+        {/* Sign In / Sign Out button */}
         <div className="hidden md:block">
           {isLoggedIn ? (
             <button 
-              onClick={handleLogout} // Call handleLogout on click
+              onClick={handleLogout} 
               className="bg-red-600 hover:bg-red-500 text-white py-2 px-4 rounded transition duration-300"
             >
               Sign Out
             </button>
           ) : (
             <button 
-              onClick={() => handleLogin(navigate)} // Call handleLogin
+              onClick={() => setIsModalOpen(true)} // Open modal
               className="bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded transition duration-300"
             >
               Sign In
@@ -98,19 +114,57 @@ const Navbar = () => {
             ))}
             {isLoggedIn ? (
               <button 
-                onClick={handleLogout} // Call handleLogout
+                onClick={handleLogout} 
                 className="block text-center bg-red-600 hover:bg-red-500 text-white py-2 px-4 rounded transition duration-300"
               >
                 Sign Out
               </button>
             ) : (
               <button 
-                onClick={() => handleLogin(navigate)} // Call handleLogin
+                onClick={() => setIsModalOpen(true)} // Open modal
                 className="block text-center bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded transition duration-300"
               >
                 Sign In
               </button>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Modal for email and password input */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+            <h2 className="text-2xl mb-4">Sign In</h2>
+
+            {error && <p className="text-red-500 mb-4">{error}</p>} {/* Display error message */}
+
+            <input 
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="border border-gray-300 p-2 mb-4 w-full rounded"
+            />
+            <input 
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="border border-gray-300 p-2 mb-4 w-full rounded"
+            />
+            <button 
+              onClick={handleSignIn} 
+              className="bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded w-full transition duration-300"
+            >
+              Sign In
+            </button>
+            <button 
+              onClick={() => setIsModalOpen(false)} 
+              className="mt-4 text-red-600 hover:text-red-500 w-full"
+            >
+              Cancel
+            </button>
           </div>
         </div>
       )}

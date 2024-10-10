@@ -26,10 +26,10 @@ const Projects = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-polygon bg-cover bg-center bg-no-repeat">
+    <div className="flex flex-col min-h-screen">
       <Navbar />
 
-      <div className="flex flex-col items-center bg-[#191e2e] min-h-screen text-white py-10 w-full">
+      <div className="flex flex-col items-center bg-polygon bg-cover bg-center bg-no-repeat min-h-screen text-white py-10 w-full">
         <OngoingProjects projects={ongoingProjectData} onJoinRequest={handleJoinRequest} />
         <PastProjects projects={pastProjectData} />
       </div>

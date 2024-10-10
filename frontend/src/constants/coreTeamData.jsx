@@ -3,55 +3,55 @@ const coreTeamMembers = [
   {
     name: "Sarthak Sharma",
     designation: "President",
-    imageUrl: "a123vx8krscz7zcwfjag", // Replace with actual image URL
+    imageUrl: "Algorithm/xfxgeawlbogtzw6r5u2p", // Replace with actual image URL
     linkedinUrl: "https://www.linkedin.com/in/sarthak-sharma-1a0287256/", // Replace with actual LinkedIn URL
   },
   {
     name: "Saumil Aggarwal",
     designation: "Vice President",
-    imageUrl: "kjix4iz6un4uthukdmmj", // Replace with actual image URL
+    imageUrl: "Algorithm/a4moqp58kkuof6hbciua", // Replace with actual image URL
     linkedinUrl: "https://www.linkedin.com/in/saumil-aggarwal-835213253/", // Replace with actual LinkedIn URL
   },
   {
     name: "Piyush Sinha",
     designation: "Vice President",
-    imageUrl: "n9fylf1lh6xryo6ywedi.jpg", // Replace with actual image URL
+    imageUrl: "Algorithm/cvuuaojztom3sgolzbfr", // Replace with actual image URL
     linkedinUrl: "https://www.linkedin.com/in/piyush-sinha019807/", // Replace with actual LinkedIn URL
   },
   {
     name: "Raj Soni",
     designation: "Secretary",
-    imageUrl: "i1j8r8h1peqh7n0dic50", // Replace with actual image URL
+    imageUrl: "Algorithm/qxpzq6ksdg9wwarp60r5", // Replace with actual image URL
     linkedinUrl: "https://www.linkedin.com/in/raj-soni-2009131b3/", // Replace with actual LinkedIn URL
   },
   {
     name: "Nitish Mishra",
     designation: "Joint Secretary",
-    imageUrl: "shpakdoryozciizrhz8p", // Replace with actual image URL
+    imageUrl: "Algorithm/efucnae9lkltaklvqst0", // Replace with actual image URL
     linkedinUrl: "https://www.linkedin.com/in/nitish-mishra-540106254/", // Replace with actual LinkedIn URL
   },
   {
     name: "Mishita Jain",
     designation: "Women in Tech Head",
-    imageUrl: "zcztkr1bqlbyyajemqd4", // Replace with actual image URL
+    imageUrl: "Algorithm/fbr3avggzgdbquu50jqn", // Replace with actual image URL
     linkedinUrl: "https://www.linkedin.com/in/mishita-jain-282257257/", // Replace with actual LinkedIn URL
   },
   {
     name: "Raunak Rathee",
     designation: "Operations Head",
-    imageUrl: "rsebb5g8trgkejtmbini", // Replace with actual image URL
+    imageUrl: "Algorithm/dlhdowmdnlma5yoqjpoe", // Replace with actual image URL
     linkedinUrl: "#", // Replace with actual LinkedIn URL
   },
   {
     name: "Chavvi Dhiman",
     designation: "PR Head",
-    imageUrl: "zhczicmlm4hjdt3gkvhh", // Replace with actual image URL
+    imageUrl: "Algorithm/fljqmc2yvhs4jfwji4hy", // Replace with actual image URL
     linkedinUrl: "#", // Replace with actual LinkedIn URL
   },
   {
     name: "Shrey RajShekhar",
     designation: "Web Development Head - 1",
-    imageUrl: "src/assets/shrey_resized.jpg", // Replace with actual image URL
+    imageUrl: "Algorithm/rktpoxrfv2oavpuw12xi", // Replace with actual image URL
     linkedinUrl: "https://www.linkedin.com/in/shrey-rajshekhar-b1102226b/", // Replace with actual LinkedIn URL
   },
   {
