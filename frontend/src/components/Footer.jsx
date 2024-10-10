@@ -8,7 +8,7 @@ const Footer = () => {
   const quickLinks = ['Home', 'About Us', 'Leaderboard', 'Projects'];
   const contactInfo = {
     phone: '9891403568',
-    email: 'sarthak.sharma.ug22@nsut.ac.in'
+    email: 'algorithmNSUT@gmail.com'
   };
   
   const socialLinks = [

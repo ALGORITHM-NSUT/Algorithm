@@ -29,17 +29,16 @@ const HeroSection = () => {
             className="w-32 h-24 md:w-40 md:h-32 lg:w-50 lg:h-36 mr-4"
           />
           {/* Gradually decreasing font size for the Algorithm text */}
-          <h1 className="text-[5rem] sm:text-[6rem] md:text-[7rem] lg:text-[250px] text-gray-200 font-bold mt-2">
+          <h1 className="text-[5rem] sm:text-[rem] md:text-[7rem] lg:text-[250px] text-gray-200 font-bold mt-2">
             Algorithm
           </h1>
         </div>
 
-        <div className="text-3xl sm:text-4xl md:text-5xl text-gray-300 font-bold text-center mb-4">
-          <p className="hidden sm:block">Code . Set . Go</p>
-          <p className="block sm:hidden">Code</p>
-          <p className="block sm:hidden">Set</p>
-          <p className="block sm:hidden">Go</p>
-        </div>
+      <div className="text-gray-300 font-bold text-center mb-4">
+        <p className="text-xl lg:text-5xl">Code . Set . Go</p>
+      </div>
+
+
 
         <p className="text-lg sm:text-xl max-w-3xl text-gray-400 text-center mb-8 px-4">
           Join us to explore, learn, and innovate together!
