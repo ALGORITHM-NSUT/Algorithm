@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import FormInput from "../components/FormInput.jsx";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -13,17 +14,40 @@ const ProfileForm = () => {
     leetcodeProfile: "",
     codeforcesProfile: "",
   });
+  const [successMessage, setSuccessMessage] = useState("");
+  const navigate = useNavigate(); // For redirecting after submission
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form Submitted:", formData);
-    // Add form submission logic here (e.g., API call)
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent form from refreshing the page
+
+    try {
+      const response = await fetch("http://localhost:5000/form", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // If submission is successful, show an alert and redirect
+        alert("Form submitted successfully!");
+        navigate("/"); // Redirect to the home page
+      } else {
+        console.error("Error saving form data:", result);
+      }
+    } catch (error) {
+      console.error("Error saving form data:", error);
+    }
   };
+
 
   return (
     <div className="flex flex-col min-h-screen bg-[#191e2e]">
@@ -33,6 +57,9 @@ const ProfileForm = () => {
           <h2 className="text-4xl font-bold text-center text-[#4c56d7] mb-6">
             Join Us Form
           </h2>
+          {successMessage && (
+            <p className="text-green-500 text-center mb-4">{successMessage}</p>
+          )}
           <form onSubmit={handleSubmit}>
             <FormInput
               label="Name"
