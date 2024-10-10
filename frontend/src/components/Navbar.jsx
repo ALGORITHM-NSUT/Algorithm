@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signOut, signInWithEmailAndPassword } from 'firebase/auth'; 
 import { auth } from '../utils/firebase_sdk'; // Import your Firebase auth config
+import Modal from './Modal'; // Import the Modal component
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // Hamburger menu state
@@ -132,42 +133,16 @@ const Navbar = () => {
       )}
 
       {/* Modal for email and password input */}
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-            <h2 className="text-2xl mb-4">Sign In</h2>
-
-            {error && <p className="text-red-500 mb-4">{error}</p>} {/* Display error message */}
-
-            <input 
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="border border-gray-300 p-2 mb-4 w-full rounded"
-            />
-            <input 
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="border border-gray-300 p-2 mb-4 w-full rounded"
-            />
-            <button 
-              onClick={handleSignIn} 
-              className="bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded w-full transition duration-300"
-            >
-              Sign In
-            </button>
-            <button 
-              onClick={() => setIsModalOpen(false)} 
-              className="mt-4 text-red-600 hover:text-red-500 w-full"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSignIn={handleSignIn}
+        email={email}
+        setEmail={setEmail}
+        password={password}
+        setPassword={setPassword}
+        error={error}
+      />
     </nav>
   );
 };
