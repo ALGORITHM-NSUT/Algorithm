@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-<<<<<<< HEAD:frontend/src/pages/ProfileForm.jsx
 import { useNavigate } from "react-router-dom";
-=======
->>>>>>> f1fbdf57e05713b187c74ee026dcf55eba6cbe27:src/pages/ProfileForm.jsx
 import FormInput from "../components/FormInput.jsx";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -17,51 +14,40 @@ const ProfileForm = () => {
     leetcodeProfile: "",
     codeforcesProfile: "",
   });
-<<<<<<< HEAD:frontend/src/pages/ProfileForm.jsx
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate(); // For redirecting after submission
-=======
->>>>>>> f1fbdf57e05713b187c74ee026dcf55eba6cbe27:src/pages/ProfileForm.jsx
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-<<<<<<< HEAD:frontend/src/pages/ProfileForm.jsx
- const handleSubmit = async (e) => {
-  e.preventDefault(); // Prevent form from refreshing the page
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent form from refreshing the page
 
-  try {
-    const response = await fetch("http://localhost:5000/form", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+    try {
+      const response = await fetch("http://localhost:5000/form", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    const result = await response.json();
+      const result = await response.json();
 
-    if (response.ok) {
-      // If submission is successful, show an alert and redirect
-      alert("Form submitted successfully!");
-      navigate("/"); // Redirect to the home page
-    } else {
-      console.error("Error saving form data:", result);
+      if (response.ok) {
+        // If submission is successful, show an alert and redirect
+        alert("Form submitted successfully!");
+        navigate("/"); // Redirect to the home page
+      } else {
+        console.error("Error saving form data:", result);
+      }
+    } catch (error) {
+      console.error("Error saving form data:", error);
     }
-  } catch (error) {
-    console.error("Error saving form data:", error);
-  }
-};
-
-=======
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form Submitted:", formData);
-    // Add form submission logic here (e.g., API call)
   };
->>>>>>> f1fbdf57e05713b187c74ee026dcf55eba6cbe27:src/pages/ProfileForm.jsx
+
 
   return (
     <div className="flex flex-col min-h-screen bg-[#191e2e]">
@@ -71,12 +57,9 @@ const ProfileForm = () => {
           <h2 className="text-4xl font-bold text-center text-[#4c56d7] mb-6">
             Join Us Form
           </h2>
-<<<<<<< HEAD:frontend/src/pages/ProfileForm.jsx
           {successMessage && (
             <p className="text-green-500 text-center mb-4">{successMessage}</p>
           )}
-=======
->>>>>>> f1fbdf57e05713b187c74ee026dcf55eba6cbe27:src/pages/ProfileForm.jsx
           <form onSubmit={handleSubmit}>
             <FormInput
               label="Name"
