@@ -34,7 +34,11 @@ const ProjectCard = ({ project, isOngoing }) => {
 
         <div className='flex flex-col justify-center items-center mt-14'>
              {!isExpanded && (
+<<<<<<< HEAD:frontend/src/components/ProjectCard.jsx
                 <h3 className="text-5xl font-bold mb-2 md:text-3xl md:text-wrap">{project.title}</h3>
+=======
+                <h3 className="text-5xl font-bold mb-2">{project.title}</h3>
+>>>>>>> f1fbdf57e05713b187c74ee026dcf55eba6cbe27:src/components/ProjectCard.jsx
                 )}
       
            
