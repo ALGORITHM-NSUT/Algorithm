@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import routes from './routes/routes.js';
 import userRoutes from './routes/userRoutes.js'
+import cookieParser from "cookie-parser"
+
 
 dotenv.config();
 
@@ -18,6 +20,7 @@ app.use(cors({
     methods: 'GET,POST',
     credentials: true
 }));
+app.use(cookieParser())
 
 mongoose.connect(process.env.MONGO_URI, {
     dbName: `Algorithm`,

@@ -29,7 +29,7 @@ const HeroSection = () => {
             className="w-32 h-24 md:w-40 md:h-32 lg:w-50 lg:h-36 mr-4"
           />
           {/* Gradually decreasing font size for the Algorithm text */}
-          <h1 className="text-[5rem] sm:text-[rem] md:text-[7rem] lg:text-[250px] text-gray-200 font-bold mt-2">
+          <h1 className="text-7xl md:text-[130px] lg:text-[250px] text-gray-200 font-bold mt-2">
             Algorithm
           </h1>
         </div>

@@ -13,7 +13,9 @@ const ProfileForm = () => {
     githubProfile: "",
     leetcodeProfile: "",
     codeforcesProfile: "",
+    password: "", // New password field
   });
+
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate(); // For redirecting after submission
 
@@ -26,7 +28,7 @@ const ProfileForm = () => {
     e.preventDefault(); // Prevent form from refreshing the page
 
     try {
-      const response = await fetch("http://localhost:5000/form", {
+      const response = await fetch("http://localhost:5000/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -38,21 +40,20 @@ const ProfileForm = () => {
 
       if (response.ok) {
         // If submission is successful, show an alert and redirect
-        alert("Form submitted successfully!");
+        alert(result.message);
         navigate("/"); // Redirect to the home page
       } else {
-        console.error("Error saving form data:", result);
+        alert(result.message)
       }
     } catch (error) {
-      console.error("Error saving form data:", error);
+      console.error("Error registering user:", error);
     }
   };
-
 
   return (
     <div className="flex flex-col min-h-screen bg-[#191e2e]">
       <Navbar />
-      <div className="flex-grow flex items-center justify-center p-4">
+      <div className="flex-grow flex items-center justify-center p-4 bg-polygon bg-cover bg-center bg-no-repeat">
         <div className="bg-gray-100 rounded-lg shadow-lg p-10 w-11/12 md:w-7/12 lg:w-7/12 mt-12 mb-24">
           <h2 className="text-4xl font-bold text-center text-[#4c56d7] mb-6">
             Join Us Form
@@ -72,8 +73,8 @@ const ProfileForm = () => {
             <FormInput
               label="NSUT Email"
               type="email"
-              name="nsutEmail"
-              value={formData.nsutEmail}
+              name="email"
+              value={formData.email}
               onChange={handleChange}
               required
             />
@@ -113,6 +114,14 @@ const ProfileForm = () => {
               name="codeforcesProfile"
               value={formData.codeforcesProfile}
               onChange={handleChange}
+            />
+            <FormInput
+              label="Password"  // New password field
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
             />
             <div className="flex justify-center">
               <button

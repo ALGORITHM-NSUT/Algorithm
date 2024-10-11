@@ -4,9 +4,14 @@ import bcrypt, { hash } from "bcrypt"
 
 const formDataSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    email: { type: String, required: true },
-    password: {type: String, required: true}
-});
+    email: { type: String, required: true, unique: true }, // NSUT email, must be unique
+    personalEmail: { type: String, required: true },
+    phoneNumber: { type: String, required: true },
+    githubProfile: { type: String }, // Optional field
+    leetcodeProfile: { type: String }, // Optional field
+    codeforcesProfile: { type: String }, // Optional field
+    password: { type: String, required: true }, // Store hashed password
+}, { timestamps: true }); // Adds createdAt and updatedAt fields
 
 
 formDataSchema.pre("save", async function (next){
