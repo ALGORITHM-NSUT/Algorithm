@@ -36,7 +36,7 @@ const Articles = () => {
   }
 
   return (
-    <div className='flex flex-col items-center min-h-screen text-white py-10 w-full bg-[#191e2e]'>
+    <div className='flex flex-col items-center min-h-screen text-white py-10 w-full bg-polygon bg-cover bg-center  bg-no-repeat'>
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4'>
         {news
           .filter(article => article.title !== '[Removed]')
