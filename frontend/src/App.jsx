@@ -5,6 +5,10 @@ import AboutPage from "./pages/AboutPage";
 import Tech_news from "./pages/Tech_news";
 import ProfileForm from "./pages/ProfileForm";
 import Projects from "./pages/Projects";
+import UserProfile from "./pages/UserProfile";
+import LoginPage from "./pages/LoginPage";
+
+
 
 const App = () => {
   return (
@@ -16,6 +20,10 @@ const App = () => {
         <Route path="/technews" element={<Tech_news />} />
         <Route path="/join-us" element={<ProfileForm />} />
         <Route path="/projects" element={<Projects />} />
+        <Route path="/userProfile" element={<UserProfile />} />
+        <Route path="/login" element={<LoginPage />} />
+
+
       </Routes>
     </BrowserRouter>
   );

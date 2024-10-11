@@ -1,32 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { signOut } from 'firebase/auth';
-import { auth } from '../utils/firebase_sdk';
-import { handleLogin } from '../controllers/auth';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { FaUserCircle } from 'react-icons/fa'; // FontAwesome user icon (install react-icons if not already installed)
 
-export default function Component() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false); // Hamburger menu state
+
   const navLinks = ['Home', 'About', 'Leaderboard', 'Projects', 'TechNews'];
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      setIsLoggedIn(false);
-      console.log("User signed out");
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
-  };
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      setIsLoggedIn(!!user);
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   return (
     <nav style={{ backgroundColor: '#10111f' }} className="text-white p-4 sticky top-0 z-50 py-3 backdrop-blur-sm">
@@ -50,24 +29,6 @@ export default function Component() {
           ))}
         </div>
 
-        <div className="hidden md:block">
-          {isLoggedIn ? (
-            <button 
-              onClick={handleLogout}
-              className="bg-red-600 hover:bg-red-500 text-white py-2 px-4 rounded transition duration-300"
-            >
-              Sign Out
-            </button>
-          ) : (
-            <button 
-              onClick={() => handleLogin(navigate)}
-              className="bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded transition duration-300"
-            >
-              Sign In
-            </button>
-          )}
-        </div>
-
         <div className="md:hidden">
           <button onClick={() => setIsOpen(!isOpen)} className="focus:outline-none">
             <svg
@@ -80,6 +41,13 @@ export default function Component() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
             </svg>
           </button>
+        </div>
+
+        {/* User Profile Icon (for large screens) */}
+        <div className="hidden md:flex items-center">
+          <Link to="/userProfile" className="hover:text-gray-300">
+            <FaUserCircle className="w-8 h-8 text-white" />
+          </Link>
         </div>
       </div>
 
@@ -96,24 +64,17 @@ export default function Component() {
                 <span className="absolute left-0 bottom-0 w-full h-0.5 bg-white transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
               </Link>
             ))}
-            {isLoggedIn ? (
-              <button 
-                onClick={handleLogout}
-                className="block text-center bg-red-600 hover:bg-red-500 text-white py-2 px-4 rounded transition duration-300"
-              >
-                Sign Out
-              </button>
-            ) : (
-              <button 
-                onClick={() => handleLogin(navigate)}
-                className="block text-center bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded transition duration-300"
-              >
-                Sign In
-              </button>
-            )}
+            {/* User Profile Link in the dropdown */}
+            <Link to="/userProfile" className="block text-center text-white hover:text-gray-300">
+              Profile
+            </Link>
           </div>
         </div>
       )}
     </nav>
   );
-}
+};
+
+export default Navbar;
+
+
