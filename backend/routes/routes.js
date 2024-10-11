@@ -9,6 +9,7 @@ const router = express.Router();
 
 // get
 router.get('/', home)
+router.get("/core", getCoreMembers)
 
 
 // post
