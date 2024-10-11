@@ -1,4 +1,3 @@
-import coreTeamMembers from '../constants/coreTeamData';
 import React, { useEffect, useState } from 'react';
 
 const Core = () => {
@@ -28,15 +27,15 @@ const Core = () => {
         {members.withoutSubPosition.map((member) => (
           <a
             key={member._id}
-            href={member.linkedinUrl} // Use the LinkedIn URL from your data
-            target="_blank" // Open in new tab
-            rel="noopener noreferrer" // Security measure
+            href={member.linkedinUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex flex-col items-center bg-[#292f45] p-6 rounded-lg transition-transform duration-200 hover:scale-105 aspect-w-1 aspect-h-1"
           >
             <img
               src={"https://res.cloudinary.com/dzmckbejo/image/upload/" + member.imageUrl}
               alt={`${member.name} profile`}
-              className="h-52 w-full object-cover object-end rounded-lg" // Set fixed width/height and object-cover
+              className="h-52 w-full object-cover object-end rounded-lg"
             />
             <h2 className="text-xl md:text-2xl font-semibold text-center">{member.name}</h2>
             <p className="text-gray-400 text-center">{member.designation}</p>
@@ -49,15 +48,15 @@ const Core = () => {
         {members.withSubPosition.map((member) => (
           <a
             key={member._id}
-            href={member.linkedinUrl} // Use the LinkedIn URL from your data
-            target="_blank" // Open in new tab
-            rel="noopener noreferrer" // Security measure
+            href={member.linkedinUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex flex-col items-center bg-[#292f45] p-6 rounded-lg transition-transform duration-200 hover:scale-105 aspect-w-1 aspect-h-1"
           >
             <img
               src={"https://res.cloudinary.com/dzmckbejo/image/upload/" + member.imageUrl}
               alt={`${member.name} profile`}
-              className="h-52 w-full object-cover object-end rounded-lg" // Set fixed width/height and object-cover
+              className="h-52 w-full object-cover object-end rounded-lg"
             />
             <h2 className="text-xl md:text-2xl font-semibold text-center">{member.name}</h2>
             <p className="text-gray-400 text-center">{member.designation}</p>
