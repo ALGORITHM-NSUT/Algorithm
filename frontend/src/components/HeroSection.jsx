@@ -30,51 +30,28 @@ export default function HeroSection() {
       />
 
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative z-10 flex flex-col items-center mt-10 p-4"
-      >
+      <div className="relative z-10 flex flex-col items-center mt-10 p-4">
         <div className="flex items-center justify-center mb-4 flex-wrap">
-          <motion.img
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            transition={{ type: "spring", stiffness: 300 }}
+          <img
             src="src/assets/algo.png"
             alt="Logo"
             className="w-24 h-18 md:w-32 md:h-24 lg:w-40 lg:h-30 mr-4"
           />
-          <motion.h1
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-            className="text-[4rem] sm:text-[5rem] md:text-[6rem] lg:text-[180px] text-gray-200 font-bold mt-2 font-sans"
-          >
+          <h1 className="text-[4rem] sm:text-[5rem] md:text-[6rem] lg:text-[180px] text-gray-200 font-bold mt-2 font-sans">
             Algorithm
-          </motion.h1>
+          </h1>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="text-2xl sm:text-3xl md:text-4xl text-gray-300 font-bold text-center mb-4 font-sans"
-        >
-          <p className="hidden sm:block">Code . Set . Go</p>
-          <p className="block sm:hidden">Code</p>
-          <p className="block sm:hidden">Set</p>
-          <p className="block sm:hidden">Go</p>
-        </motion.div>
+        <div className="text-gray-300 font-bold text-center mb-4">
+        <p className="text-xl lg:text-5xl">Code . Set . Go</p>
+      </div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
+        <p
           className="text-lg sm:text-xl max-w-3xl text-gray-400 text-center mb-8 px-4 font-sans"
         >
           Join us to explore, learn, and innovate together!
-        </motion.p>
-      </motion.div>
+        </p>
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: 50 }}
