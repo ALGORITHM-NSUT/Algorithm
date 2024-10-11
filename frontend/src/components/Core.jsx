@@ -1,4 +1,3 @@
-import coreTeamMembers from '../constants/coreTeamData';
 import React, { useEffect, useState } from 'react';
 
 const Core = () => {
