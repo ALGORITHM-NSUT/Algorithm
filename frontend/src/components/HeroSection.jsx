@@ -37,7 +37,8 @@ export default function HeroSection() {
             alt="Logo"
             className="w-24 h-18 md:w-32 md:h-24 lg:w-40 lg:h-30 mr-4"
           />
-          <h1 className="text-[4rem] sm:text-[5rem] md:text-[6rem] lg:text-[180px] text-gray-200 font-bold mt-2 font-sans">
+          <h1 className="text-[4rem] sm:text-[5rem] md:text-[6rem] lg:text-[180px] text-gray-200 font-bold mt-2">
+
             Algorithm
           </h1>
         </div>

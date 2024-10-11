@@ -22,31 +22,31 @@ const ProfileForm = () => {
     setFormData({ ...formData, [name]: value });
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault(); // Prevent form from refreshing the page
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent form from refreshing the page
 
-  try {
-    const response = await fetch("http://localhost:5000/form", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+    try {
+      const response = await fetch("http://localhost:5000/form", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    const result = await response.json();
+      const result = await response.json();
 
-    if (response.ok) {
-      // If submission is successful, show an alert and redirect
-      alert("Form submitted successfully!");
-      navigate("/"); // Redirect to the home page
-    } else {
-      console.error("Error saving form data:", result);
+      if (response.ok) {
+        // If submission is successful, show an alert and redirect
+        alert("Form submitted successfully!");
+        navigate("/"); // Redirect to the home page
+      } else {
+        console.error("Error saving form data:", result);
+      }
+    } catch (error) {
+      console.error("Error saving form data:", error);
     }
-  } catch (error) {
-    console.error("Error saving form data:", error);
-  }
-};
+  };
 
 
   return (

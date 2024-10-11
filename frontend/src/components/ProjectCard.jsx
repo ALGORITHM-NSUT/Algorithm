@@ -32,24 +32,23 @@ const ProjectCard = ({ project, isOngoing }) => {
       onClick={toggleExpand} // Clicking anywhere on the card toggles details
     >
 
-        <div className='flex flex-col justify-center items-center mt-14'>
-             {!isExpanded && (
-                <h3 className="text-5xl font-bold mb-2 md:text-3xl md:text-wrap">{project.title}</h3>
-                )}
-      
-           
-            {!isExpanded && (
-                <p className="text-gray-300 mt-20 mb-5">{project.description}</p>
-            )}
-        
-        </div>
-     
+      <div className='flex flex-col justify-center items-center mt-14'>
+        {!isExpanded && (
+          <h3 className="text-5xl font-bold mb-2 md:text-3xl md:text-wrap">{project.title}</h3>
+        )}
+
+
+        {!isExpanded && (
+          <p className="text-gray-300 mt-20 mb-5">{project.description}</p>
+        )}
+
+      </div>
+
 
       {/* Card Details: Visibility controlled without changing card height */}
       <div
-        className={` mb-11 ${
-          isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible'
-        }`}
+        className={` mb-11 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible'
+          }`}
       >
         {/* Project Lead Section */}
         <div className="mb-11">

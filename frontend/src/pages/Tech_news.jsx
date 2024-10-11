@@ -5,7 +5,7 @@ import Articles from '../components/Newsarticles'
 
 const Tech_news = () => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-polygon bg-cover bg-center bg-no-repeat">
       <Navbar />
       <div className="flex-grow">
         <Articles />
