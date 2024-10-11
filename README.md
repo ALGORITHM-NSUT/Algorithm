@@ -1,4 +1,4 @@
-"# Algorithm Society East Campus Tech Chapter
+# Algorithm Society East Campus Tech Chapter
 
 This repository contains the website for the **Algorithm Society of East Campus Tech Chapter**. It serves as a platform for members to engage, share resources, and participate in events related to algorithms and technology.
 
