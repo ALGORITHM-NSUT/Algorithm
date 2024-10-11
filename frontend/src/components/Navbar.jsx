@@ -18,15 +18,19 @@ const Navbar = () => {
 
         <div className="hidden md:flex space-x-10 text-lg justify-center flex-grow">
           {navLinks.map((link, index) => (
-            <Link key={index} to={`/${link.toLowerCase().replace(/\s+/g, '')}`} className="hover:text-gray-300">
+            <Link 
+              key={index} 
+              to={`/${link.toLowerCase().replace(/\s+/g, '')}`} 
+              className="hover:text-gray-300 relative group"
+            >
               {link}
+              <span className="absolute left-0 bottom-0 w-full h-0.5 bg-white transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
             </Link>
           ))}
         </div>
 
         <div className="md:hidden">
           <button onClick={() => setIsOpen(!isOpen)} className="focus:outline-none">
-            {/* Hamburger icon */}
             <svg
               className="w-6 h-6 text-white"
               fill="none"
@@ -47,7 +51,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Dropdown Menu for small screens */}
       {isOpen && (
         <div className="md:hidden">
           <div className="flex flex-col space-y-4 mt-4">
@@ -55,9 +58,10 @@ const Navbar = () => {
               <Link
                 key={index}
                 to={`/${link.toLowerCase().replace(/\s+/g, '')}`}
-                className="block text-center text-white hover:text-gray-300"
+                className="block text-center text-white hover:text-gray-300 relative group"
               >
                 {link}
+                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-white transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
               </Link>
             ))}
             {/* User Profile Link in the dropdown */}

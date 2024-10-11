@@ -87,3 +87,4 @@ const coreTeamMembers = [
 ];
 
 export default coreTeamMembers;
+
