@@ -1,21 +1,14 @@
 import mongoose from 'mongoose';
-
-const contributorSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  linkedinUrl: { type: String, required: true },
-});
-
-const leadSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  linkedinUrl: { type: String, required: true },
-});
+import CoreMember from './CoreMember.js';
+import FormData from './formDataModel.js';
 
 const projectSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  lead: leadSchema,
-  contributors: [contributorSchema],
+  lead: { type: mongoose.Schema.Types.ObjectId, ref: CoreMember, required: true },
+  contributors: [{ type: mongoose.Schema.Types.ObjectId, ref: FormData }],
   githubUrl: { type: String, required: true },
   description: { type: String, required: true },
+  status: { type: Boolean, required: true }
 });
 
 const Project = mongoose.model('Project', projectSchema, 'ProjectCard');

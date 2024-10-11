@@ -76,7 +76,7 @@ const ProjectCard = ({ project, isOngoing }) => {
             >
               <p className="font-semibold">{contributor.name}</p>
               <a
-                href={contributor.linkedinUrl}
+                href={"ww"}
                 target="_blank"
                 rel="noreferrer"
                 className="text-gray-300 text-sm hover:text-gray-100 transition-colors duration-200"
