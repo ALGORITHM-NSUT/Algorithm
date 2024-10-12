@@ -27,6 +27,7 @@ export default function HeroSection() {
           className="absolute top-0 left-0 w-full h-full object-cover"
           src="src/assets/gifgif.gif"
           alt="Background animation"
+          loading="lazy"
       />
 
 
@@ -43,9 +44,9 @@ export default function HeroSection() {
           </h1>
         </div>
 
-        <div className="text-gray-300 font-bold text-center mb-4">
-        <p className="text-xl lg:text-5xl">Code . Set . Go</p>
-      </div>
+          <div className="text-gray-300 font-bold text-center mb-4">
+          <p className="text-xl lg:text-5xl">Code . Set . Go</p>
+        </div>
 
         <p
           className="text-lg sm:text-xl max-w-3xl text-gray-400 text-center mb-8 px-4 font-sans"
