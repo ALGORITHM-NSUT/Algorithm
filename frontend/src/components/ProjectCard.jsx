@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import JoinRequestModal from './JoinRequestModal';
 
 const ProjectCard = ({ project, isOngoing }) => {
   const [showModal, setShowModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-
+  const userEmail = sessionStorage.getItem('userEmail');
   // Toggle the visibility of the card details
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -21,8 +21,8 @@ const ProjectCard = ({ project, isOngoing }) => {
   };
 
   // Handle sending the join request
-  const handleSendRequest = (message) => {
-    console.log(`Request to join ${project.title} with message: ${message}`);
+  const handleSendRequest = () => {
+    console.log(`Request to join ${project.title} by ${userEmail}`);
     setShowModal(false); // Close modal after sending the request
   };
 
@@ -74,9 +74,9 @@ const ProjectCard = ({ project, isOngoing }) => {
               key={index}
               className="bg-gray-700 p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200"
             >
-              <p className="font-semibold">{contributor.name}</p>
+              <p className="font-semibold">{contributor}</p>
               <a
-                href={contributor.linkedinUrl}
+                href={"ww"}
                 target="_blank"
                 rel="noreferrer"
                 className="text-gray-300 text-sm hover:text-gray-100 transition-colors duration-200"
@@ -102,7 +102,7 @@ const ProjectCard = ({ project, isOngoing }) => {
         </div>
 
         {/* Join Request Button */}
-        {isOngoing && (
+        {isOngoing && userEmail && (
           <button
             className="mt-8 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
             onClick={(e) => {
