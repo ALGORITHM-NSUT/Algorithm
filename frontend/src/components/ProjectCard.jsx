@@ -4,7 +4,55 @@ import JoinRequestModal from './JoinRequestModal';
 const ProjectCard = ({ project, isOngoing }) => {
   const [showModal, setShowModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const userEmail = sessionStorage.getItem('userEmail');
+  const [email, setEmail] = useState(null);
+  console.log(project);
+  const postData = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/application', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: project.title,
+          lead: project.lead.name,
+          applier: email
+        })
+      });
+
+      const data = await response.json();
+      console.log('Response data:', data);  // Handle the response
+
+    } catch (error) {
+      console.error('Error posting data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetch('http://localhost:5000/me', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: "include",  // Required to send cookies along
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();  // Proceed to parse JSON if response is okay
+        } else {
+          setEmail(null);  // No user is logged in
+          throw new Error('Failed to fetch user data');
+        }
+      })
+      .then((data) => {
+        setEmail(data.user.email);  // Set the user data if they are logged in
+      })
+      .catch((error) => {
+        console.error('Error fetching user data:', error);
+        setEmail(null);  // Set user to null in case of error
+      });
+  }, [email]);
+
   // Toggle the visibility of the card details
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -22,7 +70,9 @@ const ProjectCard = ({ project, isOngoing }) => {
 
   // Handle sending the join request
   const handleSendRequest = () => {
-    console.log(`Request to join ${project.title} by ${userEmail}`);
+    postData();
+
+    console.log(`Request to join ${project.title} by ${email}`);
     setShowModal(false); // Close modal after sending the request
   };
 
@@ -102,7 +152,7 @@ const ProjectCard = ({ project, isOngoing }) => {
         </div>
 
         {/* Join Request Button */}
-        {isOngoing && userEmail && (
+        {isOngoing && email && (
           <button
             className="mt-8 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
             onClick={(e) => {
