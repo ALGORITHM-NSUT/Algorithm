@@ -35,6 +35,8 @@ const Core = () => {
             <img
               src={"https://res.cloudinary.com/dzmckbejo/image/upload/" + member.imageUrl}
               alt={`${member.name} profile`}
+              decoding='async'
+              loading='lazy'
               className="h-52 w-full object-cover object-end rounded-lg" // Set fixed width/height and object-cover
             />
             <h2 className="text-xl md:text-2xl font-semibold text-center">{member.name}</h2>
@@ -56,6 +58,8 @@ const Core = () => {
             <img
               src={"https://res.cloudinary.com/dzmckbejo/image/upload/" + member.imageUrl}
               alt={`${member.name} profile`}
+              loading='lazy'
+              decoding='async'
               className="h-52 w-full object-cover object-end rounded-lg" // Set fixed width/height and object-cover
             />
             <h2 className="text-xl md:text-2xl font-semibold text-center">{member.name}</h2>
