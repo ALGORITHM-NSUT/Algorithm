@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
-import OngoingProjects from '../components/OngoingProjects';
-import PastProjects from '../components/PastProjects';
 import Footer from '../components/Footer';
-
+import ProjectCard from '../components/ProjectCard';
 
 
 
@@ -17,7 +15,6 @@ const Projects = () => {
       .then((data) => {
         const onGoing = data.filter(project => project.status);
         const completed = data.filter(project => !project.status);
-        console.log(onGoing);
         setProjects({ onGoing, completed });
       })
       .catch((error) => console.error('Error fetching members:', error));
@@ -47,8 +44,26 @@ const Projects = () => {
       <Navbar />
 
       <div className="flex flex-col items-center bg-polygon bg-cover bg-center bg-no-repeat min-h-screen text-white py-10 w-full">
-        <OngoingProjects projects={projects.onGoing} onJoinRequest={handleJoinRequest} />
-        <PastProjects projects={projects.completed} />
+        <div className="w-full mb-24">
+          <h2 className="text-5xl md:text-[100px] font-bold text-center mt-10 mb-16">Ongoing Projects</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 px-4 md:px-10">
+            {projects.onGoing.map((project, index) => (
+              <ProjectCard
+                key={index}
+                project={project}
+                isOngoing={true} // Ongoing projects have the join button
+              />
+            ))}
+          </div>
+        </div>
+        <div className="w-full">
+          <h2 className="text-5xl md:text-[100px] font-bold text-center mt-10 mb-14">Past Projects</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 px-4 md:px-10">
+            {projects.completed.map((project, index) => (
+              <ProjectCard key={index} project={project} isOngoing={false} />
+            ))}
+          </div>
+        </div>
       </div>
 
       <Footer />

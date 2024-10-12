@@ -27,6 +27,7 @@ const Login = () => {
 
       if (response.ok) {
         // If login is successful, navigate to the desired page (e.g., user profile)
+        sessionStorage.setItem('userEmail', email);
         alert('Login successful!');
         navigate('/userprofile');
       } else {

@@ -4,20 +4,25 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import routes from './routes/routes.js';
-import userRoutes from './routes/userRoutes.js'
 import cookieParser from "cookie-parser"
 
 
 dotenv.config();
 
 const app = express();
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    next();
+});
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors({
     origin: 'http://localhost:5173',
-    methods: 'GET,POST',
+    methods: 'GET,POST,PUT,DELETE,OPTIONS',
     credentials: true
 }));
 app.use(cookieParser())
@@ -34,7 +39,7 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // Routes
 app.use('/', routes);
-app.use('/', userRoutes);
+// app.use('/', userRoutes);
 
 
 app.listen(process.env.PORT || 5000, () => {
