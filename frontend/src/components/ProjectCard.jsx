@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import JoinRequestModal from './JoinRequestModal';
 
 const ProjectCard = ({ project, isOngoing }) => {
@@ -22,13 +22,6 @@ const ProjectCard = ({ project, isOngoing }) => {
 
   // Handle sending the join request
   const handleSendRequest = () => {
-
-    if (userEmail) {
-      console.log('User is logged in:', userEmail);
-    } else {
-      console.log('No user is logged in');
-    }
-
     console.log(`Request to join ${project.title} by ${userEmail}`);
     setShowModal(false); // Close modal after sending the request
   };
