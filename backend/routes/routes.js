@@ -4,8 +4,7 @@ import { submitFormData } from '../controllers/formController.js';
 import { home } from '../controllers/home.js';
 import { getProjects } from '../controllers/ProjectController.js';
 import { getCoreMembers } from '../controllers/coreMemberController.js';
-import { getMyProfile, login, logout, register } from '../controllers/userController.js';
-import { isAuthenticated } from '../middlewares/auth.js';
+
 
 const router = express.Router();
 
