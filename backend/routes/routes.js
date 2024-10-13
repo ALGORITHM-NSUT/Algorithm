@@ -5,6 +5,7 @@ import { home } from '../controllers/home.js';
 import { getProjects } from '../controllers/ProjectController.js';
 import { getCoreMembers } from '../controllers/coreMemberController.js';
 import { submitapplication } from '../controllers/applicationController.js';
+import { checkapplication } from '../controllers/checkApplication.js';
 
 const router = express.Router();
 
@@ -16,5 +17,6 @@ router.get("/projects", getProjects)
 // post
 router.post('/form', submitFormData);
 router.post('/application', submitapplication);
+router.post('/checkapplication', checkapplication);
 
 export default router;

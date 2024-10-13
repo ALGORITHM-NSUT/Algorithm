@@ -30,27 +30,6 @@ const Projects = () => {
   }, []);
 
 
-
-
-  const [showModal, setShowModal] = useState(false);
-  const [selectedProject, setSelectedProject] = useState(null);
-
-
-  const handleJoinRequest = (project) => {
-    setSelectedProject(project);
-    setShowModal(true);
-  };
-
-  const handleSendRequest = (message) => {
-    // Fetch user details from the backend
-    console.log(`Request sent for project ${selectedProject.title} with message: ${message}`);
-    setShowModal(false);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
-
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
