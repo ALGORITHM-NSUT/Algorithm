@@ -42,7 +42,7 @@ const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
             title: project.title,
             applier: user?.email
           })
-        });
+        })
 
         const data = await availability.json();
         if (data.message == "Application already exists") {
