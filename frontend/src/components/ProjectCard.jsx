@@ -58,8 +58,7 @@ const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
     };
 
     fetchapplication();
-  }, [user]);
-
+  }, [user, application]);
   // useEffect(() => {
   //   console.log(project);
   // }, [project]);

@@ -22,6 +22,6 @@ export const checkapplication = async (req, res) => {
     res.status(200).json({ message: 'Application does not exist' });
   }
   catch (error) {
-    res.status(500).json({ message: 'Error checking applications', error });
+    res.status(200).json({ message: 'Application does not exist' });
   }
 };
