@@ -1,35 +1,11 @@
-// components/Navbar.jsx
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { signOut } from 'firebase/auth'; // Import signOut
-import { auth } from '../utils/firebase_sdk'; // Import your auth object
-import { handleLogin } from '../controllers/auth';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { FaUserCircle } from 'react-icons/fa'; // FontAwesome user icon (install react-icons if not already installed)
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
+  const [isOpen, setIsOpen] = useState(false); // Hamburger menu state
+
   const navLinks = ['Home', 'About', 'Leaderboard', 'Projects', 'TechNews'];
-  const navigate = useNavigate();
-
-  // Function to handle sign out
-  const handleLogout = async () => {
-    try {
-      await signOut(auth); // Sign out using Firebase auth
-      setIsLoggedIn(false); // Update login status
-      console.log("User signed out");
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
-  };
-
-  // Check user authentication status on component mount
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      setIsLoggedIn(!!user); // Update login status based on user state
-    });
-
-    return () => unsubscribe(); // Cleanup subscription on unmount
-  }, []);
 
   return (
     <nav style={{ backgroundColor: '#10111f' }} className="text-white p-4 sticky top-0 z-50 py-3 backdrop-blur-sm">
@@ -42,34 +18,19 @@ const Navbar = () => {
 
         <div className="hidden md:flex space-x-10 text-lg justify-center flex-grow">
           {navLinks.map((link, index) => (
-            <Link key={index} to={`/${link.toLowerCase().replace(/\s+/g, '')}`} className="hover:text-gray-300">
+            <Link 
+              key={index} 
+              to={`/${link.toLowerCase().replace(/\s+/g, '')}`} 
+              className="hover:text-gray-300 relative group"
+            >
               {link}
+              <span className="absolute left-0 bottom-0 w-full h-0.5 bg-white transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
             </Link>
           ))}
         </div>
 
-        {/* Conditional Sign In / Sign Out button */}
-        <div className="hidden md:block">
-          {isLoggedIn ? (
-            <button 
-              onClick={handleLogout} // Call handleLogout on click
-              className="bg-red-600 hover:bg-red-500 text-white py-2 px-4 rounded transition duration-300"
-            >
-              Sign Out
-            </button>
-          ) : (
-            <button 
-              onClick={() => handleLogin(navigate)} // Call handleLogin
-              className="bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded transition duration-300"
-            >
-              Sign In
-            </button>
-          )}
-        </div>
-
         <div className="md:hidden">
           <button onClick={() => setIsOpen(!isOpen)} className="focus:outline-none">
-            {/* Hamburger icon */}
             <svg
               className="w-6 h-6 text-white"
               fill="none"
@@ -81,9 +42,15 @@ const Navbar = () => {
             </svg>
           </button>
         </div>
+
+        {/* User Profile Icon (for large screens) */}
+        <div className="hidden md:flex items-center">
+          <Link to="/userProfile" className="hover:text-gray-300">
+            <FaUserCircle className="w-8 h-8 text-white" />
+          </Link>
+        </div>
       </div>
 
-      {/* Dropdown Menu for small screens */}
       {isOpen && (
         <div className="md:hidden">
           <div className="flex flex-col space-y-4 mt-4">
@@ -91,26 +58,16 @@ const Navbar = () => {
               <Link
                 key={index}
                 to={`/${link.toLowerCase().replace(/\s+/g, '')}`}
-                className="block text-center text-white hover:text-gray-300"
+                className="block text-center text-white hover:text-gray-300 relative group"
               >
                 {link}
+                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-white transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
               </Link>
             ))}
-            {isLoggedIn ? (
-              <button 
-                onClick={handleLogout} // Call handleLogout
-                className="block text-center bg-red-600 hover:bg-red-500 text-white py-2 px-4 rounded transition duration-300"
-              >
-                Sign Out
-              </button>
-            ) : (
-              <button 
-                onClick={() => handleLogin(navigate)} // Call handleLogin
-                className="block text-center bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded transition duration-300"
-              >
-                Sign In
-              </button>
-            )}
+            {/* User Profile Link in the dropdown */}
+            <Link to="/userProfile" className="block text-center text-white hover:text-gray-300">
+              Profile
+            </Link>
           </div>
         </div>
       )}
@@ -119,3 +76,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+

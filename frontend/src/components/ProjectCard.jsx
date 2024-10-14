@@ -1,9 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import JoinRequestModal from './JoinRequestModal';
 
-const ProjectCard = ({ project, isOngoing }) => {
+const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
   const [showModal, setShowModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('userProfile')));
+  const [application, setApplication] = useState(false);
+
+  const postData = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/application', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: project.title,
+          lead: project.lead.name,
+          applier: user?.email
+        })
+      });
+
+      const data = await response.json();
+      setApplication(false);
+      console.log('Response data:', data);  // Handle the response
+      return true;
+    } catch (error) {
+      console.error('Error posting data:', error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchapplication = async () => {
+      try {
+        const availability = await fetch('http://localhost:5000/checkapplication', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: project.title,
+            applier: user?.email
+          })
+        })
+
+        const data = await availability.json();
+        if (data.message == "Application already exists") {
+          setApplication(false);
+        }
+        else {
+          setApplication(true);
+        }
+      }
+      catch (error) {
+        console.log('error checking open applications', error);
+      }
+    };
+
+    fetchapplication();
+  }, [user, application]);
+  // useEffect(() => {
+  //   console.log(project);
+  // }, [project]);
 
   // Toggle the visibility of the card details
   const toggleExpand = () => {
@@ -21,11 +79,12 @@ const ProjectCard = ({ project, isOngoing }) => {
   };
 
   // Handle sending the join request
-  const handleSendRequest = (message) => {
-    console.log(`Request to join ${project.title} with message: ${message}`);
+  const handleSendRequest = () => {
+    if (postData()) {
+      setApplication(false);
+    };
     setShowModal(false); // Close modal after sending the request
   };
-
   return (
     <div
       className="bg-gray-800 p-4 h-[680px] rounded-lg shadow-lg cursor-pointer transition-all duration-300"
@@ -74,9 +133,9 @@ const ProjectCard = ({ project, isOngoing }) => {
               key={index}
               className="bg-gray-700 p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200"
             >
-              <p className="font-semibold">{contributor.name}</p>
+              <p className="font-semibold">{contributor}</p>
               <a
-                href={contributor.linkedinUrl}
+                href={"ww"}
                 target="_blank"
                 rel="noreferrer"
                 className="text-gray-300 text-sm hover:text-gray-100 transition-colors duration-200"
@@ -103,16 +162,38 @@ const ProjectCard = ({ project, isOngoing }) => {
 
         {/* Join Request Button */}
         {isOngoing && (
-          <button
-            className="mt-8 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
-            onClick={(e) => {
-              e.stopPropagation(); // Prevent button click from toggling card
-              handleJoinRequest();
-            }}
-          >
-            Request to Join
-          </button>
+          <React.Fragment>
+            {user ? (
+              application ? (
+                <button
+                  className="mt-8 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent button click from toggling card
+                    handleJoinRequest();
+                  }}
+                >
+                  Request to Join
+                </button>
+              ) : (
+                <button
+                  className="mt-8 py-2 px-4 bg-gray-400 text-white rounded-lg cursor-not-allowed"
+                  disabled
+                >
+                  Already Applied
+                </button>
+              )
+            ) : (
+              <button
+                className="mt-8 py-2 px-4 bg-gray-400 text-white rounded-lg cursor-not-allowed"
+                disabled
+              >
+                Login to apply
+              </button>
+            )}
+          </React.Fragment>
         )}
+
+
       </div>
 
       {/* Modal for sending join request */}
@@ -126,6 +207,6 @@ const ProjectCard = ({ project, isOngoing }) => {
       )}
     </div>
   );
-};
+});
 
 export default ProjectCard;
