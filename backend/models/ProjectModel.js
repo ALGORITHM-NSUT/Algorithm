@@ -8,7 +8,7 @@ const projectSchema = new mongoose.Schema({
   contributors: [{ type: mongoose.Schema.Types.ObjectId, ref: FormData }],
   githubUrl: { type: String, required: true },
   description: { type: String, required: true },
-  status: { type: Boolean, required: true }
+  status: { type: Boolean, required: false }
 });
 
 const Project = mongoose.model('Project', projectSchema, 'ProjectCard');

@@ -6,6 +6,7 @@ import cors from 'cors';
 import routes from './routes/routes.js';
 import cookieParser from "cookie-parser"
 import userRoutes from "./routes/userRoutes.js"
+import projectRoutes from "./routes/projectRoutes.js"
 
 
 dotenv.config();
@@ -42,7 +43,7 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use('/', routes);
 app.use('/', userRoutes);
 
-
+app.use('/', projectRoutes);
 app.listen(process.env.PORT || 5000, () => {
     console.log(`Server is listening at port : ${process.env.PORT}`);
 });
