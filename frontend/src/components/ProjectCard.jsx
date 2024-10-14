@@ -4,7 +4,7 @@ import JoinRequestModal from './JoinRequestModal';
 const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
   const [showModal, setShowModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [email, setEmail] = useState(null);
+  const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('userProfile')));
   const [application, setApplication] = useState(false);
 
   const postData = async () => {
@@ -17,7 +17,7 @@ const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
         body: JSON.stringify({
           title: project.title,
           lead: project.lead.name,
-          applier: email
+          applier: user?.email
         })
       });
 
@@ -31,33 +31,6 @@ const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
   };
 
   useEffect(() => {
-    const fetchprofile = async () => {
-      try {
-        const profile = await fetch('http://localhost:5000/me', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: "include",  // Required to send cookies along
-        });
-
-        const data = await profile.json();
-        if (profile.ok) {
-          setEmail(data.user.email);
-        }
-        else {
-          setEmail(null);
-        }
-      }
-      catch (error) {
-        console.error('Error fetching profile', error);
-      }
-    };
-
-    fetchprofile();
-  }, []);
-
-  useEffect(() => {
     const fetchapplication = async () => {
       try {
         const availability = await fetch('http://localhost:5000/checkapplication', {
@@ -67,9 +40,9 @@ const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
           },
           body: JSON.stringify({
             title: project.title,
-            applier: email
+            applier: user?.email
           })
-        });
+        })
 
         const data = await availability.json();
         if (data.message == "Application already exists") {
@@ -85,12 +58,10 @@ const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
     };
 
     fetchapplication();
-  }, [email]);
-
+  }, [user, application]);
   // useEffect(() => {
   //   console.log(project);
   // }, [project]);
-
 
   // Toggle the visibility of the card details
   const toggleExpand = () => {
@@ -112,8 +83,6 @@ const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
     if (postData()) {
       setApplication(false);
     };
-
-    console.log(`Request to join ${project.title} by ${email}`);
     setShowModal(false); // Close modal after sending the request
   };
   return (
@@ -194,7 +163,7 @@ const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
         {/* Join Request Button */}
         {isOngoing && (
           <React.Fragment>
-            {email ? (
+            {user ? (
               application ? (
                 <button
                   className="mt-8 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"

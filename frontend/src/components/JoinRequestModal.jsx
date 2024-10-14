@@ -18,8 +18,8 @@ const JoinRequestModal = ({ isOpen, project, onClose, onSend }) => {
         <button
           className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
           onClick={(e) => {
-            e.stopPropagation(); // Prevent button click from toggling card
-            handleSend;
+            e.stopPropagation();// Prevent button click from toggling card
+            handleSend();
           }}
         >
           Send Request
