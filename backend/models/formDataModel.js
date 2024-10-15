@@ -23,11 +23,22 @@ formDataSchema.pre("save", async function (next){
     next()
 })
 
-formDataSchema.methods.getJWTToken = function (){
-    return jwt.sign({_id:this._id}, process.env.JWT_SECRET,{
-        expiresIn: "15d"
-    })
-}
+formDataSchema.methods.getJWTToken = function () {
+    const userProfile = {
+        _id: this._id,
+        name: this.name,
+        email: this.email,
+        phoneNumber: this.phoneNumber,
+        githubProfile: this.githubProfile,
+        leetcodeProfile: this.leetcodeProfile,
+        codeforcesProfile: this.codeforcesProfile
+    };
+
+    return jwt.sign(userProfile, process.env.JWT_SECRET, {
+        expiresIn: "15d"  // Set expiration to 15 days
+    });
+};
+
 
 formDataSchema.methods.comparePassword = async function (password){
     return await bcrypt.compare(password, this.password);
