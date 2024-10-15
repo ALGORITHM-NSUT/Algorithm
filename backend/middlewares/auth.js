@@ -2,10 +2,10 @@ import jwt from "jsonwebtoken"
 import FormData from "../models/formDataModel.js";
 
 
-export const isAuthenticated = async (req,res,next)=>{
-    const {token} = req.cookies;
+export const isAuthenticated = async (req, res, next) => {
+    const { token } = req.cookies;
 
-    if(!token){
+    if (!token) {
         return res.json({
             message: "Not logged in"
         })
@@ -13,9 +13,6 @@ export const isAuthenticated = async (req,res,next)=>{
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
-    console.log(decoded)
-
-    req.user = decoded._id
-
+    req.user = decoded;
     next()
 }

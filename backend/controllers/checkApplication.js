@@ -3,16 +3,17 @@ import Project from "../models/ProjectModel.js";
 import FormData from "../models/formDataModel.js";
 
 export const checkapplication = async (req, res) => {
-  const { title, lead, applier } = req.body;
+  const { title } = req.body;
 
   try {
+    const applier = req.user._id;
     const existingApp = await apply.findOne({ title, applier });
-    const contributor = await FormData.findOne({ email: applier });
+    const contributor = await FormData.findOne({ _id: applier });
     const existingContributor = await Project.findOne({
       contributors: contributor._id
     }).populate({
       path: 'contributors',
-      select: 'email'
+      select: '_id'
     });
 
     if (existingApp || existingContributor) {

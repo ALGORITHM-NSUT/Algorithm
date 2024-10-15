@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import JoinRequestModal from './JoinRequestModal';
+import { useNavigate } from 'react-router-dom';
 
 const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
   const [showModal, setShowModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('userProfile')));
   const [application, setApplication] = useState(false);
+  const navigate = useNavigate();
 
   const postData = async () => {
     try {
@@ -14,10 +16,10 @@ const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: "include",
         body: JSON.stringify({
           title: project.title,
-          lead: project.lead.name,
-          applier: user?.email
+          lead: project.lead.name
         })
       });
 
@@ -38,9 +40,9 @@ const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
           headers: {
             'Content-Type': 'application/json',
           },
+          credentials: "include",
           body: JSON.stringify({
             title: project.title,
-            applier: user?.email
           })
         })
 
@@ -59,6 +61,31 @@ const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
 
     fetchapplication();
   }, [user, application]);
+
+  // useEffect(() => {
+  //   const fetchapplication = async () => {
+  //     try {
+  //       const applicants = await fetch('http://localhost:5000/applicationapproval', {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         credentials: "include",
+  //         body: JSON.stringify({
+  //           title: project.title,
+  //         })
+  //       })
+
+  //       const applicant = await applicants.json();
+
+  //     }
+  //     catch (error) {
+  //       console.log('error checking open applications', error);
+  //     }
+  //   };
+
+  //   fetchapplication();
+  // }, [user, application]);
   // useEffect(() => {
   //   console.log(project);
   // }, [project]);
@@ -133,9 +160,9 @@ const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
               key={index}
               className="bg-gray-700 p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200"
             >
-              <p className="font-semibold">{contributor}</p>
+              <p className="font-semibold">{contributor.name}</p>
               <a
-                href={"ww"}
+                href={contributor.linkedinUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="text-gray-300 text-sm hover:text-gray-100 transition-colors duration-200"
@@ -184,8 +211,11 @@ const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
               )
             ) : (
               <button
-                className="mt-8 py-2 px-4 bg-gray-400 text-white rounded-lg cursor-not-allowed"
-                disabled
+                className="mt-8 py-2 px-4 bg-green-700 hover:bg-green-800 text-white rounded-lg"
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent button click from toggling card
+                  navigate('/login')
+                }}
               >
                 Login to apply
               </button>

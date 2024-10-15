@@ -17,8 +17,7 @@ const JoinRequestModal = ({ isOpen, project, onClose, onSend }) => {
         <h2 className="text-2xl text-black font-bold mb-4">Are you sure you want to request to Join: <br /> {project.title}</h2>
         <button
           className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
-          onClick={(e) => {
-            e.stopPropagation();// Prevent button click from toggling card
+          onClick={() => {// Prevent button click from toggling card
             handleSend();
           }}
         >
