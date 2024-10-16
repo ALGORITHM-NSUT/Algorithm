@@ -7,6 +7,7 @@ import { getCoreMembers } from '../controllers/coreMemberController.js';
 import { submitapplication } from '../controllers/applicationController.js';
 import { checkapplication } from '../controllers/checkApplication.js';
 import { isAuthenticated } from '../middlewares/auth.js';
+import { handleApplication } from '../controllers/handleApplication.js';
 
 const router = express.Router();
 
@@ -20,4 +21,5 @@ router.route("/projects").get(isAuthenticated, getProjects);
 router.post('/form', submitFormData);
 router.route("/application").post(isAuthenticated, submitapplication);
 router.route("/checkapplication").post(isAuthenticated, checkapplication);
+router.post("/applicationstate", handleApplication);
 export default router;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import JoinRequestModal from './JoinRequestModal';
 import { useNavigate } from 'react-router-dom';
 
-const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
+const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }) {
   const [showModal, setShowModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('userProfile')));
@@ -62,30 +62,32 @@ const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
     fetchapplication();
   }, [user, application]);
 
-  // useEffect(() => {
-  //   const fetchapplication = async () => {
-  //     try {
-  //       const applicants = await fetch('http://localhost:5000/applicationapproval', {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         credentials: "include",
-  //         body: JSON.stringify({
-  //           title: project.title,
-  //         })
-  //       })
 
-  //       const applicant = await applicants.json();
+  const handleApplication = async (id, state) => {
+    try {
+      const applicants = await fetch('http://localhost:5000/applicationstate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          title: project.title,
+          applicant: id,
+          state: state
+        })
+      })
+      refreshProjects();
+      const data = await applicants.json();
+      console.log(data);
+    }
+    catch (error) {
+      console.log('error checking open applications', error);
+    }
+  };
 
-  //     }
-  //     catch (error) {
-  //       console.log('error checking open applications', error);
-  //     }
-  //   };
 
-  //   fetchapplication();
-  // }, [user, application]);
+
   // useEffect(() => {
   //   console.log(project);
   // }, [project]);
@@ -221,7 +223,50 @@ const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
               </button>
             )}
           </React.Fragment>
+
         )}
+
+        <div className="max-h-[180px] overflow-y-auto grid grid-cols-1 gap-2 mt-5">
+          {project.applicants.map((applicant, index) => (
+            <div
+              key={index}
+              className="bg-gray-700 p-2 mt-1 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 flex justify-between items-center"
+            >
+              <p className="font-semibold">{applicant.name}</p>
+              <div className="flex space-x-2">
+                <button
+                  className="bg-green-500 rounded-md p-2 hover:bg-green-600 transition duration-200"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleApplication(applicant._id, 1)
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M10 15.172L16.95 8.222a1 1 0 011.414 1.414l-8.485 8.485a1 1 0 01-1.414 0l-4.242-4.242a1 1 0 011.414-1.414L10 15.172z" />
+                    <path d="M10 15.172L5.636 10.808a1 1 0 00-1.415 1.414l5.656 5.656a1 1 0 001.415 0l10-10a1 1 0 00-1.415-1.415l-9.293 9.293z" />
+                  </svg>
+                </button>
+                <button
+                  className="bg-red-500 rounded-md p-2 hover:bg-red-600 transition duration-200"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleApplication(applicant._id, 0)
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" viewBox="0 0 24 24" fill="currentColor">
+                    <path fillRule="evenodd" d="M12 11.293l-4.293-4.293-1.414 1.414L10.586 12l-4.293 4.293 1.414 1.414L12 12.414l4.293 4.293 1.414-1.414L13.414 12l4.293-4.293-1.414-1.414L12 11.293z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+
+
+
+
+
 
 
       </div>
@@ -237,6 +282,6 @@ const ProjectCard = React.memo(function ProjectCard({ project, isOngoing }) {
       )}
     </div>
   );
-});
+}
 
 export default ProjectCard;
