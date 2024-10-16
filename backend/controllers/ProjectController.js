@@ -11,12 +11,12 @@ export const getProjects = async (req, res) => {
         path: 'applications',
         populate: {
           path: 'applier',  // Populate the applier field to get names
-          select: 'name'     // Only select the name field
+          select: 'name linkedinUrl _id'     // Only select the name field
         }
       });
 
     // Fetch all applications from the apply model
-    const applications = await apply.find().populate('applier', 'name');
+    const applications = await apply.find().populate('applier', 'name linkedinUrl _id');
 
     // Iterate through each project and match applications based on the title
     const formattedProjects = projects.map(project => {
@@ -32,7 +32,11 @@ export const getProjects = async (req, res) => {
         githubUrl: project.githubUrl,
         description: project.description,
         status: project.status === false ? "Ongoing" : "Completed",
-        applicants: user == project.lead._id ? matchedApplications.map(app => app.applier?.name) : []// Extract applicant names
+        applicants: user == project.lead._id ? matchedApplications.map(app => ({
+          name: app.applier.name,
+          linkedinUrl: app.applier?.linkedinUrl,
+          _id: app.applier._id
+        })) : []// Extract applicant names
       };
     });
 

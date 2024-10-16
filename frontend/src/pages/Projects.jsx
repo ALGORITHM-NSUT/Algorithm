@@ -9,27 +9,26 @@ import ProjectCard from '../components/ProjectCard';
 
 const Projects = () => {
   const [projects, setProjects] = useState({ onGoing: [], completed: [] });
+  const fetchProjects = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/projects', {
+        method: "GET",
+        credentials: "include"
+      }
+      );
+      const data = await response.json();
+
+      console.log("Fetched data:", data);
+      const onGoing = data.filter(project => project.status);
+      const completed = data.filter(project => !project.status);
+      setProjects({ onGoing, completed });
+
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/projects', {
-          method: "GET",
-          credentials: "include"
-        }
-        );
-        const data = await response.json();
-
-        console.log("Fetched data:", data);
-        const onGoing = data.filter(project => project.status);
-        const completed = data.filter(project => !project.status);
-        setProjects({ onGoing, completed });
-
-      } catch (error) {
-        console.error('Error fetching projects:', error);
-      }
-    };
-
     fetchProjects();
   }, []);
 
@@ -46,7 +45,8 @@ const Projects = () => {
               <ProjectCard
                 key={index}
                 project={project}
-                isOngoing={true} // Ongoing projects have the join button
+                isOngoing={true}
+                refreshProjects={fetchProjects} // Ongoing projects have the join button
               />
             ))}
           </div>
@@ -55,7 +55,7 @@ const Projects = () => {
           <h2 className="text-5xl md:text-[100px] font-bold text-center mt-10 mb-14">Past Projects</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 px-4 md:px-10">
             {projects.completed.map((project, index) => (
-              <ProjectCard key={index} project={project} isOngoing={false} />
+              <ProjectCard key={index} project={project} isOngoing={false} refreshProjects={fetchProjects} />
             ))}
           </div>
         </div>
