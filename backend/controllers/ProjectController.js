@@ -3,9 +3,9 @@ import apply from "../models/joinProject.js"; // Make sure you have the right pa
 
 export const getProjects = async (req, res) => {
   try {
-    const user = req.user.name;
+    const user = req.user._id;
     const projects = await Project.find()
-      .populate('lead', 'name linkedinUrl')
+      .populate('lead', 'name')
       .populate('contributors', 'name linkedinUrl')
       .populate({
         path: 'applications',
@@ -32,7 +32,7 @@ export const getProjects = async (req, res) => {
         githubUrl: project.githubUrl,
         description: project.description,
         status: project.status === false ? "Ongoing" : "Completed",
-        applicants: user == project.lead.name ? matchedApplications.map(app => app.applier?.name) : []// Extract applicant names
+        applicants: user == project.lead._id ? matchedApplications.map(app => app.applier?.name) : []// Extract applicant names
       };
     });
 

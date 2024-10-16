@@ -9,7 +9,6 @@ import ProjectCard from '../components/ProjectCard';
 
 const Projects = () => {
   const [projects, setProjects] = useState({ onGoing: [], completed: [] });
-  // console.log(projects?.applicants?.applicants);
 
   useEffect(() => {
     const fetchProjects = async () => {

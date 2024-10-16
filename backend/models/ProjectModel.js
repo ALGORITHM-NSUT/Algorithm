@@ -5,7 +5,7 @@ import apply from './joinProject.js';
 
 const projectSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  lead: { type: mongoose.Schema.Types.ObjectId, ref: CoreMember, required: true },
+  lead: { type: mongoose.Schema.Types.ObjectId, ref: FormData, required: true },
   contributors: [{ type: mongoose.Schema.Types.ObjectId, ref: FormData }],
   githubUrl: { type: String, required: true },
   description: { type: String, required: true },
