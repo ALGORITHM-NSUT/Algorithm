@@ -13,9 +13,10 @@ const formDataSchema = new mongoose.Schema({
     password: { type: String, required: true }, // Store hashed password
 }, { timestamps: true }); // Adds createdAt and updatedAt fields
 
+formDataSchema.index({ email: 1 }, { unique: true });
 
-formDataSchema.pre("save", async function (next){
-    if(!this.isModified("password")){
+formDataSchema.pre("save", async function (next) {
+    if (!this.isModified("password")) {
         return next()
     }
     const hashPassword = await bcrypt.hash(this.password, 10)
@@ -40,7 +41,7 @@ formDataSchema.methods.getJWTToken = function () {
 };
 
 
-formDataSchema.methods.comparePassword = async function (password){
+formDataSchema.methods.comparePassword = async function (password) {
     return await bcrypt.compare(password, this.password);
 }
 

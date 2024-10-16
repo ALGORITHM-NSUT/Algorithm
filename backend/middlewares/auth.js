@@ -2,20 +2,19 @@ import jwt from "jsonwebtoken"
 import FormData from "../models/formDataModel.js";
 
 
-export const isAuthenticated = async (req,res,next)=>{
-    const {token} = req.cookies;
+export const isAuthenticated = async (req, res, next) => {
+    const { token } = req.cookies;
 
-    if(!token){
-        return res.json({
-            message: "Not logged in"
-        })
+    if (!token) {
+        req.user = {
+            _id: ''
+        }
+        next();
     }
+    else {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
-
-    console.log(decoded)
-
-    req.user = decoded._id
-
-    next()
+        req.user = decoded;
+        next()
+    }
 }

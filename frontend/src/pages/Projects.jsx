@@ -10,13 +10,17 @@ import ProjectCard from '../components/ProjectCard';
 const Projects = () => {
   const [projects, setProjects] = useState({ onGoing: [], completed: [] });
 
-
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch('http://localhost:5000/projects');
+        const response = await fetch('http://localhost:5000/projects', {
+          method: "GET",
+          credentials: "include"
+        }
+        );
         const data = await response.json();
 
+        console.log("Fetched data:", data);
         const onGoing = data.filter(project => project.status);
         const completed = data.filter(project => !project.status);
         setProjects({ onGoing, completed });
