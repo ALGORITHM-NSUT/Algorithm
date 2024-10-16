@@ -1,18 +1,18 @@
-
-export const sendToken = (res, user, message, statusCode = 200)=>{
-
+export const sendToken = (res, user, message, statusCode = 200) => {
+    // Get the token that now includes userProfile
     const token = user.getJWTToken();
 
     const options = {
-        expires: new Date(Date.now() + 15*24*60*60*1000),
+        expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // 15 days
         httpOnly: true,
-        secure: true,
-        sameSite : "none",
-    }
+        secure: true, 
+        sameSite: "none",
+    };
 
-    res.status(statusCode).cookie("token", token,options ).json({
+    // Send the token and message in the response
+    res.status(statusCode).cookie("token", token, options).json({
         success: true,
         message,
-        user
-    })
-}
+        token,  // The token contains the user profile now
+    });
+};
