@@ -32,11 +32,11 @@ const ThreeScene = () => {
     //  This geometery  can be used  to   later in the  project so dont delete or  alter this
 
     // Torus geometry
-    const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
-    const material = new THREE.MeshStandardMaterial({ color: 0x004680 });
-    const torus = new THREE.Mesh(geometry, material);
-    torusRef.current = torus;
-    scene.add(torus);
+    // const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
+    // const material = new THREE.MeshStandardMaterial({ color: 0x004680 });
+    // const torus = new THREE.Mesh(geometry, material);
+    // torusRef.current = torus;
+    // scene.add(torus);
 
     // Lights
     const pointLight = new THREE.PointLight(0xffffff);
@@ -54,7 +54,7 @@ const ThreeScene = () => {
       scene.add(star);
     }
 
-    Array(2000).fill().forEach(addStar);
+    Array(3800).fill().forEach(addStar);
 
     // Background
     const spaceTexture = new THREE.TextureLoader().load('./space.jpg');

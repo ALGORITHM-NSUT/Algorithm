@@ -19,7 +19,7 @@
     "@mui/icons-material": "^6.1.4",
     "@mui/material": "^6.1.4",
     "axios": "^1.7.7",
-    "firebase": "^10.14.0",
+   
     "framer-motion": "^11.11.9",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.4",
