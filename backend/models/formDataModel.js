@@ -10,6 +10,9 @@ const formDataSchema = new mongoose.Schema({
     githubProfile: { type: String }, // Optional field
     leetcodeProfile: { type: String }, // Optional field
     codeforcesProfile: { type: String }, // Optional field
+    linkedinUrl: { type: String },
+    rollNumber: { type: String },
+    year: { type: Number },
     password: { type: String, required: true }, // Store hashed password
 }, { timestamps: true }); // Adds createdAt and updatedAt fields
 

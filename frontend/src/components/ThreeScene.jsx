@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import './stylethree.css'; 
+import './stylethree.css';
 
 const ThreeScene = () => {
   const mountRef = useRef(null);
@@ -12,9 +12,9 @@ const ThreeScene = () => {
     // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
-      75, 
-      window.innerWidth / window.innerHeight, 
-      0.1, 
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
       1000
     );
     camera.position.setZ(30);
@@ -28,33 +28,46 @@ const ThreeScene = () => {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    // Warning !!
-    //  This geometery  can be used  to   later in the  project so dont delete or  alter this
+    // Gradient shader material for the torus
+    const gradientMaterial = new THREE.ShaderMaterial({
+      vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        varying vec2 vUv;
+        void main() {
+          vec3 color1 = vec3(0.8, 0.4, 0.7); // Start color (blue)
+          vec3 color2 = vec3(50.0 / 255.0, 11.0 / 255.0, 189.0 / 255.0); // End color (orange)
+          vec3 color = mix(color1, color2, vUv.y); // Interpolate colors based on vertical position
+          gl_FragColor = vec4(color, 1.0);
+        }
+      `
+      // fragmentShader: `
+      //   varying vec2 vUv;
+      //   void main() {
+      //     vec3 color1 = vec3(0.0, 0.5, 1.0); // Start color (blue)
+      //     vec3 color2 = vec3(1.0, 0.5, 0.0); // End color (orange)
+      //     vec3 color = mix(color1, color2, vUv.y); // Interpolate colors based on vertical position
+      //     gl_FragColor = vec4(color, 1.0);
+      //   }
+      // `,
+    });
 
-    // Torus geometry
-    // const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
-    // const material = new THREE.MeshStandardMaterial({ color: 0x004680 });
-    // const torus = new THREE.Mesh(geometry, material);
-    // torusRef.current = torus;
-    // scene.add(torus);
+    // Torus geometry with gradient material
+    const geometry = new THREE.TorusGeometry(20, 9, 20, 100);
+    const torus = new THREE.Mesh(geometry, gradientMaterial);
+    torusRef.current = torus;
+    scene.add(torus);
 
     // Lights
     const pointLight = new THREE.PointLight(0xffffff);
     pointLight.position.set(5, 5, 5);
     const ambientLight = new THREE.AmbientLight(0xffffff);
     scene.add(pointLight, ambientLight);
-
-    // Adding star geometries to the background
-    function addStar() {
-      const starGeometry = new THREE.SphereGeometry(0.25, 24, 24);
-      const starMaterial = new THREE.MeshStandardMaterial({ color: 0x191A30 });
-      const star = new THREE.Mesh(starGeometry, starMaterial);
-      const [x, y, z] = Array(20).fill().map(() => THREE.MathUtils.randFloatSpread(100));
-      star.position.set(x, y, z);
-      scene.add(star);
-    }
-
-    Array(3800).fill().forEach(addStar);
 
     // Background
     const spaceTexture = new THREE.TextureLoader().load('./space.jpg');
@@ -63,7 +76,7 @@ const ThreeScene = () => {
     // Moon geometry without texture
     const moon = new THREE.Mesh(
       new THREE.SphereGeometry(3, 32, 32),
-      new THREE.MeshStandardMaterial({ color: 0xaaaaba }) // Simple material instead of textured
+      new THREE.MeshStandardMaterial({ color: 0xa56aba }) // Simple material instead of textured
     );
     moonRef.current = moon;
     scene.add(moon);
@@ -72,15 +85,15 @@ const ThreeScene = () => {
 
     // Slower random movement values
     const torusRotationSpeed = {
-      x: Math.random() * 0.01,  
-      y: Math.random() * 0.01,  
-      z: Math.random() * 0.01,  
+      x: Math.random() * 0.01,
+      y: Math.random() * 0.01,
+      z: Math.random() * 0.01,
     };
-    
+
     const moonRotationSpeed = {
-      x: Math.random() * 0.001,  
-      y: Math.random() * 0.001,  
-      z: Math.random() * 0.001, 
+      x: Math.random() * 0.001,
+      y: Math.random() * 0.001,
+      z: Math.random() * 0.001,
     };
 
     // Scroll Animation
@@ -125,9 +138,9 @@ const ThreeScene = () => {
 
     // Cleanup on unmount
     return () => {
-      document.body.onscroll = null; 
-      window.removeEventListener('resize', handleResize); 
-      renderer.dispose(); 
+      document.body.onscroll = null;
+      window.removeEventListener('resize', handleResize);
+      renderer.dispose();
     };
   }, []);
 
@@ -142,6 +155,7 @@ const ThreeScene = () => {
         width: '100%',
         height: '100%',
         zIndex: -1,
+        backgroundColor: '#191E2E',
       }}
     />
   );

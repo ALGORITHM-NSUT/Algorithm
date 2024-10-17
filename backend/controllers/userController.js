@@ -12,8 +12,21 @@ export const register = async (req, res, next) => {
             leetcodeProfile,
             codeforcesProfile,
             password,
+            linkedinUrl,
+            rollNumber,
+            year
         } = req.body;
-
+        console.log(name,
+            email,
+            personalEmail,
+            phoneNumber,
+            githubProfile,
+            leetcodeProfile,
+            codeforcesProfile,
+            password,
+            linkedinUrl,
+            rollNumber,
+            year);
         // Check if all required fields are provided
         if (
             !name ||
@@ -43,6 +56,9 @@ export const register = async (req, res, next) => {
             githubProfile,
             leetcodeProfile,
             codeforcesProfile,
+            linkedinUrl,
+            rollNumber,
+            year,
             password,
         });
 

@@ -7,6 +7,7 @@ export default function HeroSection() {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const controls = useAnimation();
+  const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('userProfile')));
 
   useEffect(() => {
     setIsVisible(true);
@@ -17,10 +18,6 @@ export default function HeroSection() {
     });
   }, [controls]);
 
-  const handleJoinUsClick = () => {
-    navigate("/join-us");
-  };
-
   return (
     <div className="relative flex flex-col items-center justify-between min-h-screen text-white py-10 w-full bg-[#191e2e] overflow-hidden">
       <video
@@ -28,7 +25,7 @@ export default function HeroSection() {
         loop
         muted
         poster="src/assets/vid_ss.png"
-        preload = "none"
+        preload="none"
         className="absolute top-0 left-0 w-full h-full object-cover"
       >
         <source src="src/assets/vid.mp4" type="video/mp4" />
@@ -49,8 +46,8 @@ export default function HeroSection() {
         </div>
 
         <div className="text-gray-300 font-bold text-center mb-4">
-        <p className="text-xl lg:text-5xl">Code . Set . Go</p>
-      </div>
+          <p className="text-xl lg:text-5xl">Code . Set . Go</p>
+        </div>
 
         <p
           className="text-lg sm:text-xl max-w-3xl text-gray-400 text-center mb-8 px-4 font-sans"
@@ -65,9 +62,8 @@ export default function HeroSection() {
         className="relative z-10 mb-20"
       >
         <Link
-          to="/join-us"
+          to={user ? '/userProfile' : '/join-us'}
           className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white bg-[#4c56d7] rounded-full overflow-hidden transition-all duration-300 ease-in-out hover:bg-[#3a42a5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4c56d7]"
-          onClick={handleJoinUsClick}
         >
           <span className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#6a11cb] to-[#2575fc] opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></span>
           <span className="relative z-10 flex items-center">
@@ -87,6 +83,6 @@ export default function HeroSection() {
           </span>
         </Link>
       </motion.div>
-    </div>
-  );
+    </div>
+  );
 }
