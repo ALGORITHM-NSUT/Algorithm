@@ -2,20 +2,17 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProjectCard from '../components/ProjectCard';
-
-
-
-
+import AddProject from '../components/AddProject'; // Import AddProject component
 
 const Projects = () => {
   const [projects, setProjects] = useState({ onGoing: [], completed: [] });
+  const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('userProfile')));
   const fetchProjects = async () => {
     try {
       const response = await fetch('http://localhost:5000/projects', {
         method: "GET",
         credentials: "include"
-      }
-      );
+      });
       const data = await response.json();
 
       console.log("Fetched data:", data);
@@ -32,7 +29,6 @@ const Projects = () => {
     fetchProjects();
   }, []);
 
-
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
@@ -46,9 +42,10 @@ const Projects = () => {
                 key={index}
                 project={project}
                 isOngoing={true}
-                refreshProjects={fetchProjects} // Ongoing projects have the join button
+                refreshProjects={fetchProjects}
               />
             ))}
+            {user?.admin && <AddProject refreshProjects={fetchProjects} />}
           </div>
         </div>
         <div className="w-full">
@@ -62,8 +59,6 @@ const Projects = () => {
       </div>
 
       <Footer />
-
-
     </div>
   );
 };

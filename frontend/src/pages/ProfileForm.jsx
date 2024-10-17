@@ -27,18 +27,41 @@ const theme = createTheme({
     primary: { main: "#3b3b98" },
     secondary: { main: "#ff4081" },
     background: { default: "#f5f5f5", paper: "#ffffff" },
-    text: { primary: "#333333", secondary: "#555555" },
+    text: { primary: "#000000", secondary: "#000000" },
   },
   typography: {
     fontFamily: "'Poppins', sans-serif",
-    h4: { fontWeight: 600 },
+    h1: { fontWeight: 100 },
   },
   components: {
     MuiButton: {
       styleOverrides: { root: { textTransform: "none", borderRadius: "12px" } },
     },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#000000", // Set border color to black on focus
+          },
+          "&.Mui-focused": {
+            color: "#000000", // Set input text color to black on focus
+          },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          "&.Mui-focused": {
+            color: "#000000", // Set label text color to black on focus
+          },
+        },
+      },
+    },
   },
 });
+
+
 
 // FormField Component
 const FormField = ({ label, name, type, value, onChange, required = false }) => (
@@ -116,18 +139,18 @@ const ProfileForm = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="flex flex-col min-h-screen relative overflow-hidden">
+      <div className="flex flex-col min-h-screenoverflow-hidden ">
         <Navbar />
         {/*  Three.js Scene as background */}
-        <ThreeScene style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100vh", zIndex: -1 }} />
-        <Container component="main" maxWidth="md" className="mt-2 mb-2 relative z-10">
+        <ThreeScene style={{ top: 0, left: 0, width: "100%", height: "100vh", zIndex: -1 }} />
+        <Container component="main" maxWidth="md" className="mt-2 mb-2 rounded-2xl relative z-10 bg-gray-500/60 backdrop-blur-2xl">
 
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
           >
-            <Paper elevation={3} className="p-6 rounded-lg bg-white">
+            <div elevation={3} className="p-6 rounded-lg ">
               <div className="mt-0 mb-1 flex justify-center items-center" >
                 <motion.div
                   initial={{ opacity: 0, y: -30 }}
@@ -172,7 +195,7 @@ const ProfileForm = () => {
                   </Grid>
                 </Grid>
               </form>
-            </Paper>
+            </div>
           </motion.div>
         </Container>
         <Footer />

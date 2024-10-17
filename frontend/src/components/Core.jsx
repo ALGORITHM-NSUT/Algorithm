@@ -30,7 +30,7 @@ const Core = () => {
             href={member.linkedinUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex flex-col items-center bg-[#292f45] p-6 rounded-lg transition-transform duration-200 hover:scale-105 aspect-w-1 aspect-h-1"
+            className="flex flex-col items-center bg-[#292f45]/30 p-6 rounded-lg transition-transform duration-200 hover:scale-105 aspect-w-1 aspect-h-1 backdrop-blur-xl"
           >
             <img
               src={"https://res.cloudinary.com/dzmckbejo/image/upload/" + member.imageUrl}
@@ -53,7 +53,7 @@ const Core = () => {
             href={member.linkedinUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex flex-col items-center bg-[#292f45] p-6 rounded-lg transition-transform duration-200 hover:scale-105 aspect-w-1 aspect-h-1"
+            className="flex flex-col items-center bg-[#292f45]/30 p-6 rounded-lg transition-transform duration-200 hover:scale-105 aspect-w-1 aspect-h-1 backdrop-blur-xl"
           >
             <img
               src={"https://res.cloudinary.com/dzmckbejo/image/upload/" + member.imageUrl}

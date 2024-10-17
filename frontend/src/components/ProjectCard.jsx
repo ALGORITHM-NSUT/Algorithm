@@ -116,7 +116,7 @@ const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }
   };
   return (
     <div
-      className="bg-gray-800 p-4 h-[680px] rounded-lg shadow-lg cursor-pointer transition-all duration-300"
+      className="bg-gray-800/30 p-4 h-[680px] rounded-lg shadow-lg cursor-pointer transition-all duration-300 backdrop-blur-xl"
       onClick={toggleExpand} // Clicking anywhere on the card toggles details
     >
 
@@ -135,11 +135,11 @@ const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }
 
       {/* Card Details: Visibility controlled without changing card height */}
       <div
-        className={` mb-11 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible'
+        className={` mb-3 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible'
           }`}
       >
         {/* Project Lead Section */}
-        <div className="mb-11">
+        <div className="mb-8">
           <h4 className="font-semibold mb-5">Project Lead:</h4>
           <div className="bg-gray-700 p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
             <p className="font-semibold">{project.lead.name}</p>
@@ -156,7 +156,7 @@ const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }
 
         {/* Contributors Section */}
         <p className="mb-5">Contributors:</p>
-        <div className="max-h-[180px] overflow-y-auto grid grid-cols-2 gap-2">
+        <div className="max-h-[140px] overflow-y-auto grid grid-cols-2 gap-2">
           {project.contributors.map((contributor, index) => (
             <div
               key={index}
@@ -226,7 +226,7 @@ const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }
 
         )}
 
-        <div className="max-h-[180px] overflow-y-auto grid grid-cols-1 gap-2 mt-5">
+        <div className="max-h-[75px] overflow-y-auto grid grid-cols-1 gap-2 mt-5">
           {project.applicants.map((applicant, index) => (
             <div
               key={index}
