@@ -16,7 +16,7 @@ const DeleteRequestModal = ({ isOpen, project, onClose, onDelete }) => {
       <div className="bg-white rounded-lg p-6 w-[400px] shadow-lg">
         <h2 className="text-2xl text-black font-bold mb-4">Are you sure you want to request to delete: <br /> {project.title}</h2>
         <button
-          className="py-2 px-4 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200"
+          className="py-2 px-4 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 mr-3"
           onClick={(e) => {// Prevent button click from toggling card
             handleSend(e);
           }}
