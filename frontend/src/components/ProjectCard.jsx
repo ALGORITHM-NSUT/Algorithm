@@ -152,7 +152,7 @@ const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }
       className="bg-gray-800/30 p-4 h-[680px] rounded-lg shadow-lg cursor-pointer transition-all duration-300 backdrop-blur-xl"
       onClick={toggleExpand} // Clicking anywhere on the card toggles details
     >
-      {project.lead._id == user?._id && (<button
+      {user && project.lead._id == user._id && (<button
         className='block bg-red-700 rounded-md top-0 left-0 w-fit'
         onClick={(e) => {
           e.stopPropagation();
@@ -235,7 +235,7 @@ const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }
         {isOngoing && (
           <React.Fragment>
             {user ? (
-              application && project.lead._id != user?._id ? (
+              application && project.lead._id != user._id ? (
                 <button
                   className="mt-8 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
                   onClick={(e) => {
