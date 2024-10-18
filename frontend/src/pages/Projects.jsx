@@ -45,7 +45,7 @@ const Projects = () => {
                 refreshProjects={fetchProjects}
               />
             ))}
-            {user?.admin && <AddProject refreshProjects={fetchProjects} />}
+            {user && user.admin && <AddProject refreshProjects={fetchProjects} edit={false} showadd={true} />}
           </div>
         </div>
         <div className="w-full">

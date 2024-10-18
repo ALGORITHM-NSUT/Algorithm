@@ -9,6 +9,9 @@ export const addProject = async (req, res) => {
     if (!admin) {
       return res.status(401).json({ message: 'unauthorized' });
     }
+    if (!title || !description) {
+      return res.status(406).json({ message: 'check title and description' });
+    }
     // Find the lead by email
     const leadUser = await formDataSchema.findOne({ email: lead });
     if (!leadUser) {
