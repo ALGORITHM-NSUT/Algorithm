@@ -30,6 +30,9 @@ const ThreeScene = () => {
 
     // Gradient shader material for the torus
     const gradientMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        opacity: { value: 0.4 } // Default opacity
+      },
       vertexShader: `
         varying vec2 vUv;
         void main() {
@@ -40,21 +43,12 @@ const ThreeScene = () => {
       fragmentShader: `
         varying vec2 vUv;
         void main() {
-          vec3 color1 = vec3(0.8, 0.4, 0.7); // Start color (blue)
-          vec3 color2 = vec3(50.0 / 255.0, 11.0 / 255.0, 189.0 / 255.0); // End color (orange)
+          vec3 color1 = vec3(102.0 / 255.0, 11.0 / 255.0, 189.0 / 255.0); // Start color (blue)
+          vec3 color2 = vec3(54.0 / 255.0, 64.0 / 255.0, 114.0 / 255.0); // End color
           vec3 color = mix(color1, color2, vUv.y); // Interpolate colors based on vertical position
           gl_FragColor = vec4(color, 1.0);
         }
       `
-      // fragmentShader: `
-      //   varying vec2 vUv;
-      //   void main() {
-      //     vec3 color1 = vec3(0.0, 0.5, 1.0); // Start color (blue)
-      //     vec3 color2 = vec3(1.0, 0.5, 0.0); // End color (orange)
-      //     vec3 color = mix(color1, color2, vUv.y); // Interpolate colors based on vertical position
-      //     gl_FragColor = vec4(color, 1.0);
-      //   }
-      // `,
     });
 
     // Torus geometry with gradient material
