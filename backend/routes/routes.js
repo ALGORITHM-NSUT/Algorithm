@@ -9,6 +9,7 @@ import { checkapplication } from '../controllers/checkApplication.js';
 import { isAuthenticated } from '../middlewares/auth.js';
 import { handleApplication } from '../controllers/handleApplication.js';
 import { addProject } from '../controllers/addProject.js'
+import { deleteProject } from '../controllers/deleteProject.js';
 
 const router = express.Router();
 
@@ -24,4 +25,5 @@ router.route("/application").post(isAuthenticated, submitapplication);
 router.route("/checkapplication").post(isAuthenticated, checkapplication);
 router.post("/applicationstate", handleApplication);
 router.route("/addProject").post(isAuthenticated, addProject);
+router.route("/deleteProject").post(isAuthenticated, deleteProject);
 export default router;
