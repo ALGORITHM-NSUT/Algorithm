@@ -5,10 +5,10 @@ const JoinRequestModal = ({ isOpen, project, onClose, onSend }) => {
 
   if (!isOpen) return null; // If modal is not open, don't render anything
 
-  const handleSend = () => {
+  const handleSend = (e) => {
     onSend(message); // Call the parent's onSend function with the message
     setMessage(''); // Reset message
-    onClose(); // Close the modal
+    onClose(e); // Close the modal
   };
 
   return (
@@ -17,8 +17,8 @@ const JoinRequestModal = ({ isOpen, project, onClose, onSend }) => {
         <h2 className="text-2xl text-black font-bold mb-4">Are you sure you want to request to Join: <br /> {project.title}</h2>
         <button
           className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
-          onClick={() => {// Prevent button click from toggling card
-            handleSend();
+          onClick={(e) => {// Prevent button click from toggling card
+            handleSend(e);
           }}
         >
           Send Request

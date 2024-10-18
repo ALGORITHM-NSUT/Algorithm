@@ -138,8 +138,7 @@ const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }
   // Close modal
 
   // Handle sending the join request
-  const handleSendRequest = (e) => {
-    e.stopPropagation();
+  const handleSendRequest = () => {
     if (postData()) {
       setApplication(false);
     };
