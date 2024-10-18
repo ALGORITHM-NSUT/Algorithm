@@ -98,7 +98,7 @@ const ProfileForm = () => {
       >
         <Navbar />
         <Container component="main" maxWidth="sm" sx={{ mt: 8, mb: 8 }}>
-         
+
           <motion.div
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -136,7 +136,7 @@ const ProfileForm = () => {
                   color: theme.palette.secondary.main, // Pink accent color
                 }}
               >
-                
+
               </Typography>
               {successMessage && (
                 <motion.div
@@ -297,3 +297,150 @@ const ProfileForm = () => {
 };
 
 export default ProfileForm;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import React, { useState } from 'react';
+
+const AddProject = ({ onAddProject }) => {
+  const [projectData, setProjectData] = useState({
+    title: '',
+    description: '',
+    lead: '',
+    githubUrl: '',
+    linkedinUrl: '',
+    contributors: ['']
+  });
+
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Prevent default form submission
+    console.log(projectData); // Pass the project data to the parent component
+    // Close the form
+  };
+
+  const handleAddContributor = () => {
+    setProjectData((prevData) => ({
+      ...prevData,
+      contributors: [...prevData.contributors, '']
+    }));
+  };
+
+  const handleContributorChange = (index, value) => {
+    const updatedContributors = [...projectData.contributors];
+    updatedContributors[index] = value;
+    setProjectData((prevData) => ({
+      ...prevData,
+      contributors: updatedContributors
+    }));
+  };
+
+  const handleRemoveContributor = (index) => {
+    const updatedContributors = [...projectData.contributors];
+    updatedContributors.splice(index, 1);
+    setProjectData((prevData) => ({
+      ...prevData,
+      contributors: updatedContributors
+    }));
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="bg-gray-800 p-4 rounded-lg shadow-lg">
+      <div className="mb-4">
+        <label className="block text-gray-300">Title:</label>
+        <input
+          type="text"
+          value={projectData.title}
+          onChange={(e) => setProjectData({ ...projectData, title: e.target.value })}
+          className="w-full p-2 rounded text-black"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-300">Description:</label>
+        <textarea
+          value={projectData.description}
+          onChange={(e) => setProjectData({ ...projectData, description: e.target.value })}
+          className="w-full p-2 rounded text-black"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-300">Lead:</label>
+        <input
+          type="text"
+          value={projectData.lead}
+          onChange={(e) => setProjectData({ ...projectData, lead: e.target.value })}
+          className="w-full p-2 rounded text-black"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-300">GitHub URL:</label>
+        <input
+          type="text"
+          value={projectData.githubUrl}
+          onChange={(e) => setProjectData({ ...projectData, githubUrl: e.target.value })}
+          className="w-full p-2 rounded text-black"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-300">LinkedIn URL:</label>
+        <input
+          type="text"
+          value={projectData.linkedinUrl}
+          onChange={(e) => setProjectData({ ...projectData, linkedinUrl: e.target.value })}
+          className="w-full p-2 rounded text-black"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-300">Contributors:</label>
+        {projectData.contributors.map((contributor, index) => (
+          <div key={index} className="flex items-center mb-2">
+            <input
+              type="text"
+              value={contributor}
+              onChange={(e) => handleContributorChange(index, e.target.value)}
+              className="w-full p-2 rounded text-black"
+            />
+            <button
+              type="button"
+              onClick={() => handleRemoveContributor(index)}
+              className="ml-2 text-red-500"
+            >
+              Remove
+            </button>
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={handleAddContributor}
+          className="text-blue-500"
+        >
+          Add Contributor
+        </button>
+      </div>
+      <div className="flex justify-end">
+        <button type="button" className="text-gray-500 mr-4">
+          Cancel
+        </button>
+        <button type="submit" className="bg-green-500 text-white p-2 rounded-lg">
+          Add Project
+        </button>
+      </div>
+    </form>
+  );
+};
+
+export default AddProject;

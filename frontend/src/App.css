@@ -11,9 +11,11 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -22,6 +24,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -45,13 +48,41 @@
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
 }
+
+/* Customize scrollbar using Tailwind */
+.scrollbar-blue {
+  scrollbar-color: blue lightgray;
+  /* Thumb and track colors */
+  scrollbar-width: thin;
+}
+
+.scrollbar-blue::-webkit-scrollbar {
+  width: 12px;
+  /* Adjust the width of the scrollbar */
+}
+
+.scrollbar-blue::-webkit-scrollbar-track {
+  background: #E5E7EB;
+  /* Track color */
+}
+
+.scrollbar-blue::-webkit-scrollbar-thumb {
+  background-color: #1E3A8A;
+  /* Scrollbar thumb color */
+  border-radius: 6px;
+  border: 3px solid #E5E7EB;
+  /* Space around the thumb */
+}
+
 
 .animated-background {
   position: fixed;
@@ -59,7 +90,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1; /* Ensure the background is behind other elements */
+  z-index: -1;
+  /* Ensure the background is behind other elements */
   background: linear-gradient(270deg, #1e3c72, #2a69ac, #1e3c72);
   background-size: 300% 300%;
   animation: gradientAnimation 10s ease infinite;

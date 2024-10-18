@@ -17,7 +17,8 @@ export const sendToken = (res, user, message, statusCode = 200) => {
         phonenumber: user.phonenumber,
         githubProfile: user.githubProfile,
         leetcodeProfile: user.leetcodeProfile,
-        codeforcesProfile: user.codeforcesProfile
+        codeforcesProfile: user.codeforcesProfile,
+        admin: user.admin
         // Add any other fields you want to send, like profile picture, role, etc.
     };
 

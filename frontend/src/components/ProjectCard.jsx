@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import JoinRequestModal from './JoinRequestModal';
+import DeleteRequestModal from './deleteProjectModal';
 import { useNavigate } from 'react-router-dom';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }) {
-  const [showModal, setShowModal] = useState(false);
+  const [showappModal, setShowappModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('userProfile')));
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('userProfile')));
   const [application, setApplication] = useState(false);
   const navigate = useNavigate();
 
@@ -60,7 +63,7 @@ const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }
     };
 
     fetchapplication();
-  }, [user, application]);
+  }, [user, application, project]);
 
 
   const handleApplication = async (id, state) => {
@@ -97,29 +100,66 @@ const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }
     setIsExpanded(!isExpanded);
   };
 
+  const handleCloseModal = (e) => {
+    e.stopPropagation();
+    setShowappModal(false);
+    setDeleteModal(false);
+  };
+
+  const handleDeleteRequest = () => {
+    setDeleteModal(true);
+  }
+
+  const handleDeletesend = async () => {
+    try {
+      const applicants = await fetch('http://localhost:5000/deleteProject', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          title: project.title,
+        })
+      })
+      refreshProjects();
+      const data = await applicants.json();
+      console.log(data);
+    }
+    catch (error) {
+      console.log('error checking open applications', error);
+    }
+  }
   // Open modal for join request
   const handleJoinRequest = () => {
-    setShowModal(true);
+    setShowappModal(true);
   };
 
   // Close modal
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
 
   // Handle sending the join request
   const handleSendRequest = () => {
     if (postData()) {
       setApplication(false);
-    };
-    setShowModal(false); // Close modal after sending the request
+    }
+    else {
+      refreshProjects();
+    }
+    setShowappModal(false); // Close modal after sending the request
   };
   return (
     <div
-      className="bg-gray-800 p-4 h-[680px] rounded-lg shadow-lg cursor-pointer transition-all duration-300"
+      className="bg-gray-800/30 p-4 h-[680px] rounded-lg shadow-lg cursor-pointer transition-all duration-300 backdrop-blur-xl"
       onClick={toggleExpand} // Clicking anywhere on the card toggles details
     >
-
+      {user && project.lead._id == user._id && (<button
+        className='block bg-red-700 rounded-md top-0 left-0 w-fit'
+        onClick={(e) => {
+          e.stopPropagation();
+          handleDeleteRequest();
+        }}>
+        <DeleteIcon fontSize='large' />
+      </button>)}
       <div className='flex flex-col justify-center items-center mt-14'>
         {!isExpanded && (
           <h3 className="text-5xl font-bold mb-2 md:text-3xl md:text-wrap">{project.title}</h3>
@@ -135,11 +175,13 @@ const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }
 
       {/* Card Details: Visibility controlled without changing card height */}
       <div
-        className={` mb-11 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible'
+        className={` mb-3 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible'
           }`}
       >
         {/* Project Lead Section */}
-        <div className="mb-11">
+
+        <div className="mb-8">
+
           <h4 className="font-semibold mb-5">Project Lead:</h4>
           <div className="bg-gray-700 p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
             <p className="font-semibold">{project.lead.name}</p>
@@ -156,7 +198,7 @@ const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }
 
         {/* Contributors Section */}
         <p className="mb-5">Contributors:</p>
-        <div className="max-h-[180px] overflow-y-auto grid grid-cols-2 gap-2">
+        <div className="max-h-[140px] overflow-y-auto grid grid-cols-2 gap-2">
           {project.contributors.map((contributor, index) => (
             <div
               key={index}
@@ -226,7 +268,7 @@ const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }
 
         )}
 
-        <div className="max-h-[180px] overflow-y-auto grid grid-cols-1 gap-2 mt-5">
+        <div className="max-h-[75px] overflow-y-auto grid grid-cols-1 gap-2 mt-5">
           {project.applicants.map((applicant, index) => (
             <div
               key={index}
@@ -270,11 +312,19 @@ const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }
 
 
       </div>
+      {deleteModal && (
+        <DeleteRequestModal
+          isOpen={deleteModal}
+          project={project}
+          onClose={handleCloseModal}
+          onDelete={handleDeletesend}
+        />
+      )}
 
       {/* Modal for sending join request */}
-      {showModal && (
+      {showappModal && (
         <JoinRequestModal
-          isOpen={showModal}
+          isOpen={showappModal}
           project={project}
           onClose={handleCloseModal}
           onSend={handleSendRequest}

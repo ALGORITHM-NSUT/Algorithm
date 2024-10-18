@@ -13,7 +13,8 @@ const formDataSchema = new mongoose.Schema({
     linkedinUrl: { type: String },
     rollNumber: { type: String },
     year: { type: Number },
-    password: { type: String, required: true }, // Store hashed password
+    password: { type: String, required: true },
+    admin: { type: Boolean } // Store hashed password
 }, { timestamps: true }); // Adds createdAt and updatedAt fields
 
 formDataSchema.index({ email: 1 }, { unique: true });
@@ -35,7 +36,8 @@ formDataSchema.methods.getJWTToken = function () {
         phoneNumber: this.phoneNumber,
         githubProfile: this.githubProfile,
         leetcodeProfile: this.leetcodeProfile,
-        codeforcesProfile: this.codeforcesProfile
+        codeforcesProfile: this.codeforcesProfile,
+        admin: this.admin
     };
 
     return jwt.sign(userProfile, process.env.JWT_SECRET, {

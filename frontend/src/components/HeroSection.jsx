@@ -7,7 +7,7 @@ export default function HeroSection() {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const controls = useAnimation();
-  const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('userProfile')));
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('userProfile')));
 
   useEffect(() => {
     setIsVisible(true);
