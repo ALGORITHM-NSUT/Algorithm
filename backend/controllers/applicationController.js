@@ -1,20 +1,20 @@
-import apply from "../models/joinProject.js";
+import application from "../models/joinProject.js";
 
 
 export const submitapplication = async (req, res) => {
-  const title = req.body.title;
-  const lead = req.body.lead;
+  const { title, lead } = req.body;
   const applier = req.user._id;
+  console
   try {
-    const appData = new apply({
+    const apply = new application({
       title,
       lead,
       applier
     });
 
-    await appData.save();
+    const savedapplication = await apply.save();
 
-    res.status(201).json({ message: 'Form data saved successfully', appData });
+    res.status(201).json({ message: 'Form data saved successfully', savedapplication });
   } catch (error) {
     res.status(500).json({ message: 'Error saving form data', error });
   }

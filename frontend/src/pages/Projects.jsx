@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProjectCard from '../components/ProjectCard';
-import AddProject from '../components/AddProject'; // Import AddProject component
+import AddProject from '../components/addProject'; // Import AddProject component
 
 const Projects = () => {
   const [projects, setProjects] = useState({ onGoing: [], completed: [] });
-  const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('userProfile')));
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('userProfile')));
   const fetchProjects = async () => {
     try {
       const response = await fetch('http://localhost:5000/projects', {

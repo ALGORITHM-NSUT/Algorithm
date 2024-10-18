@@ -10,6 +10,7 @@ export const checkapplication = async (req, res) => {
     const existingApp = await apply.findOne({ title, applier });
     const contributor = await FormData.findOne({ _id: applier });
     const existingContributor = await Project.findOne({
+      title: title,
       contributors: contributor._id
     }).populate({
       path: 'contributors',

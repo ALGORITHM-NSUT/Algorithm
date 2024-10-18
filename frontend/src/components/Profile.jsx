@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
-  const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('userProfile'))); // State to store user info
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('userProfile'))); // State to store user info
   const navigate = useNavigate();
 
   // Redirect to login page if user is not found after loading
@@ -24,7 +24,7 @@ const Profile = () => {
       });
 
       if (response.ok) {
-        sessionStorage.clear();
+        localStorage.clear();
         setUser(null);  // Clear user info after logout
         alert('Logged out successfully!');
         navigate('/');  // Redirect to the home page after logging out

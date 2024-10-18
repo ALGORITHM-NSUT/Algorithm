@@ -8,7 +8,7 @@ const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }
   const [showappModal, setShowappModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('userProfile')));
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('userProfile')));
   const [application, setApplication] = useState(false);
   const navigate = useNavigate();
 
@@ -63,7 +63,7 @@ const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }
     };
 
     fetchapplication();
-  }, [user, application]);
+  }, [user, application, project]);
 
 
   const handleApplication = async (id, state) => {
@@ -119,7 +119,7 @@ const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }
         },
         credentials: "include",
         body: JSON.stringify({
-          title: project.title
+          title: project.title,
         })
       })
       refreshProjects();
@@ -141,7 +141,10 @@ const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }
   const handleSendRequest = () => {
     if (postData()) {
       setApplication(false);
-    };
+    }
+    else {
+      refreshProjects();
+    }
     setShowappModal(false); // Close modal after sending the request
   };
   return (

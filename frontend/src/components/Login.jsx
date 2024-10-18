@@ -28,7 +28,7 @@ const Login = () => {
       if (response.ok) {
         // If login is successful, navigate to the desired page (e.g., user profile)
         alert('Login successful!');
-        sessionStorage.setItem('userProfile', JSON.stringify(data.user));
+        localStorage.setItem('userProfile', JSON.stringify(data.user));
         navigate('/userprofile');
       } else {
         // If there was an error, display the error message
