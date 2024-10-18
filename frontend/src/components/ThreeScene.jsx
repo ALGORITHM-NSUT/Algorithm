@@ -31,7 +31,7 @@ const ThreeScene = () => {
     // Gradient shader material for the torus
     const gradientMaterial = new THREE.ShaderMaterial({
       uniforms: {
-        opacity: { value: 0.4 } // Default opacity
+        opacity: { value: 1.0 } // Default opacity
       },
       vertexShader: `
         varying vec2 vUv;
@@ -43,8 +43,8 @@ const ThreeScene = () => {
       fragmentShader: `
         varying vec2 vUv;
         void main() {
-          vec3 color1 = vec3(102.0 / 255.0, 11.0 / 255.0, 189.0 / 255.0); // Start color (blue)
-          vec3 color2 = vec3(54.0 / 255.0, 64.0 / 255.0, 114.0 / 255.0); // End color
+          vec3 color1 = vec3(82.0 / 255.0, 25.0 / 255.0, 108.0 / 255.0); // Start color (blue)
+          vec3 color2 = vec3(32.0 / 255.0, 39.0 / 255.0, 103.0 / 255.0); // End color
           vec3 color = mix(color1, color2, vUv.y); // Interpolate colors based on vertical position
           gl_FragColor = vec4(color, 1.0);
         }
@@ -79,9 +79,9 @@ const ThreeScene = () => {
 
     // Slower random movement values
     const torusRotationSpeed = {
-      x: Math.random() * 0.01,
-      y: Math.random() * 0.01,
-      z: Math.random() * 0.01,
+      x: Math.random() * 0.004,
+      y: Math.random() * 0.004,
+      z: Math.random() * 0.004,
     };
 
     const moonRotationSpeed = {

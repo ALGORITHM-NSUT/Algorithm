@@ -39,6 +39,7 @@ const Articles = () => {
                   className='w-full h-48 object-cover'
                   src={article.urlToImage || 'https://via.placeholder.com/300'}
                   alt='News'
+                  loading='lazy'
                 />
                 <div className='p-4'>
                   <h3 className='text-lg font-semibold mb-2'>{article.title}</h3>
