@@ -41,7 +41,7 @@ export const register = async (req, res, next) => {
 
         // Check if user already exists with NSUT email
         let user = await FormData.findOne({ email });
-        const admin = await CoreMember.findOne({ email: email });
+        const Admin = await CoreMember.findOne({ email });
 
         if (user) {
             return res.status(401).json({
@@ -49,8 +49,8 @@ export const register = async (req, res, next) => {
             });
         }
 
-        if (admin) {
-            const Admin = true;
+        if (Admin) {
+            const admin = true;
             user = await FormData.create({
                 name,
                 email,
@@ -63,7 +63,7 @@ export const register = async (req, res, next) => {
                 rollNumber,
                 year,
                 password,
-                Admin
+                admin
             });
         }
         else {
