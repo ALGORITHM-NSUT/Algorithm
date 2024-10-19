@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import JoinRequestModal from './JoinRequestModal';
 import DeleteRequestModal from './deleteProjectModal';
-import EditProjectModal from './EditProject'; // Assuming you have or will create this modal
 import { useNavigate } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddProject from './addProject';
-import EditProject from './EditProject';
 
 const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }) {
   const [showappModal, setShowappModal] = useState(false);
