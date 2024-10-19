@@ -49,7 +49,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
         })
       });
       refreshProjects();
-      setShowForm(false); // Close the form after submission
+      handleCancel(); // Close the form after submission
       // resetProjectData();
       const data = await response.json();
       console.log('Response data:', data);
@@ -113,7 +113,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
   const handleCancel = () => {
     setShowForm(false); // Close form
     if (setEditState) setEditState(false);
-    resetProjectData(); // Reset fields
+    if (!project) resetProjectData(); // Reset fields
   };
 
   return (
