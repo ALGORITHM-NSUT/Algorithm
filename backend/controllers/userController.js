@@ -1,5 +1,6 @@
 import FormData from "../models/formDataModel.js";
 import { sendToken } from "../utils/sendToken.js";
+import CoreMember from "../models/CoreMember.js";
 
 export const register = async (req, res, next) => {
     try {
@@ -40,6 +41,7 @@ export const register = async (req, res, next) => {
 
         // Check if user already exists with NSUT email
         let user = await FormData.findOne({ email });
+        const Admin = await CoreMember.findOne({ email });
 
         if (user) {
             return res.status(401).json({
@@ -47,20 +49,38 @@ export const register = async (req, res, next) => {
             });
         }
 
-        // Create the new user with all provided fields
-        user = await FormData.create({
-            name,
-            email,
-            personalEmail,
-            phoneNumber,
-            githubProfile,
-            leetcodeProfile,
-            codeforcesProfile,
-            linkedinUrl,
-            rollNumber,
-            year,
-            password,
-        });
+        if (Admin) {
+            const admin = true;
+            user = await FormData.create({
+                name,
+                email,
+                personalEmail,
+                phoneNumber,
+                githubProfile,
+                leetcodeProfile,
+                codeforcesProfile,
+                linkedinUrl,
+                rollNumber,
+                year,
+                password,
+                admin
+            });
+        }
+        else {
+            user = await FormData.create({
+                name,
+                email,
+                personalEmail,
+                phoneNumber,
+                githubProfile,
+                leetcodeProfile,
+                codeforcesProfile,
+                linkedinUrl,
+                rollNumber,
+                year,
+                password,
+            });
+        }
 
         // Send token response after registration
         sendToken(res, user, "Registered successfully", 201);

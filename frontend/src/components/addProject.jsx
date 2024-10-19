@@ -23,7 +23,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
       projectData.contributors = project.contributors.map((contributor) => contributor.email);
       projectData.lead = project.lead._id;
     }
-  }, [project]);
+  }, [project, showForm]);
 
   const resetProjectData = () => {
     setProjectData({
