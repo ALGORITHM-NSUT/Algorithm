@@ -291,7 +291,7 @@ const ProjectCard = function ProjectCard({ project, isOngoing, refreshProjects }
             </React.Fragment>
           )}
 
-          <div className="max-h-[75px] overflow-y-auto grid grid-cols-1 gap-2 mt-5">
+          <div className="max-h-[140px] overflow-y-auto grid grid-cols-1 gap-2 mt-5">
             {project.applicants.map((applicant, index) => (
               <div
                 key={index}
