@@ -1,4 +1,3 @@
-import useEnhancedEffect from '@mui/material/utils/useEnhancedEffect';
 import React, { useState, useEffect } from 'react';
 
 const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, project }) => {
@@ -14,7 +13,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
     contributors: [],
     githubUrl: '',
   });
-  // Reset project data
+
   useEffect(() => {
     if (project) {
       projectData.title = project.title;
@@ -23,7 +22,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
       projectData.contributors = project.contributors.map((contributor) => contributor.email);
       projectData.lead = project.lead._id;
     }
-  }, [project]);
+  }, [project, showForm]);
 
   const resetProjectData = () => {
     setProjectData({
@@ -49,7 +48,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
         })
       });
       refreshProjects();
-      setShowForm(false); // Close the form after submission
+      handleCancel(); // Close the form after submission
       // resetProjectData();
       const data = await response.json();
       console.log('Response data:', data);
@@ -113,7 +112,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
   const handleCancel = () => {
     setShowForm(false); // Close form
     if (setEditState) setEditState(false);
-    resetProjectData(); // Reset fields
+    if (!project) resetProjectData(); // Reset fields
   };
 
   return (
@@ -144,7 +143,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
               <div className="mb-4">
 
                 <label className="block text-gray-300 text-xl">Title:</label>
-                {project && <label className="block text-gray-300 p-2">{project.title}</label>}
+                {project && <label className="block w-full bg-[#191E2E] text-gray-300 text-md p-2 rounded-lg">{project.title}</label>}
 
                 {!project && <input
                   type="text"
@@ -168,7 +167,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
 
               <div className="mb-4">
                 <label className="block text-gray-300 text-xl">Lead:</label>
-                {project && <label className="text-gray-300 p-2">{project.lead.name}</label>}
+                {project && <label className="block w-full bg-[#191E2E] text-gray-300 text-md p-2 rounded-lg">{project.lead.name}</label>}
                 {!project && <input
                   type="text"
                   value={projectData.lead}

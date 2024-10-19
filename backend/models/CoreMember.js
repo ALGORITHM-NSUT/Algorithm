@@ -6,6 +6,7 @@ const coreMemberSchema = new mongoose.Schema({
   imageUrl: { type: String, required: true },
   linkedinUrl: { type: String, required: true },
   order: { type: Number },
+  email: { type: String },
   subPosition: { type: String } // Optional field
 });
 const CoreMember = mongoose.model('Core_members', coreMemberSchema, 'Core_members');
