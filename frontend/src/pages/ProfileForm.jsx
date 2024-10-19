@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   TextField,
@@ -107,6 +107,15 @@ const ProfileForm = () => {
     rollNumber: "",
     year: "",
   });
+  const [playAnimation, setPlayAnimation] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPlayAnimation(true);
+    }, 300); // 1 second delay
+
+    return () => clearTimeout(timer); // Clear the timer on unmount
+  }, []);
 
   const navigate = useNavigate();
 
@@ -129,7 +138,7 @@ const ProfileForm = () => {
       console.log(data);
       if (response.ok) {
         alert('Register successful!');
-        sessionStorage.setItem('userProfile', JSON.stringify(data.user));
+        localStorage.setItem('userProfile', JSON.stringify(data.user));
         navigate('/userprofile');
       }
     } catch (error) {
@@ -161,7 +170,7 @@ const ProfileForm = () => {
                   <Lottie
                     options={{
                       loop: false,
-                      autoplay: true,
+                      autoplay: playAnimation,
                       animationData: cartoonProfile,
                       rendererSettings: { preserveAspectRatio: "xMidYMid slice" },
                     }}
@@ -184,7 +193,7 @@ const ProfileForm = () => {
                   <FormField label="LeetCode Profile" name="leetcodeProfile" value={formData.leetcodeProfile} onChange={handleChange} />
                   <FormField label="Codeforces Profile" name="codeforcesProfile" value={formData.codeforcesProfile} onChange={handleChange} />
                   <FormField label="Password" name="password" type="password" value={formData.password} onChange={handleChange} required />
-                  <FormField label="LinkedIn ID" name="linkedinUrl" value={formData.linkedinUrl} onChange={handleChange} />
+                  <FormField label="LinkedIn ID" name="linkedinUrl" value={formData.linkedinUrl} onChange={handleChange} required />
                   <FormField label="Roll Number" name="rollNumber" value={formData.rollNumber} onChange={handleChange} required />
                   <YearSelection value={formData.year} onChange={handleChange} />
 
