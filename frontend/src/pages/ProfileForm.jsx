@@ -6,6 +6,7 @@ import Register from '../components/Registercard'
 
 const LoginPage = () => {
   return (
+
     <div className="flex flex-col min-h-screen ">
       <Navbar />
       <Register />
@@ -15,4 +16,5 @@ const LoginPage = () => {
 }
 
 export default LoginPage
+
 
