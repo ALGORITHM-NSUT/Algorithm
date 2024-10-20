@@ -252,14 +252,14 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                   pr: 1,
                   scrollBehavior: 'smooth',
                   '&::-webkit-scrollbar': {
-                    width: '8px', // Custom scrollbar width
+                    width: '8px', 
                   },
                   '&::-webkit-scrollbar-thumb': {
-                    backgroundColor: '#aaa', // Scrollbar color
-                    borderRadius: '10px', // Rounded scrollbar
+                    backgroundColor: '#aaa',
+                    borderRadius: '10px',
                   },
                   '&::-webkit-scrollbar-thumb:hover': {
-                    backgroundColor: '#888', // Darker on hover
+                    backgroundColor: '#888', 
                   },
                 }}
               >
@@ -269,7 +269,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
-                        backgroundColor: '#1f2937', // Darker background for modern look
+                        backgroundColor: '#1f2937', 
                         p: 2,
                         borderRadius: 2,
                         boxShadow: 3,
@@ -277,14 +277,14 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                         '&:hover': {
                           backgroundColor: '#374151', // Slightly lighter on hover
                           transform: 'scale(1.05)',
-                          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)', // Add depth on hover
+                          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)', 
                         },
                       }}
                     >
                       <Avatar
                         src={contributor.avatarUrl}
                         alt={contributor.name}
-                        sx={{ width: 48, height: 48, mr: 2, border: '2px solid white', boxShadow: 2 }} // Larger avatar with border
+                        sx={{ width: 48, height: 48, mr: 2, border: '2px solid white', boxShadow: 2 }} 
                       />
                       <Box>
                         <Typography variant="body1" color="white" sx={{ fontWeight: 'bold' }}>
@@ -296,7 +296,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                           rel="noreferrer"
                           sx={{
                             color: '#d1d5db',
-                            textDecoration: 'underline', // Underline for modern feel
+                            textDecoration: 'underline', 
                             '&:hover': {
                               color: '#ffffff',
                               textDecoration: 'underline',

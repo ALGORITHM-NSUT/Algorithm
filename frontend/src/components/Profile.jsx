@@ -1,34 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Box,
+  Container,
+  Avatar,
+} from '@mui/material';
+import LogoutIcon from '@mui/icons-material/Logout';
+import EditIcon from '@mui/icons-material/Edit';
 
 const Profile = () => {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('userProfile'))); // State to store user info
-  const [addPass, setAddPass] = useState(false);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('userProfile')));
   const navigate = useNavigate();
 
-  // Redirect to login page if user is not found after loading
   useEffect(() => {
     if (!user) {
-      navigate('/login');  // Redirect to login if no user found
+      navigate('/login');
     }
   }, [user, navigate]);
 
-  // Logout user
   const handleLogout = async () => {
     try {
       const response = await fetch('http://localhost:5000/logout', {
-        method: 'GET',  // Assuming logout is a GET request
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: "include",  // Send cookies with request
+        credentials: 'include',
       });
 
       if (response.ok) {
         localStorage.clear();
-        setUser(null);  // Clear user info after logout
+        setUser(null);
         alert('Logged out successfully!');
-        navigate('/');  // Redirect to the home page after logging out
+        navigate('/');
       } else {
         console.error('Failed to log out');
       }
@@ -38,26 +46,67 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <Container maxWidth="sm" sx={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       {user && (
-        <div className="bg-gray-100 p-6 rounded-lg shadow-lg text-center">
-          <h2 className="text-2xl font-bold mb-4">Welcome, {user.name}!</h2>
-          <p className="text-lg mb-4">Email: {user.email}</p>
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mb-2"
+        <Card
+          sx={{
+            width: '100%',
+            padding: 3,
+            borderRadius: 2,
+            boxShadow: 4,
+            position: 'relative',
+            minHeight: '50vh', // Ensure enough space for buttons at the bottom
+          }}
+        >
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+            <Avatar
+              sx={{ width: 100, height: 100, bgcolor: 'primary.main' }}
+            >
+              {user.name.charAt(0)}
+            </Avatar>
+          </Box>
+          <CardContent sx={{ textAlign: 'center' }}>
+            <Typography variant="h5" fontWeight="bold" gutterBottom>
+              Welcome, {user.name}!
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Email: {user.email}
+            </Typography>
+          </CardContent>
+
+          {/* Buttons at bottom corners */}
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: 16,
+              left: 16,
+              right: 16,
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
           >
-            Logout
-          </button>
-          <br />
-          <button
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Edit Account
-          </button>
-        </div>
+            <Button
+              variant="contained"
+              color="error"
+              startIcon={<LogoutIcon />}
+              onClick={handleLogout}
+              sx={{ flex: 1, marginRight: 1 }}
+            >
+              Logout
+            </Button>
+
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<EditIcon />}
+              sx={{ flex: 1, marginLeft: 1 }}
+            >
+              Edit Account
+            </Button>
+          </Box>
+        </Card>
       )}
-    </div>
+    </Container>
   );
 };
 
