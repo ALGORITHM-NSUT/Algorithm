@@ -7,7 +7,10 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
-
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('userProfile')));
+  if (user) {
+    navigate('/userprofile');
+  }
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent the default form submission
 

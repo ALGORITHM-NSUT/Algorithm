@@ -14,10 +14,14 @@ export const sendToken = (res, user, message, statusCode = 200) => {
         _id: user._id,
         name: user.name,
         email: user.email,
-        phonenumber: user.phonenumber,
+        phoneNumber: user.phoneNumber,
         githubProfile: user.githubProfile,
         leetcodeProfile: user.leetcodeProfile,
         codeforcesProfile: user.codeforcesProfile,
+        linkedinUrl: user.linkedinUrl,
+        rollNumber: user.rollNumber,
+        personalEmail: user.personalEmail,
+        year: user.year,
         admin: user.admin
         // Add any other fields you want to send, like profile picture, role, etc.
     };

@@ -5,14 +5,12 @@ import Register from '../components/Registercard';
 
 const LoginPage = () => {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <div className="bg-polygon flex justify-center items-center h-screen bg-cover">
+      <div className="bg-polygon flex-grow justify-center items-center bg-cover">
         <Register />
       </div>
-      <div>
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 };
