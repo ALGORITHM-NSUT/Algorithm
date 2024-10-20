@@ -121,7 +121,7 @@ const Register = () => {
     <ThemeProvider theme={theme}>
       <div className="flex flex-col min-h-screenoverflow-hidden ">
         {/*  Three.js Scene as background */}
-        <ThreeScene style={{ top: 0, left: 0, width: "100%", height: "100vh", zIndex: -1 }} />
+        {/* <ThreeScene style={{ top: 0, left: 0, width: "100%", height: "100vh", zIndex: -1 }} /> */}
 
         <Container component="main" maxWidth="md" className="mt-2 mb-2 rounded-2xl relative z-10 bg-white backdrop-blur-2xl">
 

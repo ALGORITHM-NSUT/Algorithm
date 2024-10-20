@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProjectCard from '../components/ProjectCard';
-import AddProject from '../components/addProject'; // Import AddProject component
+import AddProject from '../components/addProject';
 
 const Projects = () => {
   const [projects, setProjects] = useState({ onGoing: [], completed: [] });
