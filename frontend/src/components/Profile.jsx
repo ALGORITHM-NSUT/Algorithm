@@ -104,6 +104,7 @@ const Profile = () => {
               boxShadow: 4,
               position: 'relative',
               minHeight: '50vh',
+
             }}
           >
             <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>

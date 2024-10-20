@@ -28,7 +28,7 @@ const theme = createTheme({
     text: { primary: "#000000", secondary: "#000000" },
   },
   typography: {
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "sans-serif",
     h1: { fontWeight: 100 },
   },
 });
