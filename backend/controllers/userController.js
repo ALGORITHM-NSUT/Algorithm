@@ -17,17 +17,6 @@ export const register = async (req, res, next) => {
             rollNumber,
             year
         } = req.body;
-        console.log(name,
-            email,
-            personalEmail,
-            phoneNumber,
-            githubProfile,
-            leetcodeProfile,
-            codeforcesProfile,
-            password,
-            linkedinUrl,
-            rollNumber,
-            year);
         // Check if all required fields are provided
         if (
             !name ||
