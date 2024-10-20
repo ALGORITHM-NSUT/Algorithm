@@ -96,3 +96,35 @@
   background-size: 300% 300%;
   animation: gradientAnimation 10s ease infinite;
 }
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.group-hover\:animate-ripple {
+  animation: ripple 0.6s linear;
+}
+.gradient-bg {
+  background: linear-gradient(135deg, #9b59b6, #3498db, #ffffff, #ff69b4);
+  background-size: 400% 400%; /* Adjust this to make the gradient flowing */
+  animation: gradientFlow 15s ease infinite; /* Animation for flowing effect */
+}
+
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
