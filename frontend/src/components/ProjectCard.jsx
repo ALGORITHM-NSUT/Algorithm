@@ -222,7 +222,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
           {!isExpanded && (
             <Typography
               variant="body1"
-              sx={{ color: 'black', animation: 'fadeIn 0.5s ease-in-out', height: '100px', fontSize: '17px', mb: 3 }}
+              sx={{ color: 'black', animation: 'fadeIn 0.5s ease-in-out', height: '100px', fontSize: '17px', mb: 6 }}
             >
               {project.description}
             </Typography>
@@ -258,7 +258,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                   </IconButton>
                 </Tooltip>
           
-                <Tooltip title={editProject ? "Cancel Edit" : "Edit"} arrow>
+                <Tooltip  title={editProject ? "Cancel Edit" : "Edit"} arrow>
                   <IconButton
                     sx={{
                       backgroundColor: '#f59e0b',
@@ -322,13 +322,14 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
+                        height: '100px',
                         backgroundColor: '#330075',
                         p: 2,
                         borderRadius: 2,
                         boxShadow: 3,
                         transition: 'transform 0.3s, background-color 0.3s',
                         '&:hover': {
-                          backgroundColor: '#330080', // Slightly lighter on hover
+                          backgroundColor: '#330080',
                           transform: 'scale(1.05)',
                           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
                         },
