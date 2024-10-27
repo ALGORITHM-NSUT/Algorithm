@@ -5,7 +5,7 @@ import Core from "../components/Core";
 
 const AboutPage = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-polygon bg-cover bg-center bg-no-repeat">
+    <div className="flex flex-col bg-polygon bg-cover w-full ">
       <Navbar />
       <div className="flex-grow mb-24">
         <Core />

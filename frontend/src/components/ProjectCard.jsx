@@ -3,11 +3,17 @@ import JoinRequestModal from './JoinRequestModal';
 import DeleteRequestModal from './deleteProjectModal';
 
 import { useNavigate } from 'react-router-dom';
-import { Grid, Paper, Typography, Button, Box, IconButton, Link, useMediaQuery, useTheme, Avatar } from '@mui/material';
+import { Grid, Paper, Typography, Button, Box,  Link, useMediaQuery, useTheme, Avatar } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddProject from './addProject';
 import { motion } from 'framer-motion';
+import { Fullscreen } from 'lucide-react';
+import { FaBlackTie } from 'react-icons/fa';
+
+
+import {  IconButton, Tooltip } from '@mui/material';
+
 
 
 const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
@@ -142,12 +148,14 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
     >
       <Paper
         sx={{
-          background: 'linear-gradient(to right, #1f2937, #111827)',
+          background: 'linear-gradient(to right, #ffffff)',
           borderRadius: 3,
           boxShadow: 6,
           transition: 'all 0.3s ease-in-out',
           overflow: 'hidden',
           cursor: 'pointer',
+
+          color: 'black', // Corrected this line
           '&:hover': { boxShadow: 12 },
           width: '100%', // Ensure the paper takes full width
           maxWidth: '600px', // Max width to prevent stretching on large screens
@@ -155,6 +163,9 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
         }}
         onClick={toggleExpand}
       >
+
+
+
         <AddProject
           refreshProjects={refreshProjects}
           showadd={false}
@@ -163,103 +174,145 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
           project={project}
         />
 
-        <Box sx={{ p: 3 }}>
+        <div style={{
+          background: '#330080', // Changed from 'white' to '#330080'
+          height: '150px',
+          display: 'flex',
+          alignItems: 'center',
+          position: 'relative',
+          zIndex: 0,
+          clipPath: 'path("M0,100 C150,200 400,0 600,100 L600,0 L0,0 Z")',
+        }}>
           <Typography
             variant={isExpanded ? 'h5' : 'h4'}
             component="h3"
             sx={{
-              background: 'linear-gradient(to right, #3b82f6, #10b981)',
+              background: '#330080', // Changed from 'white' to '#330080'
               WebkitBackgroundClip: 'text',
-              color: 'transparent',
+              color: 'white', // Changed from 'transparent' to 'white'
               transition: 'all 0.3s',
               fontWeight: 'bold',
               mb: 2,
-              fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' }, // Responsive font size
+              fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' },
+              position: 'relative',
+              zIndex: 1,
+              textAlign: 'center', // Center text horizontally
+              fontFamily: "'Cursive', sans-serif", // Fancy font
             }}
           >
-            {project.title}
+            <span style={{
+              position: 'relative',
+              zIndex: 2,
+              color: 'white', // Changed from '#330080' to 'white'
+              padding: '60px 10px 30px',
+            }}>
+              {project.title}
+            </span>
           </Typography>
+        </div>
+
+
+
+        <Box sx={{ p: 3 }}>
+
+
+
+
 
           {!isExpanded && (
             <Typography
               variant="body1"
-              sx={{ color: '#d1d5db', animation: 'fadeIn 0.5s ease-in-out', mb: 3 }}
+              sx={{ color: 'black', animation: 'fadeIn 0.5s ease-in-out', height: '100px', fontSize: '17px', mb: 3 }}
             >
               {project.description}
             </Typography>
           )}
 
           {/* Action Buttons for Project Lead */}
-          {user && project.lead._id === user._id && (
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-              <IconButton
-                sx={{
-                  backgroundColor: '#b91c1c',
-                  '&:hover': { backgroundColor: '#991b1b' },
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteRequest();
-                }}
-              >
-                <DeleteIcon fontSize="large" />
-              </IconButton>
-
-              <IconButton
-                sx={{
-                  backgroundColor: '#f59e0b',
-                  '&:hover': { backgroundColor: '#d97706' },
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setEditProject(!editProject);
-                }}
-              >
-                <EditIcon fontSize="large" />
-              </IconButton>
-            </Box>
-          )}
 
           {/* Expanded View */}
           {isExpanded && (
-            <Box sx={{ mt: 4 }}>
+            <Box sx={{ mt: 0 }}>
+              {user && project.lead._id === user._id && (
+                <Box 
+                sx={{ 
+                  display: 'flex', 
+                  gap: 2, 
+                  mt: 2,
+                  justifyContent: 'flex-end', // Aligns the buttons to the right
+                }}
+              >
+                <Tooltip title="Delete" arrow>
+                  <IconButton
+                    sx={{
+                      backgroundColor: '#b91c1c',
+                      '&:hover': { backgroundColor: '#991b1b' },
+                      transition: 'background-color 0.3s ease',
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteRequest();
+                    }}
+                  >
+                    <DeleteIcon fontSize="large" />
+                  </IconButton>
+                </Tooltip>
+          
+                <Tooltip title={editProject ? "Cancel Edit" : "Edit"} arrow>
+                  <IconButton
+                    sx={{
+                      backgroundColor: '#f59e0b',
+                      '&:hover': { backgroundColor: '#d97706' },
+                      transition: 'background-color 0.3s ease',
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditProject((prev) => !prev);
+                    }}
+                  >
+                    <EditIcon fontSize="large" />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+              )}
+
               {/* Project Lead Section */}
-              <Typography variant="h6" sx={{ color: '#d1d5db', fontWeight: 'bold' }}>
+              <Typography variant="h6" sx={{ color: '#330080', fontWeight: 'bold' }}>
                 Project Lead:
               </Typography>
-              <Box sx={{ backgroundColor: '#374151', p: 2, borderRadius: 2, mt: 2 }}>
+              <Box sx={{ backgroundColor: '#330075', p: 2, borderRadius: 2, mt: 2 }}>
                 <Typography variant="body1" color="white">{project.lead.name}</Typography>
                 <Link
                   href={project.lead.linkedinUrl}
                   target="_blank"
                   rel="noreferrer"
-                  sx={{ color: '#d1d5db', textDecoration: 'none', '&:hover': { color: '#ffffff' } }}
+                  sx={{ color: 'white', textDecoration: 'none', '&:hover': { color: 'red' } }}
                 >
                   View Profile
                 </Link>
               </Box>
 
               {/* Contributors Section */}
-              <Typography variant="h6" sx={{ mt: 3, mb: 3, fontWeight: 'bold', color: 'primary.main' }}>
+              <Typography variant="h6" sx={{ mt: 3, mb: 3, fontWeight: 'bold', color: '#330080' }}>
                 Contributors:
               </Typography>
               <Grid
                 container
                 spacing={2}
                 sx={{
-                  maxHeight: '180px',
+                  height: '180px',
                   overflowY: 'auto',
                   pr: 1,
                   scrollBehavior: 'smooth',
                   '&::-webkit-scrollbar': {
-                    width: '8px', 
+                    width: '8px',
                   },
                   '&::-webkit-scrollbar-thumb': {
                     backgroundColor: '#aaa',
                     borderRadius: '10px',
                   },
                   '&::-webkit-scrollbar-thumb:hover': {
-                    backgroundColor: '#888', 
+                    backgroundColor: '#888',
                   },
                 }}
               >
@@ -269,22 +322,22 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
-                        backgroundColor: '#1f2937', 
+                        backgroundColor: '#330075',
                         p: 2,
                         borderRadius: 2,
                         boxShadow: 3,
                         transition: 'transform 0.3s, background-color 0.3s',
                         '&:hover': {
-                          backgroundColor: '#374151', // Slightly lighter on hover
+                          backgroundColor: '#330080', // Slightly lighter on hover
                           transform: 'scale(1.05)',
-                          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)', 
+                          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
                         },
                       }}
                     >
                       <Avatar
                         src={contributor.avatarUrl}
                         alt={contributor.name}
-                        sx={{ width: 48, height: 48, mr: 2, border: '2px solid white', boxShadow: 2 }} 
+                        sx={{ width: 48, height: 48, mr: 2, border: '2px solid white', boxShadow: 2 }}
                       />
                       <Box>
                         <Typography variant="body1" color="white" sx={{ fontWeight: 'bold' }}>
@@ -296,7 +349,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                           rel="noreferrer"
                           sx={{
                             color: '#d1d5db',
-                            textDecoration: 'underline', 
+                            textDecoration: 'underline',
                             '&:hover': {
                               color: '#ffffff',
                               textDecoration: 'underline',
@@ -371,7 +424,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                   </button>
                 ) : (
                   <button
-                    className="mt-8 py-2 px-4 bg-gray-400 text-white rounded-lg cursor-not-allowed"
+                    className="mt-8 py-2 px-4 bg-[#0a242d] text-white rounded-lg cursor-not-allowed"
                     disabled
                   >
                     Already Applied
@@ -379,7 +432,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                 )
               ) : (
                 <button
-                  className="mt-8 py-2 px-4 bg-green-700 hover:bg-green-800 text-white rounded-lg"
+                  className="mt-8 py-2 px-4 bg-[#40199a] hover:bg-green-800 text-white rounded-lg"
                   onClick={(e) => {
                     e.stopPropagation();
                     navigate('/login');
@@ -446,7 +499,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               href={project.githubUrl}
               target="_blank"
               rel="noreferrer"
-              sx={{ color: '#d1d5db', textDecoration: 'none', '&:hover': { color: '#ffffff' } }}
+              sx={{ color: 'black', textDecoration: 'none', fontSize: '20px', '&:hover': { color: '#330080' } }}
             >
               View Project on GitHub
             </Link>

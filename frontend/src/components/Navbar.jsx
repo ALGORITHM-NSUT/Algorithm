@@ -8,7 +8,7 @@ const Navbar = () => {
   const navLinks = ['Home', 'About', 'Leaderboard', 'Projects', 'TechNews'];
 
   return (
-    <nav style={{ backgroundColor: '#10111f' }} className="text-white p-4 sticky top-0 z-50 py-3 backdrop-blur-sm">
+    <nav style={{ backgroundColor: '#10111f' }} className="text-white p-4 sticky top-0 z-50 py-1 backdrop-blur-sm">
       <div className="container mx-auto flex justify-between items-center h-14">
         <div className="flex-shrink-0">
           <Link to={'/home'}>

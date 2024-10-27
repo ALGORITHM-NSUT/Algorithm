@@ -21,7 +21,7 @@ const Core = () => {
 
       </div>
       <div className="w-[80%] h-1 bg-[#858491] bg-opacity-0 my-4 mx-auto text-[#858491] text-[5vw] md:text-[20px] font-bold" >MANAGEMENT</div>
-      <div className="w-[80%] h-1 bg-[#858491] bg-opacity-50 my-4 mx-auto"></div>
+      <div className="w-[80%] h-1 bg-[#3f3e43] bg-opacity-50 my-4 mx-auto"></div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-20 px-4 md:px-10 mt-8">
 
         {members.withoutSubPosition.map((member) => (

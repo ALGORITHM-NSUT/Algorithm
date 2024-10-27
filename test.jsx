@@ -1,446 +1,495 @@
+import React, { useState, useEffect } from 'react';
+import JoinRequestModal from './JoinRequestModal';
+import DeleteRequestModal from './deleteProjectModal';
+
+import { useNavigate } from 'react-router-dom';
+import { Grid, Paper, Typography, Button, Box, IconButton, Link, useMediaQuery, useTheme, Avatar } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import AddProject from './addProject';
+import { motion } from 'framer-motion';
+import { Fullscreen } from 'lucide-react';
+import { FaBlackTie } from 'react-icons/fa';
 
 
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  TextField,
-  Button,
-  Container,
-  Typography,
-  Grid,
-  Paper,
-  ThemeProvider,
-  createTheme,
-  Box,
-  IconButton,
-} from "@mui/material";
-import { GitHub, Code, MailOutline, Phone } from "@mui/icons-material";
-import { motion } from "framer-motion";
-import Lottie from "react-lottie";
-import cartoonProfile from "../assets/cartoon-profile.json";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-
-// Custom Material UI Theme for a fun look
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#4c56d7", // Vibrant purple-blue
-    },
-    secondary: {
-      main: "#ff4081", // Pink
-    },
-    background: {
-      default: "#4c56d7", // Fun gradient
-      paper: "#ffffff", // Card background
-    },
-    text: {
-      primary: "#000000", // White text for contrast
-      secondary: "#000000", // Black text inside forms and cards
-    },
-  },
-  typography: {
-    fontFamily: "'Roboto', sans-serif", // Modern, professional font
-  },
-});
-
-const ProfileForm = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    nsutEmail: "",
-    personalEmail: "",
-    phoneNumber: "",
-    githubProfile: "",
-    leetcodeProfile: "",
-    codeforcesProfile: "",
-    password: "",
-  });
-
-  const [successMessage, setSuccessMessage] = useState("");
+const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
+  const [showappModal, setShowappModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('userProfile')));
+  const [application, setApplication] = useState(false);
   const navigate = useNavigate();
+  const [editProject, setEditProject] = useState(false);
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const postData = async () => {
     try {
-      const response = await fetch("http://localhost:5000/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(formData),
+      const response = await fetch('http://localhost:5000/application', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ title: project.title, lead: project.lead._id })
       });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        alert(result.message);
-        navigate("/");
-      } else {
-        alert(result.message);
-      }
+      const data = await response.json();
+      setApplication(false);
+      return true;
     } catch (error) {
-      console.error("Error registering user:", error);
+      console.error('Error posting data:', error);
     }
   };
 
+  useEffect(() => {
+    const fetchApplication = async () => {
+      try {
+        const availability = await fetch('http://localhost:5000/checkapplication', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ title: project.title })
+        });
+
+        const data = await availability.json();
+        setApplication(data.message !== 'Application already exists');
+      } catch (error) {
+        console.error('Error checking open applications:', error);
+      }
+    };
+
+    fetchApplication();
+  }, [user, application, project]);
+
+  const handleApplication = async (id, state) => {
+    try {
+      const applicants = await fetch('http://localhost:5000/applicationstate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ title: project.title, applicant: id, state: state })
+      });
+      refreshProjects();
+    } catch (error) {
+      console.error('Error updating application state:', error);
+    }
+  };
+
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const handleCloseModal = (e) => {
+    e.stopPropagation();
+    setShowappModal(false);
+    setDeleteModal(false);
+    setEditModal(false);
+  };
+
+  const handleDeleteRequest = () => {
+    setDeleteModal(true);
+  };
+
+  const handleDeletesend = async () => {
+    try {
+      await fetch('http://localhost:5000/deleteProject', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ title: project.title })
+      });
+      refreshProjects();
+    } catch (error) {
+      console.error('Error deleting project:', error);
+    }
+  };
+
+  const handleEditRequest = () => {
+    setEditModal(true);
+  };
+
+  const handleEditSubmit = async (editedData) => {
+    try {
+      await fetch('http://localhost:5000/editProject', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(editedData)
+      });
+      refreshProjects();
+      setEditModal(false);
+    } catch (error) {
+      console.error('Error editing project:', error);
+    }
+  };
+
+  const handleJoinRequest = () => {
+    setShowappModal(true);
+  };
+
+  const handleSendRequest = () => {
+    if (postData()) {
+      setApplication(false);
+    } else {
+      refreshProjects();
+    }
+    setShowappModal(false);
+  };
+
   return (
-    <ThemeProvider theme={theme}>
-      <div
-        className="flex flex-col min-h-screen  bg-[#191e2e]"
-        style={{ backgroundColor: theme.palette.background.default }}
+    <motion.div
+      className="relative"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Paper
+        sx={{
+          background: 'linear-gradient(to right, #ffffff)',
+          borderRadius: 3,
+          boxShadow: 6,
+          transition: 'all 0.3s ease-in-out',
+          overflow: 'hidden',
+          cursor: 'pointer',
+          
+          color: 'black', // Corrected this line
+          '&:hover': { boxShadow: 12 },
+          width: '100%', // Ensure the paper takes full width
+          maxWidth: '600px', // Max width to prevent stretching on large screens
+          mx: 'auto', // Center the paper on larger screens
+        }}
+        onClick={toggleExpand}
       >
-        <Navbar />
-        <Container component="main" maxWidth="sm" sx={{ mt: 8, mb: 8 }}>
 
-          <motion.div
-            initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}
-          >
-            <Lottie
-              options={{
-                loop: true,
-                autoplay: true,
-                animationData: cartoonProfile, // Fun cartoon animation
-                rendererSettings: {
-                  preserveAspectRatio: "xMidYMid slice",
-                },
-              }}
-              height={150}
-              width={150}
-            />
-          </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
+
+        <AddProject
+          refreshProjects={refreshProjects}
+          showadd={false}
+          edit={editProject}
+          setEditState={setEditProject}
+          project={project}
+        />
+
+        <div style={{
+          background: '#330080', // Changed from 'white' to '#330080'
+          height: '150px',
+          display: 'flex',
+          alignItems: 'center',
+          position: 'relative',
+          zIndex: 0,
+          clipPath: 'path("M0,100 C150,200 400,0 600,100 L600,0 L0,0 Z")',
+        }}>
+          <Typography
+            variant={isExpanded ? 'h5' : 'h4'}
+            component="h3"
+            sx={{
+              background: '#330080', // Changed from 'white' to '#330080'
+              WebkitBackgroundClip: 'text',
+              color: 'white', // Changed from 'transparent' to 'white'
+              transition: 'all 0.3s',
+              fontWeight: 'bold',
+              mb: 2,
+              fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' },
+              position: 'relative',
+              zIndex: 1,
+              textAlign: 'center', // Center text horizontally
+              fontFamily: "'Cursive', sans-serif", // Fancy font
+            }}
           >
-            <Paper elevation={6} sx={{ padding: 4, borderRadius: "12px" }}>
-              <Typography
-                component="h1"
-                variant="h4"
-                align="center"
-                color="primary"
-                gutterBottom
+            <span style={{
+              position: 'relative',
+              zIndex: 2,
+              color: 'white', // Changed from '#330080' to 'white'
+              padding: '60px 10px 30px',
+            }}>
+              {project.title}
+            </span>
+          </Typography>
+        </div>
+
+
+
+        <Box sx={{ p: 3 }}>
+
+
+
+
+
+          {!isExpanded && (
+            <Typography
+              variant="body1"
+              sx={{ color: 'black', animation: 'fadeIn 0.5s ease-in-out',  fontSize: '17px',mb: 3 }}
+            >
+              {project.description}
+            </Typography>
+          )}
+
+          {/* Action Buttons for Project Lead */}
+          {user && project.lead._id === user._id && (
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+              <IconButton
                 sx={{
-                  fontFamily: "'Roboto', sans-serif", // Professional font
-                  color: theme.palette.secondary.main, // Pink accent color
+                  backgroundColor: '#b91c1c',
+                  '&:hover': { backgroundColor: '#991b1b' },
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteRequest();
                 }}
               >
+                <DeleteIcon fontSize="large" />
+              </IconButton>
 
+              <IconButton
+                sx={{
+                  backgroundColor: '#f59e0b',
+                  '&:hover': { backgroundColor: '#d97706' },
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setEditProject(!editProject);
+                }}
+              >
+                <EditIcon fontSize="large" />
+              </IconButton>
+            </Box>
+          )}
+
+          {/* Expanded View */}
+          {isExpanded && (
+            <Box sx={{ mt: 4 }}>
+              {/* Project Lead Section */}
+              <Typography variant="h6" sx={{ color: '#d1d5db', fontWeight: 'bold' }}>
+                Project Lead:
               </Typography>
-              {successMessage && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
+              <Box sx={{ backgroundColor: '#374151', p: 2, borderRadius: 2, mt: 2 }}>
+                <Typography variant="body1" color="white">{project.lead.name}</Typography>
+                <Link
+                  href={project.lead.linkedinUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  sx={{ color: '#d1d5db', textDecoration: 'none', '&:hover': { color: '#ffffff' } }}
                 >
-                  <Typography color="green" align="center" gutterBottom>
-                    {successMessage}
-                  </Typography>
-                </motion.div>
-              )}
-              <Box component="form" onSubmit={handleSubmit} noValidate>
-                <Grid container spacing={2}>
-                  {/* Name Field */}
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      label="Name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      variant="outlined"
-                    />
-                  </Grid>
+                  View Profile
+                </Link>
+              </Box>
 
-                  {/* NSUT Email Field */}
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      label="NSUT Email"
-                      name="nsutEmail"
-                      type="email"
-                      value={formData.nsutEmail}
-                      onChange={handleChange}
-                      variant="outlined"
-                    />
-                  </Grid>
-
-                  {/* Personal Email Field */}
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      label="Personal Email"
-                      name="personalEmail"
-                      type="email"
-                      value={formData.personalEmail}
-                      onChange={handleChange}
-                      variant="outlined"
-                    />
-                  </Grid>
-
-                  {/* Phone Number Field */}
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      label="Phone Number"
-                      name="phoneNumber"
-                      type="tel"
-                      value={formData.phoneNumber}
-                      onChange={handleChange}
-                      variant="outlined"
-                    />
-                  </Grid>
-
-                  {/* GitHub Profile Field */}
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="GitHub Profile"
-                      name="githubProfile"
-                      type="url"
-                      value={formData.githubProfile}
-                      onChange={handleChange}
-                      variant="outlined"
-                    />
-                  </Grid>
-
-                  {/* LeetCode Profile Field */}
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="LeetCode Profile"
-                      name="leetcodeProfile"
-                      type="url"
-                      value={formData.leetcodeProfile}
-                      onChange={handleChange}
-                      variant="outlined"
-                    />
-                  </Grid>
-
-                  {/* Codeforces Profile Field */}
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Codeforces Profile"
-                      name="codeforcesProfile"
-                      type="url"
-                      value={formData.codeforcesProfile}
-                      onChange={handleChange}
-                      variant="outlined"
-                    />
-                  </Grid>
-
-                  {/* Password Field */}
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      label="Password"
-                      name="password"
-                      type="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      variant="outlined"
-                    />
-                  </Grid>
-
-                  {/* Submit Button */}
-                  <Grid item xs={12}>
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+              {/* Contributors Section */}
+              <Typography variant="h6" sx={{ mt: 3, mb: 3, fontWeight: 'bold', color: 'primary.main' }}>
+                Contributors:
+              </Typography>
+              <Grid
+                container
+                spacing={2}
+                sx={{
+                  height: '180px',
+                  overflowY: 'auto',
+                  pr: 1,
+                  scrollBehavior: 'smooth',
+                  '&::-webkit-scrollbar': {
+                    width: '8px',
+                  },
+                  '&::-webkit-scrollbar-thumb': {
+                    backgroundColor: '#aaa',
+                    borderRadius: '10px',
+                  },
+                  '&::-webkit-scrollbar-thumb:hover': {
+                    backgroundColor: '#888',
+                  },
+                }}
+              >
+                {project.contributors.map((contributor, index) => (
+                  <Grid item xs={12} sm={6} key={index}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        backgroundColor: '#1f2937',
+                        p: 2,
+                        borderRadius: 2,
+                        boxShadow: 3,
+                        transition: 'transform 0.3s, background-color 0.3s',
+                        '&:hover': {
+                          backgroundColor: '#374151', // Slightly lighter on hover
+                          transform: 'scale(1.05)',
+                          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+                        },
+                      }}
                     >
+                      <Avatar
+                        src={contributor.avatarUrl}
+                        alt={contributor.name}
+                        sx={{ width: 48, height: 48, mr: 2, border: '2px solid white', boxShadow: 2 }}
+                      />
+                      <Box>
+                        <Typography variant="body1" color="white" sx={{ fontWeight: 'bold' }}>
+                          {contributor.name}
+                        </Typography>
+                        <Link
+                          href={contributor.linkedinUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          sx={{
+                            color: '#d1d5db',
+                            textDecoration: 'underline',
+                            '&:hover': {
+                              color: '#ffffff',
+                              textDecoration: 'underline',
+                            },
+                          }}
+                        >
+                          View Profile
+                        </Link>
+                      </Box>
+                    </Box>
+                  </Grid>
+                ))}
+              </Grid>
+
+              {/* Applicants Section */}
+              <Box sx={{ mt: 5, maxHeight: '75px', overflowY: 'auto' }}>
+                {project.applicants.map((applicant, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      backgroundColor: '#374151',
+                      p: 2,
+                      mt: 1,
+                      borderRadius: 2,
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Typography variant="body2" color="white">{applicant.name}</Typography>
+                    <Box>
                       <Button
-                        type="submit"
-                        fullWidth
                         variant="contained"
-                        sx={{
-                          mt: 3,
-                          mb: 2,
-                          padding: "12px",
-                          background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)", // Gradient background
-                          borderRadius: "50px", // Rounded button
-                          color: "#fff", // White text
-                          boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)", // Shadow for a floating effect
+                        color="success"
+                        sx={{ mr: 1 }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleApplication(applicant._id, 1);
                         }}
                       >
-                        Join Now!
+                        Accept
                       </Button>
-                    </motion.div>
-                  </Grid>
-                </Grid>
-
-
+                      <Button
+                        variant="contained"
+                        color="error"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleApplication(applicant._id, 0);
+                        }}
+                      >
+                        Decline
+                      </Button>
+                    </Box>
+                  </Box>
+                ))}
               </Box>
-            </Paper>
-          </motion.div>
-        </Container>
-        <Footer />
-      </div>
-    </ThemeProvider>
-  );
-};
+            </Box>
+          )}
 
-export default ProfileForm;
+          {isOngoing && (
+            <React.Fragment>
+              {user ? (
+                application && project.lead._id !== user._id ? (
+                  <button
+                    className="mt-8 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleJoinRequest();
+                    }}
+                  >
+                    Request to Join
+                  </button>
+                ) : (
+                  <button
+                    className="mt-8 py-2 px-4 bg-gray-400 text-white rounded-lg cursor-not-allowed"
+                    disabled
+                  >
+                    Already Applied
+                  </button>
+                )
+              ) : (
+                <button
+                  className="mt-8 py-2 px-4 bg-[#40199a] hover:bg-green-800 text-white rounded-lg"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate('/login');
+                  }}
+                >
+                  Login to apply
+                </button>
+              )}
+            </React.Fragment>
+          )}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import React, { useState } from 'react';
-
-const AddProject = ({ onAddProject }) => {
-  const [projectData, setProjectData] = useState({
-    title: '',
-    description: '',
-    lead: '',
-    githubUrl: '',
-    linkedinUrl: '',
-    contributors: ['']
-  });
-
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent default form submission
-    console.log(projectData); // Pass the project data to the parent component
-    // Close the form
-  };
-
-  const handleAddContributor = () => {
-    setProjectData((prevData) => ({
-      ...prevData,
-      contributors: [...prevData.contributors, '']
-    }));
-  };
-
-  const handleContributorChange = (index, value) => {
-    const updatedContributors = [...projectData.contributors];
-    updatedContributors[index] = value;
-    setProjectData((prevData) => ({
-      ...prevData,
-      contributors: updatedContributors
-    }));
-  };
-
-  const handleRemoveContributor = (index) => {
-    const updatedContributors = [...projectData.contributors];
-    updatedContributors.splice(index, 1);
-    setProjectData((prevData) => ({
-      ...prevData,
-      contributors: updatedContributors
-    }));
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="bg-gray-800 p-4 rounded-lg shadow-lg">
-      <div className="mb-4">
-        <label className="block text-gray-300">Title:</label>
-        <input
-          type="text"
-          value={projectData.title}
-          onChange={(e) => setProjectData({ ...projectData, title: e.target.value })}
-          className="w-full p-2 rounded text-black"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-300">Description:</label>
-        <textarea
-          value={projectData.description}
-          onChange={(e) => setProjectData({ ...projectData, description: e.target.value })}
-          className="w-full p-2 rounded text-black"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-300">Lead:</label>
-        <input
-          type="text"
-          value={projectData.lead}
-          onChange={(e) => setProjectData({ ...projectData, lead: e.target.value })}
-          className="w-full p-2 rounded text-black"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-300">GitHub URL:</label>
-        <input
-          type="text"
-          value={projectData.githubUrl}
-          onChange={(e) => setProjectData({ ...projectData, githubUrl: e.target.value })}
-          className="w-full p-2 rounded text-black"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-300">LinkedIn URL:</label>
-        <input
-          type="text"
-          value={projectData.linkedinUrl}
-          onChange={(e) => setProjectData({ ...projectData, linkedinUrl: e.target.value })}
-          className="w-full p-2 rounded text-black"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-300">Contributors:</label>
-        {projectData.contributors.map((contributor, index) => (
-          <div key={index} className="flex items-center mb-2">
-            <input
-              type="text"
-              value={contributor}
-              onChange={(e) => handleContributorChange(index, e.target.value)}
-              className="w-full p-2 rounded text-black"
-            />
-            <button
-              type="button"
-              onClick={() => handleRemoveContributor(index)}
-              className="ml-2 text-red-500"
-            >
-              Remove
-            </button>
+          <div className="max-h-[140px] overflow-y-auto grid grid-cols-1 gap-2 mt-5">
+            {project.applicants.map((applicant, index) => (
+              <div
+                key={index}
+                className="bg-gray-700 p-2 mt-1 rounded-lg shadow-md flex justify-between items-center"
+              >
+                <p className="font-semibold">{applicant.name}</p>
+                <div className="flex space-x-2">
+                  <button
+                    className="bg-green-500 rounded-md p-2 hover:bg-green-600"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleApplication(applicant._id, 1);
+                    }}
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className="bg-red-700 rounded-md p-2 hover:bg-red-800"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleApplication(applicant._id, 0);
+                    }}
+                  >
+                    Decline
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-        <button
-          type="button"
-          onClick={handleAddContributor}
-          className="text-blue-500"
-        >
-          Add Contributor
-        </button>
-      </div>
-      <div className="flex justify-end">
-        <button type="button" className="text-gray-500 mr-4">
-          Cancel
-        </button>
-        <button type="submit" className="bg-green-500 text-white p-2 rounded-lg">
-          Add Project
-        </button>
-      </div>
-    </form>
+          {deleteModal && (
+            <DeleteRequestModal
+              isOpen={deleteModal}
+              project={project}
+              onClose={handleCloseModal}
+              onDelete={handleDeletesend}
+            />
+          )}
+
+          {/* Modal for sending join request */}
+          {showappModal && (
+            <JoinRequestModal
+              isOpen={showappModal}
+              project={project}
+              onClose={handleCloseModal}
+              onSend={handleSendRequest}
+            />
+          )}
+
+          {/* GitHub Link */}
+          <Box sx={{ mt: 4 }}>
+            <Link
+              href={project.githubUrl}
+              target="_blank"
+              rel="noreferrer"
+              sx={{ color: 'black', textDecoration: 'none', fontSize: '20px', '&:hover': { color: '#330080' } }}
+            >
+              View Project on GitHub
+            </Link>
+          </Box>
+        </Box>
+      </Paper>
+    </motion.div>
   );
 };
 
-export default AddProject;
+export default ProjectCard;
