@@ -60,7 +60,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
 
   const handleApplication = async (id, state) => {
     try {
-      const applicants = await fetch('http://localhost:5000/applicationstate', {
+      const applicants = await fetch('http://localhost:5000/handleApplication', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -71,6 +71,12 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
       console.error('Error updating application state:', error);
     }
   };
+
+  useEffect(() => {
+    if (editProject) {
+      setEditProject(false);
+    }
+  }, [isExpanded])
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -115,120 +121,189 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   };
 
   return (
-    <motion.div
-      className="relative"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <Paper
-        sx={{
-          background: 'linear-gradient(to right, #1f2937, #111827)',
-          borderRadius: 3,
-          boxShadow: 6,
-          transition: 'all 0.3s ease-in-out',
-          overflow: 'hidden',
-          cursor: 'pointer',
-          '&:hover': { boxShadow: 12 },
-          width: '100%', // Ensure the paper takes full width
-          maxWidth: '600px', // Max width to prevent stretching on large screens
-          mx: 'auto', // Center the paper on larger screens
-        }}
+    <React.Fragment>
+      {isExpanded && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-20"
+          onClick={toggleExpand}
+        ></div>
+      )}
+      <div
         onClick={toggleExpand}
+        className={`relative p-4 w-full rounded-lg transition-all duration-300 ease-in-out cursor-pointer 
+          ${isExpanded ? 'scale-110 z-30' : 'z-10'}`}
       >
-        <AddProject
-          refreshProjects={refreshProjects}
-          showadd={false}
-          edit={editProject}
-          setEditState={setEditProject}
-          project={project}
-        />
+        <Paper
+          sx={{
+            background: 'linear-gradient(to right, #1f2937, #111827)',
+            borderRadius: 3,
+            boxShadow: 6,
+            transition: 'all 0.3s ease-in-out',
+            overflow: 'hidden',
+            cursor: 'pointer',
+            '&:hover': { boxShadow: 12 },
+            width: '100%', // Ensure the paper takes full width
+            maxWidth: '600px', // Max width to prevent stretching on large screens
+            mx: 'auto',// Center the paper on larger screens
+          }}
+          onClick={toggleExpand}
+        >
+          <AddProject
+            refreshProjects={refreshProjects}
+            showadd={false}
+            edit={editProject}
+            setEditState={setEditProject}
+            project={project}
+          />
 
-        <Box sx={{ p: 3 }}>
-          <Typography
-            variant={isExpanded ? 'h5' : 'h4'}
-            component="h3"
-            sx={{
-              background: 'linear-gradient(to right, #3b82f6, #10b981)',
-              WebkitBackgroundClip: 'text',
-              color: 'transparent',
-              transition: 'all 0.3s',
-              fontWeight: 'bold',
-              mb: 2,
-              fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' }, // Responsive font size
-            }}
-          >
-            {project.title}
-          </Typography>
+          <Box sx={{ p: 3 }}>
 
-          {!isExpanded && (
+            {/* Action Buttons for Project Lead */}
+            {user && project.lead._id === user._id && isExpanded && (
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+
+
+                <IconButton sx={{
+                  backgroundColor: '#b91c1c',
+                  '&:hover': { backgroundColor: '#991b1b' },
+                }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteRequest();
+                  }} >
+                  <DeleteIcon fontSize="medium"
+                  />
+                </IconButton>
+                <IconButton
+                  sx={{
+                    backgroundColor: '#f59e0b',
+                    '&:hover': { backgroundColor: '#d97706' },
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEditProject(!editProject);
+                  }}
+                >
+                  <EditIcon fontSize="medium" />
+                </IconButton>
+              </Box>
+            )}
+
+            <Typography
+              variant={isExpanded ? 'h5' : 'h4'}
+              component="h3"
+              sx={{
+                background: 'linear-gradient(to right, #3b82f6, #10b981)',
+                WebkitBackgroundClip: 'text',
+                color: 'transparent',
+                transition: 'all 0.3s',
+                fontWeight: 'bold',
+                mb: 2,
+                fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' }, // Responsive font size
+              }}
+            >
+              {project.title}
+            </Typography>
+
             <Typography
               variant="body1"
               sx={{ color: '#d1d5db', animation: 'fadeIn 0.5s ease-in-out', mb: 3 }}
             >
               {project.description}
             </Typography>
-          )}
 
-          {/* Action Buttons for Project Lead */}
-          {user && project.lead._id === user._id && (
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-              <IconButton
-                sx={{
-                  backgroundColor: '#b91c1c',
-                  '&:hover': { backgroundColor: '#991b1b' },
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteRequest();
-                }}
-              >
-                <DeleteIcon fontSize="large" />
-              </IconButton>
+            {/* Expanded View */}
+            {isExpanded && (
+              <Box sx={{ mt: 4 }}>
+                {/* Project Lead Section */}
+                <Typography variant="h6" sx={{ color: '#d1d5db', fontWeight: 'bold' }}>
+                  Project Lead:
+                </Typography>
+                <Box sx={{ backgroundColor: '#374151', p: 2, borderRadius: 2, mt: 2 }}>
+                  <Typography variant="body1" color="white" sx={{ fontWeight: "bold", fontSize: "large" }}>{project.lead.name}</Typography>
+                  <Link
+                    href={project.lead.linkedinUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    sx={{ color: '#d1d5db', textDecoration: 'none', '&:hover': { color: '#ffffff' } }}
+                  >
+                    View Profile
+                  </Link>
+                </Box>
 
-              <IconButton
-                sx={{
-                  backgroundColor: '#f59e0b',
-                  '&:hover': { backgroundColor: '#d97706' },
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setEditProject(!editProject);
-                }}
-              >
-                <EditIcon fontSize="large" />
-              </IconButton>
-            </Box>
-          )}
-
-          {/* Expanded View */}
-          {isExpanded && (
-            <Box sx={{ mt: 4 }}>
-              {/* Project Lead Section */}
-              <Typography variant="h6" sx={{ color: '#d1d5db', fontWeight: 'bold' }}>
-                Project Lead:
-              </Typography>
-              <Box sx={{ backgroundColor: '#374151', p: 2, borderRadius: 2, mt: 2 }}>
-                <Typography variant="body1" color="white">{project.lead.name}</Typography>
-                <Link
-                  href={project.lead.linkedinUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  sx={{ color: '#d1d5db', textDecoration: 'none', '&:hover': { color: '#ffffff' } }}
+                {/* Contributors Section */}
+                <Typography variant="h6" sx={{ mt: 3, mb: 3, fontWeight: 'bold', color: 'primary.main' }}>
+                  Contributors:
+                </Typography>
+                <Grid
+                  container
+                  spacing={2}
+                  sx={{
+                    maxHeight: '250px',
+                    overflowY: 'auto',
+                    pr: 1,
+                    scrollBehavior: 'smooth',
+                    '&::-webkit-scrollbar': {
+                      width: '8px',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      backgroundColor: '#aaa',
+                      borderRadius: '10px',
+                    },
+                    '&::-webkit-scrollbar-thumb:hover': {
+                      backgroundColor: '#888',
+                    },
+                  }}
                 >
-                  View Profile
-                </Link>
-              </Box>
+                  {project.contributors.map((contributor, index) => (
+                    <Grid item xs={12} sm={6} key={index}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          backgroundColor: '#1f2937',
+                          p: 2,
+                          borderRadius: 2,
+                          boxShadow: 3,
+                          transition: 'transform 0.3s, background-color 0.3s',
+                          '&:hover': {
+                            backgroundColor: '#374151', // Slightly lighter on hover
+                            transform: 'scale(1.05)',
+                            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+                          },
+                        }}
+                      >
+                        <Avatar
+                          src={contributor.avatarUrl}
+                          alt={contributor.name}
+                          sx={{ width: 48, height: 48, mr: 2, border: '2px solid white', boxShadow: 2 }}
+                        />
+                        <Box sx={{ fontSize: "small", flexWrap: "nowrap" }}>
+                          <Typography variant="body1" color="white" sx={{ fontSize: "small" }}>
+                            {contributor.name}
+                          </Typography>
+                          <Link
+                            href={contributor.linkedinUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            sx={{
+                              color: '#d1d5db',
+                              '&:hover': {
+                                color: '#ffffff',
+                              },
+                            }}
+                          >
+                            LinkedIn
+                          </Link>
+                        </Box>
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
 
-              {/* Contributors Section */}
-              <Typography variant="h6" sx={{ mt: 3, mb: 3, fontWeight: 'bold', color: 'primary.main' }}>
-                Contributors:
-              </Typography>
-              <Grid
-                container
-                spacing={2}
-                sx={{
-                  maxHeight: '180px',
+                {/* Applicants Section */}
+                <Box sx={{
+                  mt: 5, maxHeight: '100px',
                   overflowY: 'auto',
                   pr: 1,
                   scrollBehavior: 'smooth',
@@ -242,199 +317,120 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                   '&::-webkit-scrollbar-thumb:hover': {
                     backgroundColor: '#888',
                   },
-                }}
-              >
-                {project.contributors.map((contributor, index) => (
-                  <Grid item xs={12} sm={6} key={index}>
+                }}>
+                  {project.applicants.map((applicant, index) => (
                     <Box
+                      key={index}
                       sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        backgroundColor: '#1f2937',
+                        backgroundColor: '#374151',
                         p: 2,
+                        mt: 1,
                         borderRadius: 2,
-                        boxShadow: 3,
-                        transition: 'transform 0.3s, background-color 0.3s',
-                        '&:hover': {
-                          backgroundColor: '#374151', // Slightly lighter on hover
-                          transform: 'scale(1.05)',
-                          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
-                        },
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+
                       }}
                     >
-                      <Avatar
-                        src={contributor.avatarUrl}
-                        alt={contributor.name}
-                        sx={{ width: 48, height: 48, mr: 2, border: '2px solid white', boxShadow: 2 }}
-                      />
+                      <Typography variant="body2" color="white">{applicant.name}</Typography>
                       <Box>
-                        <Typography variant="body1" color="white" sx={{ fontWeight: 'bold' }}>
-                          {contributor.name}
-                        </Typography>
-                        <Link
-                          href={contributor.linkedinUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          sx={{
-                            color: '#d1d5db',
-                            textDecoration: 'underline',
-                            '&:hover': {
-                              color: '#ffffff',
-                              textDecoration: 'underline',
-                            },
+                        <Button
+                          variant="contained"
+                          color="success"
+                          sx={{ mr: 1, fontSize: "small" }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleApplication(applicant._id, 1);
                           }}
                         >
-                          View Profile
-                        </Link>
+                          Accept
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="error"
+                          sx={{ fontSize: "small" }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleApplication(applicant._id, 0);
+                          }}
+                        >
+                          Decline
+                        </Button>
                       </Box>
                     </Box>
-                  </Grid>
-                ))}
-              </Grid>
-
-              {/* Applicants Section */}
-              <Box sx={{ mt: 5, maxHeight: '75px', overflowY: 'auto' }}>
-                {project.applicants.map((applicant, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      backgroundColor: '#374151',
-                      p: 2,
-                      mt: 1,
-                      borderRadius: 2,
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <Typography variant="body2" color="white">{applicant.name}</Typography>
-                    <Box>
-                      <Button
-                        variant="contained"
-                        color="success"
-                        sx={{ mr: 1 }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleApplication(applicant._id, 1);
-                        }}
-                      >
-                        Accept
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="error"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleApplication(applicant._id, 0);
-                        }}
-                      >
-                        Decline
-                      </Button>
-                    </Box>
-                  </Box>
-                ))}
+                  ))}
+                </Box>
               </Box>
-            </Box>
-          )}
+            )}
 
-          {isOngoing && (
-            <React.Fragment>
-              {user ? (
-                application && project.lead._id !== user._id ? (
-                  <button
-                    className="mt-8 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleJoinRequest();
-                    }}
-                  >
-                    Request to Join
-                  </button>
+            {isOngoing && (
+              <React.Fragment>
+                {user ? (
+                  application && project.lead._id !== user._id ? (
+                    <button
+                      className="mt-8 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleJoinRequest();
+                      }}
+                    >
+                      Request to Join
+                    </button>
+                  ) : (
+                    <button
+                      className="mt-8 py-2 px-4 bg-gray-400 text-white rounded-lg cursor-not-allowed"
+                      disabled
+                    >
+                      Already Applied
+                    </button>
+                  )
                 ) : (
                   <button
-                    className="mt-8 py-2 px-4 bg-gray-400 text-white rounded-lg cursor-not-allowed"
-                    disabled
+                    className="mt-8 py-2 px-4 bg-green-700 hover:bg-green-800 text-white rounded-lg"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate('/login');
+                    }}
                   >
-                    Already Applied
+                    Login to apply
                   </button>
-                )
-              ) : (
-                <button
-                  className="mt-8 py-2 px-4 bg-green-700 hover:bg-green-800 text-white rounded-lg"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate('/login');
-                  }}
-                >
-                  Login to apply
-                </button>
-              )}
-            </React.Fragment>
-          )}
+                )}
+              </React.Fragment>
+            )}
+            {deleteModal && (
+              <DeleteRequestModal
+                isOpen={deleteModal}
+                project={project}
+                onClose={handleCloseModal}
+                onDelete={handleDeletesend}
+              />
+            )}
 
-          <div className="max-h-[140px] overflow-y-auto grid grid-cols-1 gap-2 mt-5">
-            {project.applicants.map((applicant, index) => (
-              <div
-                key={index}
-                className="bg-gray-700 p-2 mt-1 rounded-lg shadow-md flex justify-between items-center"
+            {/* Modal for sending join request */}
+            {showappModal && (
+              <JoinRequestModal
+                isOpen={showappModal}
+                project={project}
+                onClose={handleCloseModal}
+                onSend={handleSendRequest}
+              />
+            )}
+
+            {/* GitHub Link */}
+            <Box sx={{ mt: 4 }}>
+              <Link
+                href={project.githubUrl}
+                target="_blank"
+                rel="noreferrer"
+                sx={{ color: '#d1d5db', textDecoration: 'none', '&:hover': { color: '#ffffff' } }}
               >
-                <p className="font-semibold">{applicant.name}</p>
-                <div className="flex space-x-2">
-                  <button
-                    className="bg-green-500 rounded-md p-2 hover:bg-green-600"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleApplication(applicant._id, 1);
-                    }}
-                  >
-                    Accept
-                  </button>
-                  <button
-                    className="bg-red-700 rounded-md p-2 hover:bg-red-800"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleApplication(applicant._id, 0);
-                    }}
-                  >
-                    Decline
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-          {deleteModal && (
-            <DeleteRequestModal
-              isOpen={deleteModal}
-              project={project}
-              onClose={handleCloseModal}
-              onDelete={handleDeletesend}
-            />
-          )}
-
-          {/* Modal for sending join request */}
-          {showappModal && (
-            <JoinRequestModal
-              isOpen={showappModal}
-              project={project}
-              onClose={handleCloseModal}
-              onSend={handleSendRequest}
-            />
-          )}
-
-          {/* GitHub Link */}
-          <Box sx={{ mt: 4 }}>
-            <Link
-              href={project.githubUrl}
-              target="_blank"
-              rel="noreferrer"
-              sx={{ color: '#d1d5db', textDecoration: 'none', '&:hover': { color: '#ffffff' } }}
-            >
-              View Project on GitHub
-            </Link>
+                View Project on GitHub
+              </Link>
+            </Box>
           </Box>
-        </Box>
-      </Paper>
-    </motion.div>
+        </Paper>
+      </div>
+    </React.Fragment>
   );
 };
 
