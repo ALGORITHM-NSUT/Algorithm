@@ -72,6 +72,8 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
         credentials: 'include',
         body: JSON.stringify({ title: project.title, applicant: id, state: state })
       });
+      const data = await applicants.json();
+      console.log(data.message);
       refreshProjects();
     } catch (error) {
       console.error('Error updating application state:', error);
@@ -164,15 +166,15 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
         >
 
 
-
-          <AddProject
-            refreshProjects={refreshProjects}
-            showadd={false}
-            edit={editProject}
-            setEditState={setEditProject}
-            project={project}
-          />
-
+          <div>
+            <AddProject
+              refreshProjects={refreshProjects}
+              showadd={false}
+              edit={editProject}
+              setEditState={setEditProject}
+              project={project}
+            />
+          </div>
           <div style={{
             background: '#330080', // Changed from 'white' to '#330080'
             height: '150px',
@@ -180,7 +182,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
             alignItems: 'center',
             position: 'relative',
             zIndex: 0,
-            clipPath: 'path("M0,100 C150,200 400,0 600,100 L600,0 L0,0 Z")',
+            clipPath: 'path("M0,100 C200,200 400,0 600,100 L600,0 L0,0 Z")',
           }}>
             <Typography
               variant={isExpanded ? 'h5' : 'h4'}
@@ -220,7 +222,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
 
             <Typography
               variant="body1"
-              sx={{ color: 'black', animation: 'fadeIn 0.5s ease-in-out', height: '100px', fontSize: '17px', mb: 6 }}
+              sx={{ color: 'black', animation: 'fadeIn 0.5s ease-in-out', height: '100px', fontSize: '17px', mb: 10 }}
             >
               {project.description}
             </Typography>
@@ -290,9 +292,9 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                 </Box>
 
                 {/* Contributors Section */}
-                <Typography variant="h6" sx={{ mt: 3, mb: 3, fontWeight: 'bold', color: '#330080' }}>
+                {project.contributors.length != 0 && <Typography variant="h6" sx={{ mt: 3, mb: 3, fontWeight: 'bold', color: '#330080' }}>
                   Contributors:
-                </Typography>
+                </Typography>}
                 <Grid
                   container
                   spacing={2}

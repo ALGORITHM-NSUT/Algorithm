@@ -222,7 +222,7 @@ export const editProfile = async (req, res, next) => {
         }
 
         // Check if user exists with NSUT email
-        let user = await FormData.findOne({ email });
+        let user = await FormData.findOne({ _id: req.user._id });
         if (!user) {
             return res.status(404).json({
                 message: "User not found",
@@ -231,14 +231,14 @@ export const editProfile = async (req, res, next) => {
 
         // Overwrite user's information
         user.name = name;
-        user.personalEmail = personalEmail || ""; // If not provided, set to empty string
-        user.phoneNumber = phoneNumber || "";
-        user.githubProfile = githubProfile || "";
-        user.leetcodeProfile = leetcodeProfile || "";
-        user.codeforcesProfile = codeforcesProfile || "";
-        user.linkedinUrl = linkedinUrl || "";
-        user.rollNumber = rollNumber || "";
-        user.year = year || "";
+        user.personalEmail = personalEmail || user.personalEmail; // If not provided, set to previous
+        user.phoneNumber = phoneNumber || user.phoneNumber;
+        user.githubProfile = githubProfile || user.githubProfile;
+        user.leetcodeProfile = leetcodeProfile || user.leetcodeProfile;
+        user.codeforcesProfile = codeforcesProfile || user.codeforcesProfile;
+        user.linkedinUrl = linkedinUrl || user.linkedinUrl;
+        user.rollNumber = rollNumber || user.rollNumber;
+        user.year = year || user.year;
 
         // Save the updated user
         await user.save();

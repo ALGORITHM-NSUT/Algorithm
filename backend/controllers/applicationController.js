@@ -4,7 +4,7 @@ import application from "../models/joinProject.js";
 export const submitapplication = async (req, res) => {
   const { title, lead } = req.body;
   const applier = req.user._id;
-  console
+
   try {
     const apply = new application({
       title,

@@ -1,94 +1,151 @@
-
-
 import React, { useState, useEffect } from 'react';
 import {
-  Box,
   Button,
   TextField,
   Typography,
+  Box,
   IconButton,
-  Chip,
+  Grow,
+  Snackbar,
+  Alert,
+  Grid,
 } from '@mui/material';
-import { Close as CloseIcon } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { styled } from '@mui/system';
+
+const primaryColor = '#330075';
+const secondaryColor = '#4a007a';
+const whiteColor = '#ffffff';
+const overlayColor = 'rgba(0, 0, 0, 0.5)';
+
+const CustomTextField = styled(TextField)({
+  '& label.Mui-focused': {
+    color: primaryColor,
+  },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: primaryColor,
+    },
+    '&:hover fieldset': {
+      borderColor: secondaryColor,
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: primaryColor,
+    },
+  },
+});
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  backgroundColor: primaryColor,
+  color: whiteColor,
+  borderRadius: '20px',
+  padding: '10px 20px',
+  '&:hover': {
+    backgroundColor: secondaryColor,
+  },
+}));
 
 const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, project }) => {
-  const [showForm, setShowForm] = useState(false);
   const [projectData, setProjectData] = useState({
     title: '',
     description: '',
     lead: '',
     contributors: [],
     githubUrl: '',
+    images: [],
   });
-
-  useEffect(() => {
-    setShowForm(edit);
-  }, [edit]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   useEffect(() => {
     if (project) {
       setProjectData({
-        title: project.title,
-        description: project.description,
-        githubUrl: project.githubUrl,
-        contributors: project.contributors.map((contributor) => contributor.email),
-        lead: project.lead._id,
+        title: project.title || "",
+        description: project.description || "",
+        githubUrl: project.githubUrl || "",
+        contributors: project.contributors.map((contributor) => contributor.email) || [],
+        lead: project.lead._id || "",
+        images: project.images || [],
       });
     }
-  }, [project, showForm]);
+  }, [project]);
 
   const resetProjectData = () => {
     setProjectData({
-      title: '',
-      description: '',
-      lead: '',
+      title: "",
+      description: "",
+      lead: "",
       contributors: [],
-      githubUrl: '',
+      githubUrl: "",
+      images: [],
     });
+  };
+
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    setProjectData((prevData) => ({
+      ...prevData,
+      images: [...prevData.images, ...files],
+    }));
+  };
+
+  const handleRemoveImage = (index) => {
+    const updatedImages = [...projectData.images];
+    updatedImages.splice(index, 1);
+    setProjectData((prevData) => ({
+      ...prevData,
+      images: updatedImages,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+
     try {
       const response = await fetch('http://localhost:5000/addProject', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        body: JSON.stringify(projectData),
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ projectData }),
       });
-      await response.json();
+      console.log(projectData);
       refreshProjects();
+      const data = await response.json();
+      console.log(data.message);
+      if (response.ok) handleSnackbarOpen('Project added successfully!');
+      else handleSnackbarOpen('Error adding project!');
       handleCancel();
     } catch (error) {
       console.error('Error posting data:', error);
+      handleSnackbarOpen('Error adding project!');
     }
   };
 
   const updateProject = async (e) => {
     e.preventDefault();
+
     try {
       const response = await fetch('http://localhost:5000/updateProject', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        body: JSON.stringify(projectData),
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ projectData }),
       });
-      await response.json();
       refreshProjects();
+      if (response.ok) handleSnackbarOpen('Project updated successfully!');
       handleCancel();
     } catch (error) {
       console.error('Error updating data:', error);
+      handleSnackbarOpen('Error updating project!');
     }
   };
 
   const handleAddContributor = () => {
     setProjectData((prevData) => ({
       ...prevData,
-      contributors: [...prevData.contributors, ''],
+      contributors: [...prevData.contributors, '']
     }));
   };
 
@@ -97,7 +154,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
     updatedContributors[index] = value;
     setProjectData((prevData) => ({
       ...prevData,
-      contributors: updatedContributors,
+      contributors: updatedContributors
     }));
   };
 
@@ -106,135 +163,200 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
     updatedContributors.splice(index, 1);
     setProjectData((prevData) => ({
       ...prevData,
-      contributors: updatedContributors,
+      contributors: updatedContributors
     }));
   };
 
   const handleCancel = () => {
-    setShowForm(false);
-    if (setEditState) setEditState(false);
+    setEditState(false);
     if (!project) resetProjectData();
+  };
+
+  const handleSnackbarOpen = (message) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   return (
     <div className="relative flex items-center">
       {showadd && (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setShowForm(!showForm)}
-          sx={{
-            width: '100%',
-            height: '100%',
-            borderRadius: '16px',
-            fontSize: '2rem',
-          }}
+
+        <div
+          className="bg-gray-700/30 w-full  h-full rounded-lg shadow-lg cursor-pointer flex items-center justify-center text-white align-middle hover:bg-gray-700/60 backdrop-blur-xl transition duration-300 ease-in-out transform "
+          onClick={() => setEditState(true)}
         >
-          <span>+</span>
-        </Button>
+          <span className="text-6xl">+</span>
+        </div>
+
+
       )}
 
-      {showForm && (
-        <span onClick={(e) => e.stopPropagation()}>
-          <Box
-            className="absolute w-full top-0 left-0 p-4 shadow-lg z-10"
-            sx={{
-              backgroundColor: 'rgba(25, 30, 46, 0.7)', // Semi-transparent background
-              backdropFilter: 'blur(20px)',
-            }}
-          >
-            <Typography variant="h5" className="font-bold mb-4">
-              {project ? 'Update Project' : 'Add New Project'}
-              <IconButton
-                edge="end"
-                color="inherit"
-                onClick={handleCancel}
-                aria-label="close"
-                sx={{ position: 'absolute', top: 10, right: 10 }}
-              >
-                <CloseIcon />
-              </IconButton>
-            </Typography>
-
-            <form onSubmit={(e) => (project ? updateProject(e) : handleSubmit(e))}>
-              <TextField
-                label="Title"
-                variant="outlined"
-                fullWidth
-                value={projectData.title}
-                onChange={(e) => setProjectData({ ...projectData, title: e.target.value })}
-                sx={{ mb: 2 }}
-              />
-              <TextField
-                label="Description"
-                variant="outlined"
-                multiline
-                rows={4}
-                fullWidth
-                value={projectData.description}
-                onChange={(e) => setProjectData({ ...projectData, description: e.target.value })}
-                sx={{ mb: 2 }}
-              />
-              <TextField
-                label="Lead"
-                variant="outlined"
-                fullWidth
-                value={projectData.lead}
-                onChange={(e) => setProjectData({ ...projectData, lead: e.target.value })}
-                sx={{ mb: 2 }}
-              />
-              <TextField
-                label="GitHub URL"
-                variant="outlined"
-                fullWidth
-                value={projectData.githubUrl}
-                onChange={(e) => setProjectData({ ...projectData, githubUrl: e.target.value })}
-                sx={{ mb: 2 }}
-              />
-              <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                Contributors:
+      {edit && (
+        <span onClick={(e) => e.stopPropagation()} className="w-full h-full">
+          <div className='w-full h-full'>
+            <Box
+              component="form"
+              onSubmit={(e) => (project ? updateProject(e) : handleSubmit(e))}
+            >
+              <Typography variant="h5" sx={{ color: primaryColor, fontWeight: 'bold', mb: 2 }}>
+                {project ? 'Edit Project' : 'Add New Project'}
               </Typography>
-              <Box sx={{ maxHeight: '120px', overflowY: 'auto', mb: 2 }}>
+
+              <Grow in={true} timeout={600}>
+                <CustomTextField
+                  label="Title"
+                  fullWidth
+                  value={projectData.title}
+                  onChange={(e) => setProjectData({ ...projectData, title: e.target.value })}
+                  disabled={!!project}
+                  margin="normal"
+                  variant="outlined"
+                  InputProps={{
+                    style: { borderRadius: '10px' },
+                  }}
+                />
+              </Grow>
+
+              <Grow in={true} timeout={800}>
+                <CustomTextField
+                  label="Description"
+                  fullWidth
+                  multiline
+                  rows={4}
+                  value={projectData.description}
+                  onChange={(e) => setProjectData({ ...projectData, description: e.target.value })}
+                  margin="normal"
+                  variant="outlined"
+                  InputProps={{
+                    style: { borderRadius: '10px' },
+                  }}
+                />
+              </Grow>
+
+              <Grow in={true} timeout={1000}>
+                <CustomTextField
+                  label="Lead"
+                  fullWidth
+                  value={project?.lead.name}
+                  onChange={(e) => setProjectData({ ...projectData, lead: e.target.value })}
+                  disabled={!!project}
+                  margin="normal"
+                  variant="outlined"
+                  InputProps={{
+                    style: { borderRadius: '10px' },
+                  }}
+                />
+              </Grow>
+
+              <Grow in={true} timeout={1200}>
+                <CustomTextField
+                  label="GitHub URL"
+                  fullWidth
+                  value={projectData.githubUrl}
+                  onChange={(e) => setProjectData({ ...projectData, githubUrl: e.target.value })}
+                  margin="normal"
+                  variant="outlined"
+                  InputProps={{
+                    style: { borderRadius: '10px' },
+                  }}
+                />
+              </Grow>
+
+              <Box>
+                <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+                  Contributors
+                </Typography>
                 {projectData.contributors.map((contributor, index) => (
-                  <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                    <TextField
-                      variant="outlined"
-                      value={contributor}
-                      onChange={(e) => handleContributorChange(index, e.target.value)}
-                      fullWidth
-                      sx={{ mr: 1 }}
-                    />
-                    <Chip
-                      label="Remove"
-                      color="error"
-                      onClick={() => handleRemoveContributor(index)}
-                      sx={{ cursor: 'pointer' }}
-                    />
+                  <Box display="flex" alignItems="center" key={index}>
+                    <Grow in={true} timeout={1600}>
+                      <CustomTextField
+                        label={`Contributor ${index + 1}`}
+                        fullWidth
+                        value={contributor}
+                        onChange={(e) => handleContributorChange(index, e.target.value)}
+                        margin="normal"
+                        variant="outlined"
+                        InputProps={{
+                          style: { borderRadius: '10px' },
+                        }}
+                      />
+                    </Grow>
+                    <IconButton onClick={() => handleRemoveContributor(index)} sx={{ ml: 1 }}>
+                      <RemoveIcon />
+                    </IconButton>
                   </Box>
                 ))}
-              </Box>
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={handleAddContributor}
-                sx={{ mb: 2 }}
-              >
-                Add Contributor
-              </Button>
 
-              {/* Form buttons */}
-              <Box className="flex justify-end">
-                <Button onClick={handleCancel} color="default" sx={{ mr: 2 }}>
-                  Cancel
-                </Button>
-                <Button type="submit" color="primary">
-                  {project ? 'Update Project' : 'Add Project'}
-                </Button>
+                <StyledButton
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  onClick={handleAddContributor}
+                  sx={{ mt: 1 }}
+                >
+                  Add Contributor
+                </StyledButton>
               </Box>
-            </form>
-          </Box>
+
+              <Box>
+                <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+                  Project Images
+                </Typography>
+                <input
+                  accept="image/*"
+                  type="file"
+                  onChange={handleImageChange}
+                  multiple
+                  style={{ display: 'none' }}
+                  id="image-upload"
+                />
+                <label htmlFor="image-upload">
+                  <StyledButton variant="contained" component="span" startIcon={<AddIcon />} sx={{ mt: 1 }}>
+                    Upload Images
+                  </StyledButton>
+                </label>
+                <Grid container spacing={2} mt={2}>
+                  {projectData.images.map((image, index) => (
+                    <Grid item xs={4} key={index}>
+                      <Box position="relative">
+                        <img
+                          src={URL.createObjectURL(image)}
+                          alt={`Project Image ${index + 1}`}
+                          style={{ width: '100%', borderRadius: '8px' }}
+                        />
+                        <IconButton
+                          onClick={() => handleRemoveImage(index)}
+                          sx={{ position: 'absolute', top: 0, right: 0, color: 'red' }}
+                        >
+                          <RemoveIcon />
+                        </IconButton>
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+
+              <Box display="flex" justifyContent="space-between" mt={2}>
+                <StyledButton variant="contained" type="submit">
+                  {project ? 'Update Project' : 'Add Project'}
+                </StyledButton>
+                <StyledButton variant="outlined" onClick={handleCancel}>
+                  Cancel
+                </StyledButton>
+              </Box>
+            </Box>
+          </div>
         </span>
       )}
+
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

@@ -16,7 +16,7 @@ export const getProjects = async (req, res) => {
       });
 
     // Fetch all applications from the apply model
-    const applications = await apply.find().populate('applier', 'name linkedinUrl _id');
+    const applications = await apply.find().populate('applier', 'name linkedinUrl _id phoneNumber rollNumber githubProfile');
 
     // Iterate through each project and match applications based on the title
     const formattedProjects = projects.map(project => {
@@ -38,8 +38,12 @@ export const getProjects = async (req, res) => {
         status: project.status === false ? "Ongoing" : "Completed",
         applicants: user == project.lead._id ? matchedApplications.map(app => ({
           name: app.applier.name,
-          linkedinUrl: app.applier?.linkedinUrl,
-          _id: app.applier._id
+          linkedinUrl: app.applier.linkedinUrl,
+          _id: app.applier._id,
+          rollNumber: app.applier.rollNumber,
+          phoneNumber: app.applier.phoneNumber,
+          githubProfile: app.applier.githubProfile
+
         })) : []// Extract applicant names
       };
     });

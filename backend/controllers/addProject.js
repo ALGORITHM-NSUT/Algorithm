@@ -23,8 +23,8 @@ export const addProject = async (req, res) => {
     const contributorUsers = await formDataSchema.find({ email: { $in: contributorEmails } });
 
     // Check if all contributors were found
-    if (contributorUsers.length !== contributorEmails.length) {
-      return res.status(404).json({ message: 'One or more contributors not found' });
+    if (contributorUsers) {
+      if (contributorUsers.length != contributorEmails.length) return res.status(404).json({ message: 'One or more contributors not found' });
     }
 
     // Get ObjectIds of contributors
@@ -44,6 +44,7 @@ export const addProject = async (req, res) => {
 
     res.status(201).json({ message: 'Project saved successfully', project: savedProject });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Error saving project', error: error.message });
   }
 };

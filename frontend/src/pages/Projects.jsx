@@ -31,7 +31,7 @@ const Projects = () => {
 
   return (
     <div className="flex flex-col min-h-screen relative">
-      
+
       <Navbar />
       <FloatingBackground />
       <div className="flex flex-col items-center  text-white py-10 w-full relative z-10">
@@ -46,7 +46,8 @@ const Projects = () => {
                 refreshProjects={fetchProjects}
               />
             ))}
-            {user && user.admin && <AddProject refreshProjects={fetchProjects} edit={false} showadd={true} />}
+            <div className='relative w-full min-h-[150px] h-fit'>
+              {user && user.admin && <AddProject refreshProjects={fetchProjects} edit={false} showadd={true} />}</div>
           </div>
         </div>
         <div className="w-full">
