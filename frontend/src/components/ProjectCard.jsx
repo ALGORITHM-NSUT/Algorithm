@@ -220,7 +220,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
 
             <Typography
               variant="body1"
-              sx={{ color: 'black', animation: 'fadeIn 0.5s ease-in-out', height: '100px', fontSize: '17px', mb: 6 }}
+              sx={{ color: 'black', animation: 'fadeIn 0.5s ease-in-out', height: '100px', fontSize: '17px', mb: 10 }}
             >
               {project.description}
             </Typography>
