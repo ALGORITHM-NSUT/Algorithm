@@ -59,7 +59,7 @@ const Login = () => {
                 htmlFor="email"
                 className="block mb-2 text-sm font-semibold text-gray-900"
               >
-                Your email
+                Your email (NSUT-Email-ID)
               </label>
               <input
                 type="email"

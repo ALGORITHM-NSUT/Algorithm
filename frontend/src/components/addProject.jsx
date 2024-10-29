@@ -203,12 +203,25 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
   return (
     <div>
       {showadd && (
-        <div
-          className="bg-gray-700/30 w-full p-4 h-full rounded-lg shadow-lg cursor-pointer flex items-center justify-center text-white align-middle hover:bg-gray-700/60 backdrop-blur-xl"
-          onClick={() => setShowForm(!showForm)}
+        <box
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: overlayColor,
+          zIndex: 1000,
+        }}
         >
-          <span className="text-5xl">+</span>
-        </div>
+          <div
+            className="bg-gray-700/30 w-full  h-full rounded-lg shadow-lg cursor-pointer flex items-center justify-center text-white align-middle hover:bg-gray-700/60 backdrop-blur-xl transition duration-300 ease-in-out transform "
+            onClick={() => setShowForm(!showForm)}
+          >
+            <span className="text-6xl">+</span>
+          </div>
+        </box>
+
       )}
 
       {showForm && (
