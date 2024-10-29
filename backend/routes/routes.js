@@ -11,6 +11,7 @@ import { handleApplication } from '../controllers/handleApplication.js';
 import { addProject } from '../controllers/addProject.js'
 import { deleteProject } from '../controllers/deleteProject.js';
 import { updateProject } from '../controllers/updateProject.js';
+import {emailVerify} from '../controllers/emailVerify.js';
 
 const router = express.Router();
 
@@ -18,6 +19,7 @@ const router = express.Router();
 router.get('/', home)
 router.get("/core", getCoreMembers)
 router.route("/projects").get(isAuthenticated, getProjects);
+router.get("/verify/:id",emailVerify)
 
 
 // post

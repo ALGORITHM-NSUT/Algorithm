@@ -1,8 +1,12 @@
 import FormData from "../models/formDataModel.js";
 import { sendToken } from "../utils/sendToken.js";
 import CoreMember from "../models/CoreMember.js";
+import crypto from 'crypto';
+import nodemailer from 'nodemailer'
+import { transporter } from "../utils/MailClient.js";
 
-export const register = async (req, res, next) => {
+
+export const register = async (req, res) => {
     try {
         const {
             name,
@@ -17,12 +21,9 @@ export const register = async (req, res, next) => {
             rollNumber,
             year
         } = req.body;
+        
         // Check if all required fields are provided
-        if (
-            !name ||
-            !email ||
-            !password
-        ) {
+        if (!name || !email || !password) {
             return res.status(400).json({
                 message: "Please provide all required fields",
             });
@@ -38,41 +39,53 @@ export const register = async (req, res, next) => {
             });
         }
 
-        if (Admin) {
-            const admin = true;
-            user = await FormData.create({
-                name,
-                email,
-                personalEmail,
-                phoneNumber,
-                githubProfile,
-                leetcodeProfile,
-                codeforcesProfile,
-                linkedinUrl,
-                rollNumber,
-                year,
-                password,
-                admin
+        // Create the new user, with admin status if applicable
+        const isAdmin = !!Admin;
+        user = await FormData.create({
+            name,
+            email,
+            personalEmail,
+            phoneNumber,
+            githubProfile,
+            leetcodeProfile,
+            codeforcesProfile,
+            linkedinUrl,
+            rollNumber,
+            year,
+            password,
+            admin: isAdmin,
+            verified: false
+        });
+
+       
+
+        // Create email verification token and link
+        const verificationToken = crypto.randomBytes(32).toString("hex");
+        const verificationLink = `${process.env.CLIENT_URL}/verify/${user.id}`;
+
+        try {
+            // Send verification email
+            const info = await transporter.sendMail({
+                from: '"Algorithm" <algorithmnsut@gmail.com>',
+                to: email,
+                subject: "Email Verification",
+                text: `Please verify your email by clicking on the following link: ${verificationLink}`,
+                html: `<p>Please verify your email by clicking on the following link:</p><a href="${verificationLink}">Verify Email</a>`,
             });
-        }
-        else {
-            user = await FormData.create({
-                name,
-                email,
-                personalEmail,
-                phoneNumber,
-                githubProfile,
-                leetcodeProfile,
-                codeforcesProfile,
-                linkedinUrl,
-                rollNumber,
-                year,
-                password,
+
+            console.log("Message sent: %s", info.messageId);
+        } catch (emailError) {
+            console.error("Error sending verification email:", emailError.message);
+            return res.status(500).json({
+                message: "Registration successful, but email verification failed",
+                error: emailError.message,
             });
         }
 
-        // Send token response after registration
-        sendToken(res, user, "Registered successfully", 201);
+        res.status(200).send({
+            message: "success"
+        })
+
     } catch (error) {
         return next(
             res.status(500).json({
@@ -82,6 +95,8 @@ export const register = async (req, res, next) => {
         );
     }
 };
+
+
 
 export const login = async (req, res, next) => {
     try {
@@ -101,6 +116,12 @@ export const login = async (req, res, next) => {
         if (!user) {
             return res.status(401).json({
                 message: "Incorrect Email or Password",
+            });
+        }
+
+        if(!user.verified){
+            return res.status(401).json({
+                message: "User Not Verified",
             });
         }
 
