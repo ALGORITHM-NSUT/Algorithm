@@ -22,7 +22,7 @@ export const handleApplication = async (req, res) => {
         const response = await octokit.repos.addCollaborator({
           owner: "ALGORITHM-NSUT",
           repo: project.githubUrl.split("/").pop(),
-          username: userGit,
+          username: userGit.split("/").pop(),
           permission: "write",
         });
         const updatedProject = await Project.findOneAndUpdate(
@@ -36,7 +36,7 @@ export const handleApplication = async (req, res) => {
           return res.status(404).json({ message: 'Project not found' });
         }
       } catch (error) {
-        // console.log(error);
+        console.log(error);
         return res.status(500).json({ message: 'Could not add to github' });
       }
 

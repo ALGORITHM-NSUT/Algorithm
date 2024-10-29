@@ -48,6 +48,13 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, project }) => {
   const [showForm, setShowForm] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  useEffect(() => {
+
+    setShowForm(edit);
+  }, [edit])
   const [projectData, setProjectData] = useState({
     title: '',
     description: '',
@@ -56,25 +63,17 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
     githubUrl: '',
     images: [],
   });
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-
-  useEffect(() => {
-    setShowForm(edit);
-  }, [edit]);
 
   useEffect(() => {
     if (project) {
-      setProjectData({
-        title: project?.title || '',
-        description: project?.description || '',
-        githubUrl: project?.githubUrl || '',
-        contributors: project?.contributors.map((contributor) => contributor.email) || [],
-        lead: project?.lead?._id || '',
-        images: project?.images || [],
-      });
+      projectData.title = project.title;
+      projectData.description = project.description;
+      projectData.githubUrl = project.githubUrl;
+      projectData.contributors = project.contributors.map((contributor) => contributor.email);
+      projectData.lead = project.lead._id;
+      projectData.images = project.images || [];
     }
-  }, [project]);
+  }, [project, showForm]);
 
   const resetProjectData = () => {
     setProjectData({
@@ -83,7 +82,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
       lead: '',
       contributors: [],
       githubUrl: '',
-      images: [],
+      images: []
     });
   };
 
@@ -103,70 +102,54 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
       images: updatedImages,
     }));
   };
-
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    for (const key in projectData) {
-      if (Array.isArray(projectData[key])) {
-        projectData[key].forEach((value) => {
-          formData.append(key, value);
-        });
-      } else {
-        formData.append(key, projectData[key]);
-      }
-    }
-
     try {
-      await fetch('http://localhost:5000/addProject', {
+      const response = await fetch('http://localhost:5000/addProject', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
         credentials: "include",
+        body: JSON.stringify({
+          projectData
+        })
       });
       refreshProjects();
-      handleSnackbarOpen('Project added successfully!');
-      handleCancel();
+      handleCancel(); // Close the form after submission
+      // resetProjectData();
+      const data = await response.json();
+      console.log('Response data:', data);
     } catch (error) {
       console.error('Error posting data:', error);
-      handleSnackbarOpen('Error adding project!');
     }
   };
 
   const updateProject = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    for (const key in projectData) {
-      if (Array.isArray(projectData[key])) {
-        projectData[key].forEach((value) => {
-          formData.append(key, value);
-        });
-      } else {
-        formData.append(key, projectData[key]);
-      }
-    }
-
     try {
-      await fetch('http://localhost:5000/updateProject', {
+      const response = await fetch('http://localhost:5000/updateProject', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
         credentials: "include",
+        body: JSON.stringify({
+          projectData
+        })
       });
       refreshProjects();
-      handleSnackbarOpen('Project updated successfully!');
-      handleCancel();
+      handleCancel(); // Close the form after submission
+      // resetProjectData();
+      const data = await response.json();
+      console.log('Response data:', data);
     } catch (error) {
-      console.error('Error updating data:', error);
-      handleSnackbarOpen('Error updating project!');
+      console.error('Error posting data:', error);
     }
   };
 
-  const handleAddContributor = () => {
-    setProjectData((prevData) => ({
-      ...prevData,
-      contributors: [...prevData.contributors, '']
-    }));
-  };
-
+  // Handle contributor input change
   const handleContributorChange = (index, value) => {
     const updatedContributors = [...projectData.contributors];
     updatedContributors[index] = value;
@@ -176,6 +159,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
     }));
   };
 
+  // Remove a contributor field
   const handleRemoveContributor = (index) => {
     const updatedContributors = [...projectData.contributors];
     updatedContributors.splice(index, 1);
@@ -185,10 +169,11 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
     }));
   };
 
+  // Handle form cancel (close form and reset)
   const handleCancel = () => {
-    setShowForm(false);
+    setShowForm(false); // Close form
     if (setEditState) setEditState(false);
-    if (!project) resetProjectData();
+    if (!project) resetProjectData(); // Reset fields
   };
 
   const handleSnackbarOpen = (message) => {
@@ -202,21 +187,19 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
 
   return (
     <div>
+      {/* Plus card to open form */}
       {showadd && (
-        <box
+        <div
+          className="absolute inset-0 w-full h-auto bg-gray-700/30 rounded-lg shadow-lg cursor-pointer flex items-center justify-center text-white align-middle hover:bg-gray-700/60 backdrop-blur-xl transition duration-300 ease-in-out transform z-10"
+          onClick={() => setShowForm(!showForm)}
         >
-          <div
-            className="bg-gray-700/30 w-full  h-full rounded-lg shadow-lg cursor-pointer flex items-center justify-center text-white align-middle hover:bg-gray-700/60 backdrop-blur-xl transition duration-300 ease-in-out transform "
-            onClick={() => setShowForm(!showForm)}
-          >
-            <span className="text-6xl">+</span>
-          </div>
-        </box>
-
+          <span className="text-5xl">+</span>
+        </div>
       )}
 
+
       {showForm && (
-        <span onClick={(e) => e.stopPropagation()}>
+        <span onClick={(e) => e.stopPropagation()} className='h-fit'>
           <Box
             sx={{
               position: 'fixed',
@@ -227,18 +210,17 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
               backgroundColor: overlayColor,
               zIndex: 1000,
             }}
-            onClick={handleCancel}
           />
-
           <Box
             component="form"
             onSubmit={(e) => (project ? updateProject(e) : handleSubmit(e))}
             sx={{
-              position: 'fixed',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '90%',
+              position: 'absolute',
+              top: '0%',
+              left: '0%',
+              width: '100%',
+              minHeight: '100%',
+              height: 'auto',
               maxWidth: '600px',
               p: 4,
               backgroundColor: whiteColor,
@@ -249,9 +231,12 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
               border: `2px solid ${primaryColor}`,
             }}
           >
+
             <Typography variant="h5" sx={{ color: primaryColor, fontWeight: 'bold', mb: 2 }}>
               {project ? 'Edit Project' : 'Add New Project'}
             </Typography>
+
+            {/* Project form */}
 
             <Grow in={true} timeout={600}>
               <CustomTextField
@@ -288,7 +273,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
               <CustomTextField
                 label="Lead"
                 fullWidth
-                value={projectData.lead}
+                value={project?.lead.name}
                 onChange={(e) => setProjectData({ ...projectData, lead: e.target.value })}
                 disabled={!!project}
                 margin="normal"
@@ -314,9 +299,10 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
             </Grow>
 
             <Box>
-              <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+
+              {projectData.contributors.length != 0 && <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
                 Contributors
-              </Typography>
+              </Typography>}
               {projectData.contributors.map((contributor, index) => (
                 <Box display="flex" alignItems="center" key={index}>
                   <Grow in={true} timeout={1600}>
@@ -337,15 +323,6 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
                   </IconButton>
                 </Box>
               ))}
-
-              <StyledButton
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={handleAddContributor}
-                sx={{ mt: 1 }}
-              >
-                Add Contributor
-              </StyledButton>
             </Box>
 
             <Box>
@@ -386,6 +363,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
               </Grid>
             </Box>
 
+            {/* Form buttons */}
             <Box display="flex" justifyContent="space-between" mt={2}>
               <StyledButton variant="contained" type="submit">
                 {project ? 'Update Project' : 'Add Project'}
@@ -397,7 +375,6 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
           </Box>
         </span>
       )}
-
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
         <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
           {snackbarMessage}

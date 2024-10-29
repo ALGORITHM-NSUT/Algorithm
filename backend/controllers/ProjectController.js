@@ -36,7 +36,7 @@ export const getProjects = async (req, res) => {
         githubUrl: project.githubUrl,
         description: project.description,
         status: project.status === false ? "Ongoing" : "Completed",
-        applicants: user == project.lead?._id ? matchedApplications.map(app => ({
+        applicants: user == project.lead._id ? matchedApplications.map(app => ({
           name: app.applier.name,
           linkedinUrl: app.applier.linkedinUrl,
           _id: app.applier._id,

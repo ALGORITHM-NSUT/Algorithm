@@ -26,7 +26,7 @@ export const updateProject = async (req, res) => {
     }
 
     const contributorIDs = foundContributors.map(contributor => contributor._id);
-    const contributorGitProfiles = foundContributors.map(contributor => contributor.githubProfile);
+    const contributorGitProfiles = foundContributors.map(contributor => contributor.githubProfile.split('/').pop());
 
     const previousContributorIDs = project.contributors.map(contributor => contributor.toString());
     const removedContributorIDs = previousContributorIDs.filter(id => !contributorIDs.includes(id));

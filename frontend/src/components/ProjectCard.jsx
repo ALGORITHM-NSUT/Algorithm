@@ -292,9 +292,9 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                 </Box>
 
                 {/* Contributors Section */}
-                <Typography variant="h6" sx={{ mt: 3, mb: 3, fontWeight: 'bold', color: '#330080' }}>
+                {project.contributors.length != 0 && <Typography variant="h6" sx={{ mt: 3, mb: 3, fontWeight: 'bold', color: '#330080' }}>
                   Contributors:
-                </Typography>
+                </Typography>}
                 <Grid
                   container
                   spacing={2}
@@ -402,7 +402,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
             {isOngoing && (
               <React.Fragment>
                 {user ? (
-                  application && project.lead?._id !== user._id ? (
+                  application && project.lead._id !== user._id ? (
 
 
                     user.githubProfile ? (<button
