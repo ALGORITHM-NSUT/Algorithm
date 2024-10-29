@@ -5,7 +5,7 @@ import { FaUserCircle } from 'react-icons/fa'; // FontAwesome user icon (install
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // Hamburger menu state
 
-  const navLinks = ['Home', 'About', 'Leaderboard', 'Projects', 'TechNews'];
+  const navLinks = ['Home', 'About', 'Leaderboard', 'Projects', 'TechNews','Core-Registration'];
 
   return (
     <nav style={{ backgroundColor: '#10111f' }} className="text-white p-4 sticky top-0 z-50 py-1 backdrop-blur-sm">
@@ -18,16 +18,30 @@ const Navbar = () => {
 
         <div className="hidden md:flex space-x-10 text-lg justify-center flex-grow">
           {navLinks.map((link, index) => (
-            <Link
-              key={index}
-              to={`/${link.toLowerCase().replace(/\s+/g, '')}`}
-              className="hover:text-gray-300 relative group"
-            >
-              {link}
-              <span className="absolute left-0 bottom-0 w-full h-0.5 bg-white transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
-            </Link>
+            link === "Core-Registration" ? (
+              <a
+                key={index}
+                href="https://www.google.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-gray-300 relative group"
+              >
+                {link}
+                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-white transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
+              </a>
+            ) : (
+              <Link
+                key={index}
+                to={`/${link.toLowerCase().replace(/\s+/g, '')}`}
+                className="hover:text-gray-300 relative group"
+              >
+                {link}
+                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-white transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
+              </Link>
+            )
           ))}
         </div>
+
 
         <div className="md:hidden">
           <button onClick={() => setIsOpen(!isOpen)} className="focus:outline-none">
