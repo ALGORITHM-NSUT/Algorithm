@@ -401,7 +401,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                 {user ? (
                   application && project.lead._id !== user._id ? (
                     <button
-                      className="mt-8 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                      className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleJoinRequest();
@@ -411,7 +411,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                     </button>
                   ) : (
                     <button
-                      className="mt-8 py-2 px-4 bg-[#0a242d] text-white rounded-lg cursor-not-allowed"
+                      className="py-2 px-4 bg-[#0a242d] text-white rounded-lg cursor-not-allowed"
                       disabled
                     >
                       Already Applied
