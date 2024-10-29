@@ -167,13 +167,13 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
 
 
           <div>
-          <AddProject
-            refreshProjects={refreshProjects}
-            showadd={false}
-            edit={editProject}
-            setEditState={setEditProject}
-            project={project}
-          />
+            <AddProject
+              refreshProjects={refreshProjects}
+              showadd={false}
+              edit={editProject}
+              setEditState={setEditProject}
+              project={project}
+            />
           </div>
           <div style={{
             background: '#330080', // Changed from 'white' to '#330080'
@@ -402,7 +402,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
             {isOngoing && (
               <React.Fragment>
                 {user ? (
-                  application && project.lead._id !== user._id ? (
+                  application && project.lead?._id !== user._id ? (
 
 
                     user.githubProfile ? (<button

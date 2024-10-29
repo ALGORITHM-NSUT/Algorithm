@@ -66,12 +66,12 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
   useEffect(() => {
     if (project) {
       setProjectData({
-        title: project.title || '',
-        description: project.description || '',
-        githubUrl: project.githubUrl || '',
-        contributors: project.contributors.map((contributor) => contributor.email) || [],
-        lead: project.lead._id || '',
-        images: project.images || [],
+        title: project?.title || '',
+        description: project?.description || '',
+        githubUrl: project?.githubUrl || '',
+        contributors: project?.contributors.map((contributor) => contributor.email) || [],
+        lead: project?.lead?._id || '',
+        images: project?.images || [],
       });
     }
   }, [project]);
@@ -204,15 +204,6 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
     <div>
       {showadd && (
         <box
-        sx={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: overlayColor,
-          zIndex: 1000,
-        }}
         >
           <div
             className="bg-gray-700/30 w-full  h-full rounded-lg shadow-lg cursor-pointer flex items-center justify-center text-white align-middle hover:bg-gray-700/60 backdrop-blur-xl transition duration-300 ease-in-out transform "
