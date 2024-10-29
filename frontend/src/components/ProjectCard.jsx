@@ -166,7 +166,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
         >
 
 
-
+          <div>
           <AddProject
             refreshProjects={refreshProjects}
             showadd={false}
@@ -174,7 +174,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
             setEditState={setEditProject}
             project={project}
           />
-
+          </div>
           <div style={{
             background: '#330080', // Changed from 'white' to '#330080'
             height: '150px',
@@ -182,7 +182,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
             alignItems: 'center',
             position: 'relative',
             zIndex: 0,
-            clipPath: 'path("M0,100 C150,200 400,0 600,100 L600,0 L0,0 Z")',
+            clipPath: 'path("M0,100 C200,200 400,0 600,100 L600,0 L0,0 Z")',
           }}>
             <Typography
               variant={isExpanded ? 'h5' : 'h4'}
