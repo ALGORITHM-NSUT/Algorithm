@@ -24,7 +24,7 @@ router.route("/projects").get(isAuthenticated, getProjects);
 router.post('/form', submitFormData);
 router.route("/application").post(isAuthenticated, submitapplication);
 router.route("/checkapplication").post(isAuthenticated, checkapplication);
-router.post("/applicationstate", handleApplication);
+router.route("/handleApplication").post(isAuthenticated, handleApplication);
 router.route("/addProject").post(isAuthenticated, addProject);
 router.route("/deleteProject").post(isAuthenticated, deleteProject);
 router.route("/updateProject").post(isAuthenticated, updateProject);

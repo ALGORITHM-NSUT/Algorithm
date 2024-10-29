@@ -1,4 +1,3 @@
-import useEnhancedEffect from '@mui/material/utils/useEnhancedEffect';
 import React, { useState, useEffect } from 'react';
 
 const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, project }) => {
@@ -14,7 +13,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
     contributors: [],
     githubUrl: '',
   });
-  // Reset project data
+
   useEffect(() => {
     if (project) {
       projectData.title = project.title;
@@ -120,7 +119,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
     <div className="relative flex items-center">
       {/* Plus card to open form */}
       {showadd && <div
-        className="bg-gray-700/30 w-full p-4 h-[680px] rounded-lg shadow-lg cursor-pointer flex items-center justify-center text-white align-middle hover:bg-gray-700/60 backdrop-blur-xl"
+        className="bg-gray-700/30 w-full p-4 h-full rounded-lg shadow-lg cursor-pointer flex items-center justify-center text-white align-middle hover:bg-gray-700/60 backdrop-blur-xl"
         onClick={() => setShowForm(!showForm)}
       >
         <span className="text-5xl">+</span>
@@ -128,7 +127,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
 
       {showForm && (
         <span onClick={(e) => e.stopPropagation()}>
-          <div className="absolute w-full top-0 left-0 bg-gray-700/30 p-4 min-h-[680px] rounded-lg shadow-lg z-10 h-fit backdrop-blur-xl">
+          <div className="absolute w-full top-0 left-0 bg-gray-700/30 p-4 rounded-lg shadow-lg z-10 backdrop-blur-xl">
             <h3 className="text-3xl font-bold mb-4 md:text-3xl md:text-wrap">Add New Project</h3>
 
             {/* Project form */}
@@ -140,11 +139,11 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
                 handleSubmit(e);
               }
             }}
-              className="bg-gray-800 p-4 rounded-lg shadow-lg min-h-[590px]">
+              className="bg-gray-800 p-4 rounded-lg shadow-lg">
               <div className="mb-4">
 
                 <label className="block text-gray-300 text-xl">Title:</label>
-                {project && <label className="block text-gray-300 p-2">{project.title}</label>}
+                {project && <label className="block w-full bg-[#191E2E] text-gray-300 text-md p-2 rounded-lg">{project.title}</label>}
 
                 {!project && <input
                   type="text"
@@ -168,7 +167,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
 
               <div className="mb-4">
                 <label className="block text-gray-300 text-xl">Lead:</label>
-                {project && <label className="text-gray-300 p-2">{project.lead.name}</label>}
+                {project && <label className="block w-full bg-[#191E2E] text-gray-300 text-md p-2 rounded-lg">{project.lead.name}</label>}
                 {!project && <input
                   type="text"
                   value={projectData.lead}

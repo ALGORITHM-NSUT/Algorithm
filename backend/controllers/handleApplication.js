@@ -3,7 +3,12 @@ import apply from "../models/joinProject.js";
 
 export const handleApplication = async (req, res) => {
   const { title, applicant, state } = req.body;
-
+  console.log(req);
+  const user = req.user._id;
+  const project = await Project.findOne({ title });
+  if (String(project.lead) != user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
   try {
     // Find the project by title and update its contributors array
     if (state == 1) {

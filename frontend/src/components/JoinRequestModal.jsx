@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import { Dialog, DialogContent, DialogActions, Typography, Button, IconButton, Box } from '@mui/material';
+import { Close as CloseIcon, Send as SendIcon, Cancel as CancelIcon } from '@mui/icons-material';
 
 const JoinRequestModal = ({ isOpen, project, onClose, onSend }) => {
   const [message, setMessage] = useState('');
-
-  if (!isOpen) return null; // If modal is not open, don't render anything
 
   const handleSend = (e) => {
     onSend(message); // Call the parent's onSend function with the message
@@ -12,25 +12,91 @@ const JoinRequestModal = ({ isOpen, project, onClose, onSend }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white rounded-lg p-6 w-[400px] shadow-lg">
-        <h2 className="text-2xl text-black font-bold mb-4">Are you sure you want to request to Join: <br /> {project.title}</h2>
-        <button
-          className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
-          onClick={(e) => {// Prevent button click from toggling card
-            handleSend(e);
+    <Dialog 
+      open={isOpen} 
+      onClose={onClose} 
+      maxWidth="sm" 
+      fullWidth 
+      PaperProps={{
+        sx: {
+          borderRadius: 4,
+          boxShadow: 6,
+        }
+      }}
+    >
+      <DialogContent>
+        {/* Header */}
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center', 
+            mb: 2 
+          }}
+        >
+          <Typography 
+            variant="h5" 
+            component="h2" 
+            sx={{ 
+              fontWeight: 'bold', 
+              color: 'primary.main',
+            }}
+          >
+            Join Project: <br /> {project.title}
+          </Typography>
+          <IconButton onClick={onClose}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+
+        {/* Confirmation Text */}
+        <Typography 
+          variant="body1" 
+          sx={{ 
+            color: 'text.secondary', 
+            mb: 3 
+          }}
+        >
+          Are you sure you want to request to join this project? Once submitted, the request will be sent for review.
+        </Typography>
+      </DialogContent>
+
+      <DialogActions 
+        sx={{ 
+          p: 2, 
+          justifyContent: 'center' 
+        }}
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          endIcon={<SendIcon />}
+          onClick={handleSend}
+          sx={{ 
+            fontWeight: 'bold', 
+            textTransform: 'none', 
+            borderRadius: 3, 
+            px: 4 
           }}
         >
           Send Request
-        </button>
-        <button
-          className="py-2 px-4 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 mt-2"
+        </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          startIcon={<CancelIcon />}
           onClick={onClose}
+          sx={{ 
+            fontWeight: 'bold', 
+            textTransform: 'none', 
+            borderRadius: 3, 
+            px: 4 
+          }}
         >
           Cancel
-        </button>
-      </div>
-    </div>
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

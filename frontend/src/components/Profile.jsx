@@ -1,33 +1,84 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Register from './Registercard';
+import {
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Box,
+  Container,
+  Avatar,
+  TextField
+} from '@mui/material';
+import LogoutIcon from '@mui/icons-material/Logout';
+import EditIcon from '@mui/icons-material/Edit';
 
 const Profile = () => {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('userProfile'))); // State to store user info
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('userProfile')));
+  const [editAcc, setEditAcc] = useState(false);
+  const [password, setPassword] = useState('');
+  const [editform, setEditForm] = useState(false);
   const navigate = useNavigate();
 
-  // Redirect to login page if user is not found after loading
   useEffect(() => {
     if (!user) {
-      navigate('/login');  // Redirect to login if no user found
+      navigate('/login');
     }
   }, [user, navigate]);
 
-  // Logout user
+  useEffect(() => {
+    setPassword('');
+    setUser(JSON.parse(localStorage.getItem('userProfile')));
+  }, [editAcc, editform])
+
+  const showpass = () => {
+    setEditAcc(true);
+  };
+
+  const hidepass = () => {
+    setEditAcc(false);
+  };
+
+  const submitpass = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/check", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Include cookies for session management
+        body: JSON.stringify({
+          password
+        }),
+      });
+
+      if (response.ok) {
+        setEditForm(true);
+        console.log("verified");
+      } else {
+        alert("Password does not match")
+      }
+    } catch (error) {
+      console.error('Error verifying:', error);
+    }
+  };
+
   const handleLogout = async () => {
     try {
       const response = await fetch('http://localhost:5000/logout', {
-        method: 'GET',  // Assuming logout is a GET request
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: "include",  // Send cookies with request
+        credentials: 'include',
       });
 
       if (response.ok) {
         localStorage.clear();
-        setUser(null);  // Clear user info after logout
+        setUser(null);
         alert('Logged out successfully!');
-        navigate('/');  // Redirect to the home page after logging out
+        navigate('/');
       } else {
         console.error('Failed to log out');
       }
@@ -37,18 +88,114 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      {user && (
-        <div className="bg-gray-100 p-6 rounded-lg shadow-lg text-center">
-          <h2 className="text-2xl font-bold mb-4">Welcome, {user.name}!</h2>
-          <p className="text-lg mb-4">Email: {user.email}</p>
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+    <div className='h-fit flex-grow'>
+      {editform && user && <Container maxWidth="md">
+        <Register user={user} setEditForm={setEditForm} setEditAcc={setEditAcc} />
+      </Container>}
+
+
+      {!editform && user && (
+        <Container maxWidth="sm" sx={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Card
+            sx={{
+              width: '100%',
+              padding: 3,
+              borderRadius: 2,
+              boxShadow: 4,
+              position: 'relative',
+              minHeight: '50vh',
+
+            }}
           >
-            Logout
-          </button>
-        </div>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+              <Avatar sx={{ width: 100, height: 100, bgcolor: 'primary.main' }}>
+                {user.name.charAt(0)}
+              </Avatar>
+            </Box>
+            <CardContent sx={{ textAlign: 'center' }}>
+              <Typography variant="h5" fontWeight="bold" gutterBottom>
+                Welcome, {user.name}!
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Email: {user.email}
+              </Typography>
+            </CardContent>
+
+            {/* Edit Account Section */}
+            {editAcc && (
+              <Box sx={{ marginBottom: 2 }}>
+                <TextField
+                  id="outlined-password"
+                  label="Password"
+                  variant="outlined"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  sx={{ width: '100%', marginBottom: 2 }}
+                />
+              </Box>
+            )}
+
+            {/* Buttons at the bottom */}
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: 16,
+                left: 16,
+                right: 16,
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}
+            >
+              {!editAcc && (
+                <Button
+                  variant="contained"
+                  color="error"
+                  startIcon={<LogoutIcon />}
+                  onClick={handleLogout}
+                  sx={{ flex: 1, marginRight: 1 }}
+                >
+                  Logout
+                </Button>
+              )}
+              {!editAcc && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<EditIcon />}
+                  sx={{ flex: 1, marginLeft: 1 }}
+                  onClick={showpass}
+                >
+                  Edit Account
+                </Button>
+              )}
+              {editAcc &&
+                <React.Fragment>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<EditIcon />}
+                    sx={{ flex: 1, marginLeft: 1 }}
+                    onClick={submitpass}
+                  >
+                    Confirm
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    startIcon={<LogoutIcon />}
+                    onClick={hidepass}
+                    sx={{ flex: 1, marginLeft: 1, marginRight: 1 }}
+                  >
+                    Cancel
+                  </Button>
+
+                </React.Fragment>
+              }
+            </Box>
+          </Card>
+
+        </Container>
       )}
     </div>
   );

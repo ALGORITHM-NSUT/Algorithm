@@ -5,7 +5,6 @@ import './stylethree.css';
 const ThreeScene = () => {
   const mountRef = useRef(null);
   const torusRef = useRef(null);
-  const moonRef = useRef(null);
   const cameraRef = useRef(null);
 
   useEffect(() => {
@@ -52,7 +51,7 @@ const ThreeScene = () => {
     });
 
     // Torus geometry with gradient material
-    const geometry = new THREE.TorusGeometry(20, 9, 20, 100);
+    const geometry = new THREE.TorusGeometry(20, 9, 25, 150);
     const torus = new THREE.Mesh(geometry, gradientMaterial);
     torusRef.current = torus;
     scene.add(torus);
@@ -64,18 +63,8 @@ const ThreeScene = () => {
     scene.add(pointLight, ambientLight);
 
     // Background
-    const spaceTexture = new THREE.TextureLoader().load('./space.jpg');
+    const spaceTexture = new THREE.TextureLoader().load('../assest/space.jpg');
     scene.background = spaceTexture;
-
-    // Moon geometry without texture
-    const moon = new THREE.Mesh(
-      new THREE.SphereGeometry(3, 32, 32),
-      new THREE.MeshStandardMaterial({ color: 0xa56aba }) // Simple material instead of textured
-    );
-    moonRef.current = moon;
-    scene.add(moon);
-    moon.position.z = 30;
-    moon.position.setX(-10);
 
     // Slower random movement values
     const torusRotationSpeed = {
@@ -84,19 +73,9 @@ const ThreeScene = () => {
       z: Math.random() * 0.004,
     };
 
-    const moonRotationSpeed = {
-      x: Math.random() * 0.001,
-      y: Math.random() * 0.001,
-      z: Math.random() * 0.001,
-    };
-
     // Scroll Animation
     const moveCamera = () => {
       const t = document.body.getBoundingClientRect().top;
-      moon.rotation.x += moonRotationSpeed.x;
-      moon.rotation.y += moonRotationSpeed.y;
-      moon.rotation.z += moonRotationSpeed.z;
-
       camera.position.z = t * -0.01;
       camera.position.x = t * -0.0002;
       camera.rotation.y = t * -0.0002;
@@ -113,9 +92,6 @@ const ThreeScene = () => {
         torusRef.current.rotation.y += torusRotationSpeed.y;
         torusRef.current.rotation.z += torusRotationSpeed.z;
       }
-      moon.rotation.x += moonRotationSpeed.x;
-      moon.rotation.y += moonRotationSpeed.y;
-      moon.rotation.z += moonRotationSpeed.z;
       renderer.render(scene, camera);
     };
 

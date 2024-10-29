@@ -17,17 +17,6 @@ export const register = async (req, res, next) => {
             rollNumber,
             year
         } = req.body;
-        console.log(name,
-            email,
-            personalEmail,
-            phoneNumber,
-            githubProfile,
-            leetcodeProfile,
-            codeforcesProfile,
-            password,
-            linkedinUrl,
-            rollNumber,
-            year);
         // Check if all required fields are provided
         if (
             !name ||
@@ -160,8 +149,9 @@ export const logout = async (req, res, next) => {
 
 export const getMyProfile = async (req, res, next) => {
     try {
-        const user = req.user;
-        if (!user) {
+        const user = req.user._id;
+        const member = await FormData.findOne({ _id: user });
+        if (!member) {
             return res.status(404).json({
                 message: "User not found",
             });
@@ -169,8 +159,92 @@ export const getMyProfile = async (req, res, next) => {
 
         res.status(200).json({
             success: true,
-            user,
+            member,
         });
+    } catch (error) {
+        return next(
+            res.status(500).json({
+                message: "Internal Server Error",
+                error: error.message,
+            })
+        );
+    }
+};
+
+export const checkPassword = async (req, res) => {
+    try {
+        const user = req.user._id;
+        const member = await FormData.findOne({ _id: user });
+        const { password } = req.body;
+
+        const isMatch = await member.comparePassword(password);
+
+        if (!member || !isMatch) {
+            return res.status(404).json({
+                message: "User not found",
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            member,
+        });
+    } catch (error) {
+        return next(
+            res.status(500).json({
+                message: "Internal Server Error",
+                error: error.message,
+            })
+        );
+    }
+}
+
+export const editProfile = async (req, res, next) => {
+    try {
+        const {
+            name,
+            email,
+            personalEmail,
+            phoneNumber,
+            githubProfile,
+            leetcodeProfile,
+            codeforcesProfile,
+            linkedinUrl,
+            rollNumber,
+            year,
+        } = req.body;
+
+        // Check if all required fields are provided
+        if (!name || !email) {
+            return res.status(400).json({
+                message: "Please provide all required fields",
+            });
+        }
+
+        // Check if user exists with NSUT email
+        let user = await FormData.findOne({ email });
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+            });
+        }
+
+        // Overwrite user's information
+        user.name = name;
+        user.personalEmail = personalEmail || ""; // If not provided, set to empty string
+        user.phoneNumber = phoneNumber || "";
+        user.githubProfile = githubProfile || "";
+        user.leetcodeProfile = leetcodeProfile || "";
+        user.codeforcesProfile = codeforcesProfile || "";
+        user.linkedinUrl = linkedinUrl || "";
+        user.rollNumber = rollNumber || "";
+        user.year = year || "";
+
+        // Save the updated user
+        await user.save();
+
+        // Send token response after updating profile
+        sendToken(res, user, "Account Edited successfully", 200);
     } catch (error) {
         return next(
             res.status(500).json({
