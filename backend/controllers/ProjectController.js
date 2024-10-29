@@ -3,7 +3,8 @@ import apply from "../models/joinProject.js"; // Make sure you have the right pa
 
 export const getProjects = async (req, res) => {
   try {
-    const user = req.user._id;
+    const user = req.user?._id;
+    
     const projects = await Project.find()
       .populate('lead', 'name linkedinUrl')
       .populate('contributors', 'name linkedinUrl email')
