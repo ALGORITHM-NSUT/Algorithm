@@ -54,4 +54,7 @@ To run this project locally, follow these steps:
     npm i
 8. **Run the frontend:**
    ```bash
-   Run the frontend:
+   npm run dev
+9. **Run the backend:**
+   ```bash
+   nodemon server.js
