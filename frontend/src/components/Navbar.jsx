@@ -18,14 +18,23 @@ const Navbar = () => {
 
         <div className="hidden md:flex space-x-10 text-lg justify-center flex-grow">
           {navLinks.map((link, index) => (
-            <Link
+            link != "Core_registration" ? <Link
               key={index}
               to={`/${link.toLowerCase().replace(/\s+/g, '')}`}
               className="hover:text-gray-300 relative group"
             >
               {link}
               <span className="absolute left-0 bottom-0 w-full h-0.5 bg-white transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
-            </Link>
+            </Link> :
+              <Link
+                key={index}
+                to={'xyz'}
+                className="hover:text-gray-300 relative group"
+              >
+                {link}
+                <span className="absolute left-0 bottom-0 w-full h-0.5 bg-white transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
+              </Link>
+
           ))}
         </div>
 

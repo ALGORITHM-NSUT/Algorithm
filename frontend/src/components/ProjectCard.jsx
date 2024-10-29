@@ -72,6 +72,8 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
         credentials: 'include',
         body: JSON.stringify({ title: project.title, applicant: id, state: state })
       });
+      const data = await applicants.json();
+      console.log(data.message);
       refreshProjects();
     } catch (error) {
       console.error('Error updating application state:', error);
