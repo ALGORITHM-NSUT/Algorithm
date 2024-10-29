@@ -108,6 +108,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
         body: JSON.stringify({ title: project.title })
       });
       refreshProjects();
+      toggleExpand();
     } catch (error) {
       console.error('Error deleting project:', error);
     }
@@ -400,18 +401,25 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               <React.Fragment>
                 {user ? (
                   application && project.lead._id !== user._id ? (
-                    <button
-                      className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+
+
+                    user.githubProfile ? (<button
+                      className="mt-2 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleJoinRequest();
                       }}
-                    >
-                      Request to Join
-                    </button>
+                    >Request to Join </button>) :
+                      (<button
+                        className="mt-2 py-2 px-4 bg-[#0a242d] text-white rounded-lg cursor-not-allowed"
+                        disabled
+                      >
+                        Add Github to apply
+                      </button>)
+
                   ) : (
                     <button
-                      className="py-2 px-4 bg-[#0a242d] text-white rounded-lg cursor-not-allowed"
+                      className="mt-2 py-2 px-4 bg-[#0a242d] text-white rounded-lg cursor-not-allowed"
                       disabled
                     >
                       Already Applied
@@ -431,36 +439,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               </React.Fragment>
             )}
 
-            <div className="max-h-[140px] overflow-y-auto grid grid-cols-1 gap-2 mt-5">
-              {project.applicants.map((applicant, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-700 p-2 mt-1 rounded-lg shadow-md flex justify-between items-center"
-                >
-                  <p className="font-semibold">{applicant.name}</p>
-                  <div className="flex space-x-2">
-                    <button
-                      className="bg-green-500 rounded-md p-2 hover:bg-green-600"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleApplication(applicant._id, 1);
-                      }}
-                    >
-                      Accept
-                    </button>
-                    <button
-                      className="bg-red-700 rounded-md p-2 hover:bg-red-800"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleApplication(applicant._id, 0);
-                      }}
-                    >
-                      Decline
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
+
             {deleteModal && (
               <DeleteRequestModal
                 isOpen={deleteModal}
