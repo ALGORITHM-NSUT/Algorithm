@@ -139,12 +139,23 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
     setShowappModal(false);
   };
 
+  useEffect(() => {
+    if (editProject) {
+      setEditProject(false);
+    }
+  }, [isExpanded])
   return (
-    <motion.div
-      className="relative"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+    <React.Fragment>
+    {isExpanded && (
+      <div
+        className="fixed inset-0 bg-black bg-opacity-50 z-20"
+        onClick={toggleExpand}
+      ></div>
+    )}
+    <div
+      onClick={toggleExpand}
+      className={`relative p-4 w-full rounded-lg transition-all duration-300 ease-in-out cursor-pointer 
+        ${isExpanded ? 'scale-110 z-30' : 'z-10'}`}
     >
       <Paper
         sx={{
@@ -507,7 +518,8 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
           </Box>
         </Box>
       </Paper>
-    </motion.div>
+   </div>
+   </React.Fragment>
   );
 };
 
