@@ -108,9 +108,9 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
 
       const data = await response.json();
       if (response.ok) {
-        alert("Register successful!");
-        localStorage.setItem("userProfile", JSON.stringify(data.user));
-        navigate("/userprofile");
+        alert("Please check your inbox or spam folder");
+
+        navigate("/home");
       }
     } catch (error) {
       console.error("Error registering user:", error);

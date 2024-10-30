@@ -14,7 +14,8 @@ const formDataSchema = new mongoose.Schema({
     rollNumber: { type: String },
     year: { type: Number },
     password: { type: String, required: true },
-    admin: { type: Boolean } // Store hashed password
+    admin: { type: Boolean },
+    verified: {type: Boolean}
 }, { timestamps: true }); // Adds createdAt and updatedAt fields
 
 formDataSchema.index({ email: 1 }, { unique: true });
@@ -37,7 +38,8 @@ formDataSchema.methods.getJWTToken = function () {
         githubProfile: this.githubProfile,
         leetcodeProfile: this.leetcodeProfile,
         codeforcesProfile: this.codeforcesProfile,
-        admin: this.admin
+        admin: this.admin,
+        verified: this.verified
     };
 
     return jwt.sign(userProfile, process.env.JWT_SECRET, {

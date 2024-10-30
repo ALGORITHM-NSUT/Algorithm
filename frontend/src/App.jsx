@@ -7,6 +7,7 @@ import ProfileForm from "./pages/ProfileForm";
 import Projects from "./pages/Projects";
 import UserProfile from "./pages/UserProfile";
 import LoginPage from "./pages/LoginPage";
+import EmailVerify from "./pages/EmailVerify";
 
 
 
@@ -22,7 +23,8 @@ const App = () => {
         <Route path="/projects" element={<Projects />} />
         <Route path="/userProfile" element={<UserProfile />} />
         <Route path="/login" element={<LoginPage />} />
-
+        <Route path="/verify/:id" element={<EmailVerify />} />
+        
 
       </Routes>
     </BrowserRouter>

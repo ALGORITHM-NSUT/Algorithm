@@ -20,4 +20,5 @@ router.route("/me").get(isAuthenticated, getMyProfile)
 router.route("/check").post(isAuthenticated, checkPassword)
 
 router.route("/editProfile").post(isAuthenticated, editProfile)
+
 export default router;
