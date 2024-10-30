@@ -11,7 +11,8 @@ import { handleApplication } from '../controllers/handleApplication.js';
 import { addProject } from '../controllers/addProject.js'
 import { deleteProject } from '../controllers/deleteProject.js';
 import { updateProject } from '../controllers/updateProject.js';
-
+import multer from 'multer';
+import upload from '../config/multerconfig.js';
 const router = express.Router();
 
 // get
@@ -25,7 +26,7 @@ router.post('/form', submitFormData);
 router.route("/application").post(isAuthenticated, submitapplication);
 router.route("/checkapplication").post(isAuthenticated, checkapplication);
 router.route("/handleApplication").post(isAuthenticated, handleApplication);
-router.route("/addProject").post(isAuthenticated, addProject);
+router.route("/addProject").post(isAuthenticated, upload.array('images'), addProject);
 router.route("/deleteProject").post(isAuthenticated, deleteProject);
-router.route("/updateProject").post(isAuthenticated, updateProject);
+router.route("/updateProject").post(isAuthenticated, upload.array('updateImages'), updateProject);
 export default router;

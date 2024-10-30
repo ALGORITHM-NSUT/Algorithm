@@ -1,9 +1,11 @@
 import FormData from "../models/formDataModel.js";
 import { sendToken } from "../utils/sendToken.js";
 import CoreMember from "../models/CoreMember.js";
+import { Octokit } from "@octokit/rest";
 
 export const register = async (req, res, next) => {
     try {
+        const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
         const {
             name,
             email,
@@ -37,7 +39,32 @@ export const register = async (req, res, next) => {
                 message: "User with this NSUT Email Already Exists",
             });
         }
-
+        const org = "ALGORITHM-NSUT"
+        if (githubProfile && githubProfile != "") {
+            try {
+                // Check if the user is already a member of the organization
+                await octokit.rest.orgs.getMembershipForUser({
+                    org,
+                    username: githubProfile.split('/').pop()
+                });
+            } catch (error) {
+                // If error status is 404, it means the user is not a member, so invite them
+                if (error.status === 404) {
+                    try {
+                        const response = await octokit.rest.orgs.createInvitation({
+                            org,
+                            invitee_id: githubProfile.split('/').pop()
+                        });
+                    } catch (inviteError) {
+                        return res.status(422).json({
+                            message: "invalid GitHub ID",
+                            error: error.message,
+                        });
+                        console.error(`Failed to send invitation: ${inviteError.message}`);
+                    }
+                }
+            }
+        }
         if (Admin) {
             const admin = true;
             user = await FormData.create({
@@ -201,6 +228,7 @@ export const checkPassword = async (req, res) => {
 
 export const editProfile = async (req, res, next) => {
     try {
+        const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
         const {
             name,
             email,
@@ -228,14 +256,40 @@ export const editProfile = async (req, res, next) => {
                 message: "User not found",
             });
         }
+        const org = "ALGORITHM-NSUT"
+        if (user.githubProfile === "" && githubProfile && githubProfile !== "") {
+            try {
+                // Check if the user is already a member of the organization
+                await octokit.rest.orgs.getMembershipForUser({
+                    org,
+                    username: githubProfile.split('/').pop()
+                });
+            } catch (error) {
+                // If error status is 404, it means the user is not a member, so invite them
+                if (error.status === 404) {
+                    try {
+                        const response = await octokit.rest.orgs.createInvitation({
+                            org,
+                            invitee_id: githubProfile.split('/').pop()
+                        });
+                    } catch (inviteError) {
+                        return res.status(422).json({
+                            message: "invalid GitHub ID",
+                            error: error.message,
+                        });
+                        console.error(`Failed to send invitation: ${inviteError.message}`);
+                    }
+                }
+            }
+        }
 
         // Overwrite user's information
-        user.name = name;
-        user.personalEmail = personalEmail || user.personalEmail; // If not provided, set to previous
-        user.phoneNumber = phoneNumber || user.phoneNumber;
+        user.name = name || user.name;
+        user.personalEmail = personalEmail || ""; // If not provided, set to previous
+        user.phoneNumber = phoneNumber || "";
         user.githubProfile = githubProfile || user.githubProfile;
-        user.leetcodeProfile = leetcodeProfile || user.leetcodeProfile;
-        user.codeforcesProfile = codeforcesProfile || user.codeforcesProfile;
+        user.leetcodeProfile = leetcodeProfile || "";
+        user.codeforcesProfile = codeforcesProfile || "";
         user.linkedinUrl = linkedinUrl || user.linkedinUrl;
         user.rollNumber = rollNumber || user.rollNumber;
         user.year = year || user.year;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   TextField,
@@ -6,7 +6,6 @@ import {
   Container,
   Typography,
   Grid,
-  Paper,
   ThemeProvider,
   createTheme,
   FormControl,
@@ -18,7 +17,6 @@ import {
 import { motion } from "framer-motion";
 import Lottie from "react-lottie";
 import cartoonProfile from "../assets/cartoon-profile.json";
-import ThreeScene from "./ThreeScene";
 
 const theme = createTheme({
   palette: {
@@ -34,7 +32,7 @@ const theme = createTheme({
 });
 
 // FormField Component
-const FormField = ({ label, name, type, value, onChange, required = false, disabled = false }) => (
+const FormField = React.memo(({ label, name, type, value, onChange, required = false, disabled = false }) => (
   <Grid item xs={12} sm={6}>
     <TextField
       required={required}
@@ -45,13 +43,14 @@ const FormField = ({ label, name, type, value, onChange, required = false, disab
       value={value}
       onChange={onChange}
       variant="outlined"
-      disabled={disabled} // Control the disabled state
+      disabled={disabled}
     />
   </Grid>
-);
+));
 
+FormField.displayName = 'FormField';
 // YearSelection Component
-const YearSelection = ({ value, onChange }) => (
+const YearSelection = React.memo(({ value, onChange }) => (
   <Grid item xs={12}>
     <FormControl component="fieldset" required>
       <FormLabel component="legend">Year</FormLabel>
@@ -62,10 +61,10 @@ const YearSelection = ({ value, onChange }) => (
       </RadioGroup>
     </FormControl>
   </Grid>
-);
+));
 
+YearSelection.displayName = 'YearSelection';
 const Register = ({ user = null, setEditForm, setEditAcc }) => {
-  console.log(user);
   const [formData, setFormData] = useState({
     name: user?.name || "",
     email: user?.email || "",
@@ -79,24 +78,23 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
     rollNumber: user?.rollNumber || "",
     year: user?.year || "",
   });
+
   const [playAnimation, setPlayAnimation] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setPlayAnimation(true);
-    }, 300); // 1 second delay
-
-    return () => clearTimeout(timer); // Clear the timer on unmount
+    }, 300);
+    return () => clearTimeout(timer);
   }, []);
 
-  const navigate = useNavigate();
-
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  }, []);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
     try {
       const response = await fetch("http://localhost:5000/register", {
@@ -112,12 +110,17 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
         localStorage.setItem("userProfile", JSON.stringify(data.user));
         navigate("/userprofile");
       }
+      else {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.message || "An error occurred while editing the profile."}`);
+        return;
+      }
     } catch (error) {
       console.error("Error registering user:", error);
     }
-  };
+  }, [formData, navigate]);
 
-  const handleEdit = async (event) => {
+  const handleEdit = useCallback(async (event) => {
     event.preventDefault();
     try {
       const response = await fetch("http://localhost:5000/editProfile", {
@@ -127,22 +130,26 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
-      if (response.ok) {
-        alert("Account edit successful!");
-        localStorage.clear();
-        localStorage.setItem("userProfile", JSON.stringify(data.user));
-        canceledit();
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.message || "An error occurred while editing the profile."}`);
+        return;
       }
-    } catch (error) {
-      console.error("Error registering user:", error);
-    }
-  };
 
-  const canceledit = () => {
+      const data = await response.json();
+      alert("Account edit successful!");
+      localStorage.clear();
+      localStorage.setItem("userProfile", JSON.stringify(data.user));
+      canceledit();
+    } catch (error) {
+      alert(`Network error: ${error.message}`);
+    }
+  }, [formData]);
+
+  const canceledit = useCallback(() => {
     setEditForm(false);
     setEditAcc(false);
-  }
+  }, [setEditForm, setEditAcc]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -157,7 +164,7 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
           >
-            <div elevation={3} className="p-6 rounded-lg ">
+            <div elevation={3} className="p-6 rounded-lg">
               <div className="mt-0 mb-1 flex justify-center items-center">
                 <motion.div
                   initial={{ opacity: 0, y: -30 }}
@@ -176,22 +183,15 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
                     width={100}
                   />
                 </motion.div>
-                {!user ? <Typography component="h1" variant="h4" align="center" color="#10111f" className="mb-8">
-                  Join Us
+                <Typography component="h1" variant="h4" align="center" color="#10111f" className="mb-8">
+                  {!user ? "Join Us" : "Edit Profile"}
                 </Typography>
-                  :
-                  <Typography component="h1" variant="h4" align="center" color="#10111f" className="mb-8">
-                    Edit Profile
-                  </Typography>
-                }
-
               </div>
 
               <form onSubmit={(e) => {
                 if (!user) {
                   handleSubmit(e);
-                }
-                else {
+                } else {
                   handleEdit(e);
                 }
               }}>
@@ -216,8 +216,7 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
                         color="primary"
                         sx={{ width: "100%" }}
                       >
-                        {user ? <div>confirm</div> : <div> Register </div>}
-
+                        {user ? "Confirm" : "Register"}
                       </Button>
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -227,7 +226,7 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
                         sx={{ width: "100%" }}
                         onClick={canceledit}
                       >
-                        cancel
+                        Cancel
                       </Button>
                     </Grid>
                   </Grid>

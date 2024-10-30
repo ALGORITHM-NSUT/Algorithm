@@ -10,7 +10,8 @@ const projectSchema = new mongoose.Schema({
   githubUrl: { type: String, required: true },
   description: { type: String, required: true },
   status: { type: Boolean, required: false },
-  applications: [{ type: mongoose.Schema.Types.ObjectId, ref: FormData }]
+  applications: [{ type: mongoose.Schema.Types.ObjectId, ref: FormData }],
+  images: [{ type: String, required: false }]
 });
 
 const Project = mongoose.model('Project', projectSchema, 'ProjectCard');

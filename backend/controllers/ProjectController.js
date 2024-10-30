@@ -6,7 +6,7 @@ export const getProjects = async (req, res) => {
     const user = req.user._id;
     const projects = await Project.find()
       .populate('lead', 'name linkedinUrl')
-      .populate('contributors', 'name linkedinUrl email')
+      .populate('contributors', 'name linkedinUrl email phoneNumber rollNumber githubProfile')
       .populate({
         path: 'applications',
         populate: {
@@ -35,6 +35,7 @@ export const getProjects = async (req, res) => {
         })),
         githubUrl: project.githubUrl,
         description: project.description,
+        images: project.images,
         status: project.status === false ? "Ongoing" : "Completed",
         applicants: user == project.lead._id ? matchedApplications.map(app => ({
           name: app.applier.name,
