@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, useEffect } from 'react';
 import JoinRequestModal from './JoinRequestModal';
 import DeleteRequestModal from './deleteProjectModal';
 import Slider from 'react-slick';
@@ -29,7 +29,6 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   const [editProject, setEditProject] = useState(false);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const [uniqueImages, setUniqueImages] = useState([]);
 
   const postData = async () => {
     try {
@@ -82,13 +81,6 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
       console.error('Error updating application state:', error);
     }
   };
-
-  useEffect(() => {
-    if (project.images && project.images.length > 0) {
-      const uniqueImageArray = [...new Set(project.images)];
-      setUniqueImages(uniqueImageArray);
-    }
-  }, [project.images]);
 
   useEffect(() => {
     if (editProject) {
@@ -562,4 +554,4 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   );
 };
 
-export default memo(ProjectCard);
+export default ProjectCard;
