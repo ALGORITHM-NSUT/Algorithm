@@ -1,8 +1,6 @@
 import FormData from "../models/formDataModel.js";
 import { sendToken } from "../utils/sendToken.js";
 import CoreMember from "../models/CoreMember.js";
-import crypto from 'crypto';
-import nodemailer from 'nodemailer'
 import { transporter } from "../utils/MailClient.js";
 
 
@@ -59,8 +57,7 @@ export const register = async (req, res) => {
 
        
 
-        // Create email verification token and link
-        const verificationToken = crypto.randomBytes(32).toString("hex");
+     
         const verificationLink = `${process.env.CLIENT_URL}/verify/${user.id}`;
 
         try {
