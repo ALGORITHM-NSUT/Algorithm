@@ -12,6 +12,7 @@ import { Fullscreen } from 'lucide-react';
 import { FaBlackTie } from 'react-icons/fa';
 import "slick-carousel/slick/slick.css"; // Import slick carousel CSS
 import "slick-carousel/slick/slick-theme.css";
+import UserProfileModal from './UserProfileModal';
 
 
 import { IconButton, Tooltip } from '@mui/material';
@@ -29,6 +30,8 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   const [editProject, setEditProject] = useState(false);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const [showUserProfileModal, setShowUserProfileModal] = useState(false); // State for user profile modal
+  const [selectedUser, setSelectedUser] = useState(null); // State for the selected user
 
   const postData = async () => {
     try {
@@ -97,6 +100,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
     setShowappModal(false);
     setDeleteModal(false);
     setEditModal(false);
+    setShowUserProfileModal(true);
   };
 
   const handleDeleteRequest = () => {
@@ -129,6 +133,10 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
       refreshProjects();
     }
     setShowappModal(false);
+  };
+  const handleViewProfile = (userDetails) => {
+    setSelectedUser(userDetails); // Set the selected user details
+    setShowUserProfileModal(true); // Open the user profile modal
   };
 
   useEffect(() => {
@@ -231,9 +239,10 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                 sx={{
                   position: 'relative',
                   width: '100%',
+
                   paddingTop: '75%',  // 3:4 aspect ratio
                   borderRadius: '10px',
-                 
+
                   overflow: 'hidden',
                   maxWidth: '100%'
                 }}
@@ -247,6 +256,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                     position: 'absolute',
                     top: 0,
                     left: 0,
+                    p: 2,
                     width: '100%',
                     height: '100%',
                     objectFit: 'cover'
@@ -263,6 +273,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                       width: '100%',
                       paddingTop: '75%',  // 3:4 aspect ratio
                       borderRadius: '10px',
+
                       overflow: 'hidden',
                       maxWidth: '100%'
                     }}
@@ -277,7 +288,9 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                         top: 0,
                         left: 0,
                         width: '100%',
+                        p: 2,
                         height: '100%',
+                        borderRadius: '20px',
                         objectFit: 'cover'
                       }}
                     />
@@ -357,9 +370,14 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                 <Box sx={{ backgroundColor: '#330075', p: 2, borderRadius: 2, mt: 2 }}>
                   <Typography variant="body1" color="white">{project.lead.name}</Typography>
                   <Link
-                    href={project.lead.linkedinUrl}
-                    target="_blank"
-                    rel="noreferrer"
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleViewProfile(project.lead); // Pass the lead directly
+
+                      console.log(project.lead);
+                    }}
                     sx={{ color: 'white', textDecoration: 'none', '&:hover': { color: 'red' } }}
                   >
                     View Profile
@@ -397,20 +415,28 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                         className="bg-[#330075] p-2 rounded-lg shadow-md w-full"
                       >
                         <p className="font-semibold text-white">{contributor.name}</p>
-                        <a
-                          href={contributor.linkedinUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-gray-300 text-sm hover:text-gray-100"
+                        <Link
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleViewProfile(contributor); // Pass contributor details
+                          }}
+                          sx={{ color: 'white', textDecoration: 'none', '&:hover': { color: 'red' } }}
                         >
                           View Profile
-                        </a>
+                        </Link>
                       </div>
                     ))}
                   </div>
 
 
                 </Grid>
+                <UserProfileModal
+                  isOpen={showUserProfileModal}
+                  onClose={() => setShowUserProfileModal(false)}
+                  userDetails={selectedUser} // Pass the selected user details to the modal
+                />
 
                 {/* Applicants Section */}
                 <Box sx={{
@@ -444,6 +470,17 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                       }}
                     >
                       <Typography variant="body2" color="white">{applicant.name}</Typography>
+                      <Link
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleViewProfile(applicant); // Pass contributor details
+                          }}
+                          sx={{ color: 'white', textDecoration: 'none', '&:hover': { color: 'red' } }}
+                        >
+                          View Profile
+                        </Link>
                       <Box>
                         <Button
                           variant="contained"
@@ -470,6 +507,11 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                       </Box>
                     </Box>
                   ))}
+                   <UserProfileModal
+                  isOpen={showUserProfileModal}
+                  onClose={() => setShowUserProfileModal(false)}
+                  userDetails={selectedUser} // Pass the selected user details to the modal
+                />
                 </Box>
               </Box>
             )}

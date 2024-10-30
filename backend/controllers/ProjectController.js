@@ -5,18 +5,18 @@ export const getProjects = async (req, res) => {
   try {
     const user = req.user._id;
     const projects = await Project.find()
-      .populate('lead', 'name linkedinUrl')
+      .populate('lead', 'name linkedinUrl email phoneNumber rollNumber githubProfile')
       .populate('contributors', 'name linkedinUrl email phoneNumber rollNumber githubProfile')
       .populate({
         path: 'applications',
         populate: {
           path: 'applier',  // Populate the applier field to get names
-          select: 'name linkedinUrl _id phoneNumber rollNumber githubProfile'     // Only select the name field
+          select: 'name linkedinUrl _id email phoneNumber rollNumber githubProfile'     // Only select the name field
         }
       });
 
     // Fetch all applications from the apply model
-    const applications = await apply.find().populate('applier', 'name linkedinUrl _id phoneNumber rollNumber githubProfile');
+    const applications = await apply.find().populate('applier', 'name linkedinUrl _id email phoneNumber rollNumber githubProfile');
 
     // Iterate through each project and match applications based on the title
     const formattedProjects = projects.map(project => {
@@ -41,6 +41,7 @@ export const getProjects = async (req, res) => {
           name: app.applier.name,
           linkedinUrl: app.applier.linkedinUrl,
           _id: app.applier._id,
+          email: app.applier.email,
           rollNumber: app.applier.rollNumber,
           phoneNumber: app.applier.phoneNumber,
           githubProfile: app.applier.githubProfile

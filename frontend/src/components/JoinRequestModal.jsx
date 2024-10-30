@@ -6,10 +6,14 @@ const JoinRequestModal = ({ isOpen, project, onClose, onSend }) => {
   const [message, setMessage] = useState('');
 
   const handleSend = (e) => {
+    if (message.trim() === '') return; // Prevent sending empty message
     onSend(message); // Call the parent's onSend function with the message
     setMessage(''); // Reset message
     onClose(e); // Close the modal
   };
+
+  // Return null if project is not defined
+  if (!project) return null;
 
   return (
     <Dialog 
