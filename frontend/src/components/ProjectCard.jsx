@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import JoinRequestModal from './JoinRequestModal';
 import DeleteRequestModal from './deleteProjectModal';
-
+import Slider from 'react-slick';
 import { useNavigate } from 'react-router-dom';
 import { Grid, Paper, Typography, Button, Box, Link, useMediaQuery, useTheme, Avatar } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -10,6 +10,8 @@ import AddProject from './addProject';
 import { motion } from 'framer-motion';
 import { Fullscreen } from 'lucide-react';
 import { FaBlackTie } from 'react-icons/fa';
+import "slick-carousel/slick/slick.css"; // Import slick carousel CSS
+import "slick-carousel/slick/slick-theme.css";
 
 
 import { IconButton, Tooltip } from '@mui/material';
@@ -134,6 +136,17 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
       setEditProject(false);
     }
   }, [isExpanded])
+
+  const carouselSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+    autoplay: true,           // Enables autoplay
+    autoplaySpeed: 3000,      // Speed in milliseconds (3 seconds per slide)
+  };
   return (
     <React.Fragment>
       {isExpanded && (
@@ -211,7 +224,39 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               </span>
             </Typography>
           </div>
-
+          {/* Carousel for Project Images */}
+          {project.images && project.images.length > 0 && (
+            <Slider {...carouselSettings} style={{ margin: '20px auto', maxWidth: '100%', overflow: 'hidden' }}>
+              {project.images.map((image, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    position: 'relative',
+                    width: '100%',
+                    paddingTop: '75%',  // 3:4 aspect ratio
+                    borderRadius: '10px',
+                    overflow: 'hidden',
+                    maxWidth: '100%'  // Ensures it doesn’t exceed the parent width
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src={image}
+                    loading='lazy'
+                    alt={`Project image ${index + 1}`}
+                    sx={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover'
+                    }}
+                  />
+                </Box>
+              ))}
+            </Slider>
+          )}
 
 
           <Box sx={{ p: 3 }}>
