@@ -200,7 +200,7 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
                   <FormField label="NSUT Email" name="email" value={formData.email} onChange={handleChange} required disabled={!!user} />
                   <FormField label="Personal Email" name="personalEmail" value={formData.personalEmail} onChange={handleChange} />
                   <FormField label="Phone Number" name="phoneNumber" type="tel" value={formData.phoneNumber} onChange={handleChange} />
-                  <FormField label="GitHub Profile" name="githubProfile" value={formData.githubProfile} onChange={handleChange} />
+                  <FormField label="GitHub Profile" name="githubProfile" value={formData.githubProfile} onChange={handleChange} disabled={!!user.githubProfile} />
                   <FormField label="LeetCode Profile" name="leetcodeProfile" value={formData.leetcodeProfile} onChange={handleChange} />
                   <FormField label="Codeforces Profile" name="codeforcesProfile" value={formData.codeforcesProfile} onChange={handleChange} />
                   <FormField label="Password" name="password" type="password" value={formData.password} onChange={handleChange} required disabled={!!user} />
