@@ -11,6 +11,7 @@ import { handleApplication } from '../controllers/handleApplication.js';
 import { addProject } from '../controllers/addProject.js'
 import { deleteProject } from '../controllers/deleteProject.js';
 import { updateProject } from '../controllers/updateProject.js';
+import { gitmember } from '../controllers/gitmember.js'
 import multer from 'multer';
 import upload from '../config/multerconfig.js';
 const router = express.Router();
@@ -28,5 +29,6 @@ router.route("/checkapplication").post(isAuthenticated, checkapplication);
 router.route("/handleApplication").post(isAuthenticated, handleApplication);
 router.route("/addProject").post(isAuthenticated, upload.array('images'), addProject);
 router.route("/deleteProject").post(isAuthenticated, deleteProject);
+router.route("/gitmember").post(isAuthenticated, gitmember);
 router.route("/updateProject").post(isAuthenticated, upload.array('updateImages'), updateProject);
 export default router;

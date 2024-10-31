@@ -36,7 +36,7 @@ const Projects = () => {
       <FloatingBackground />
       <div className="flex flex-col items-center  text-white py-10 w-full relative z-10">
         <div className="w-full mb-24">
-          <h2 className="text-5xl md:text-[100px] font-bold text-center mt-10 mb-16">Ongoing Projects</h2>
+          <h2 className="text-5xl md:text-[100px] font-bold text-center mt-10 mb-16 font-mono">Ongoing Projects</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 px-4 md:px-10">
             {projects.onGoing.map((project, index) => (
               <ProjectCard
@@ -51,7 +51,7 @@ const Projects = () => {
           </div>
         </div>
         <div className="w-full">
-          <h2 className="text-5xl md:text-[100px] font-bold text-center mt-10 mb-14">Past Projects</h2>
+          <h2 className="text-5xl md:text-[100px] font-bold text-center mt-10 mb-14 font-mono">Past Projects</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 px-4 md:px-10">
             {projects.completed.map((project, index) => (
               <ProjectCard key={index} project={project} isOngoing={false} refreshProjects={fetchProjects} />

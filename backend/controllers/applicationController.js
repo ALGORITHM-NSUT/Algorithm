@@ -16,6 +16,7 @@ export const submitapplication = async (req, res) => {
 
     res.status(201).json({ message: 'Form data saved successfully', savedapplication });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Error saving form data', error });
   }
 };

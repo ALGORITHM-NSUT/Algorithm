@@ -3,12 +3,9 @@ import { Dialog, DialogContent, DialogActions, Typography, Button, IconButton, B
 import { Close as CloseIcon, Send as SendIcon, Cancel as CancelIcon } from '@mui/icons-material';
 
 const JoinRequestModal = ({ isOpen, project, onClose, onSend }) => {
-  const [message, setMessage] = useState('');
-
   const handleSend = (e) => {
-    if (message.trim() === '') return; // Prevent sending empty message
-    onSend(message); // Call the parent's onSend function with the message
-    setMessage(''); // Reset message
+    e.stopPropagation();
+    onSend(); // Call the parent's onSend function with the message
     onClose(e); // Close the modal
   };
 
@@ -16,11 +13,12 @@ const JoinRequestModal = ({ isOpen, project, onClose, onSend }) => {
   if (!project) return null;
 
   return (
-    <Dialog 
-      open={isOpen} 
-      onClose={onClose} 
-      maxWidth="sm" 
-      fullWidth 
+    <Dialog
+      onClick={(e) => e.stopPropagation()}
+      open={isOpen}
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
       PaperProps={{
         sx: {
           borderRadius: 4,
@@ -30,19 +28,19 @@ const JoinRequestModal = ({ isOpen, project, onClose, onSend }) => {
     >
       <DialogContent>
         {/* Header */}
-        <Box 
-          sx={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center', 
-            mb: 2 
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 2
           }}
         >
-          <Typography 
-            variant="h5" 
-            component="h2" 
-            sx={{ 
-              fontWeight: 'bold', 
+          <Typography
+            variant="h5"
+            component="h2"
+            sx={{
+              fontWeight: 'bold',
               color: 'primary.main',
             }}
           >
@@ -54,21 +52,21 @@ const JoinRequestModal = ({ isOpen, project, onClose, onSend }) => {
         </Box>
 
         {/* Confirmation Text */}
-        <Typography 
-          variant="body1" 
-          sx={{ 
-            color: 'text.secondary', 
-            mb: 3 
+        <Typography
+          variant="body1"
+          sx={{
+            color: 'text.secondary',
+            mb: 3
           }}
         >
           Are you sure you want to request to join this project? Once submitted, the request will be sent for review.
         </Typography>
       </DialogContent>
 
-      <DialogActions 
-        sx={{ 
-          p: 2, 
-          justifyContent: 'center' 
+      <DialogActions
+        sx={{
+          p: 2,
+          justifyContent: 'center'
         }}
       >
         <Button
@@ -76,11 +74,11 @@ const JoinRequestModal = ({ isOpen, project, onClose, onSend }) => {
           color="primary"
           endIcon={<SendIcon />}
           onClick={handleSend}
-          sx={{ 
-            fontWeight: 'bold', 
-            textTransform: 'none', 
-            borderRadius: 3, 
-            px: 4 
+          sx={{
+            fontWeight: 'bold',
+            textTransform: 'none',
+            borderRadius: 3,
+            px: 4
           }}
         >
           Send Request
@@ -90,11 +88,11 @@ const JoinRequestModal = ({ isOpen, project, onClose, onSend }) => {
           color="secondary"
           startIcon={<CancelIcon />}
           onClick={onClose}
-          sx={{ 
-            fontWeight: 'bold', 
-            textTransform: 'none', 
-            borderRadius: 3, 
-            px: 4 
+          sx={{
+            fontWeight: 'bold',
+            textTransform: 'none',
+            borderRadius: 3,
+            px: 4
           }}
         >
           Cancel

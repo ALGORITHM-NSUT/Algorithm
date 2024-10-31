@@ -34,6 +34,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   const [selectedUser, setSelectedUser] = useState(null); // State for the selected user
 
   const postData = async () => {
+    console.log(project.lead);
     try {
       const response = await fetch('http://localhost:5000/application', {
         method: 'POST',
@@ -42,7 +43,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
         body: JSON.stringify({ title: project.title, lead: project.lead._id })
       });
       const data = await response.json();
-      setApplication(false);
+      console.log(data.message);
       return true;
     } catch (error) {
       console.error('Error posting data:', error);
@@ -100,7 +101,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
     setShowappModal(false);
     setDeleteModal(false);
     setEditModal(false);
-    setShowUserProfileModal(true);
+    setShowUserProfileModal(false);
   };
 
   const handleDeleteRequest = () => {
@@ -238,13 +239,12 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               <Box
                 sx={{
                   position: 'relative',
-                  width: '100%',
-
-                  paddingTop: '75%',  // 3:4 aspect ratio
+                  width: '100%', // Take full width of the parent
+                  maxWidth: '100%',
+                  aspectRatio: '4 / 3', // Maintain 3:4 aspect ratio
                   borderRadius: '10px',
-
                   overflow: 'hidden',
-                  maxWidth: '100%'
+                  margin: '20px auto' // Center within parent
                 }}
               >
                 <Box
@@ -256,10 +256,10 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                     position: 'absolute',
                     top: 0,
                     left: 0,
-                    p: 2,
                     width: '100%',
                     height: '100%',
-                    objectFit: 'cover'
+                    objectFit: 'cover',
+                    borderRadius: '10px'
                   }}
                 />
               </Box>
@@ -271,11 +271,11 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                     sx={{
                       position: 'relative',
                       width: '100%',
-                      paddingTop: '75%',  // 3:4 aspect ratio
+                      maxWidth: '100%',
+                      aspectRatio: '4 / 3', // Keep 3:4 ratio
                       borderRadius: '10px',
-
                       overflow: 'hidden',
-                      maxWidth: '100%'
+                      margin: '0 auto' // Center within carousel
                     }}
                   >
                     <Box
@@ -288,10 +288,9 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                         top: 0,
                         left: 0,
                         width: '100%',
-                        p: 2,
                         height: '100%',
-                        borderRadius: '20px',
-                        objectFit: 'cover'
+                        objectFit: 'cover',
+                        borderRadius: '10px'
                       }}
                     />
                   </Box>
@@ -299,6 +298,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               </Slider>
             )
           )}
+
 
 
 
@@ -471,16 +471,16 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                     >
                       <Typography variant="body2" color="white">{applicant.name}</Typography>
                       <Link
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            handleViewProfile(applicant); // Pass contributor details
-                          }}
-                          sx={{ color: 'white', textDecoration: 'none', '&:hover': { color: 'red' } }}
-                        >
-                          View Profile
-                        </Link>
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleViewProfile(applicant); // Pass contributor details
+                        }}
+                        sx={{ color: 'white', textDecoration: 'none', '&:hover': { color: 'red' } }}
+                      >
+                        View Profile
+                      </Link>
                       <Box>
                         <Button
                           variant="contained"
@@ -507,11 +507,11 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                       </Box>
                     </Box>
                   ))}
-                   <UserProfileModal
-                  isOpen={showUserProfileModal}
-                  onClose={() => setShowUserProfileModal(false)}
-                  userDetails={selectedUser} // Pass the selected user details to the modal
-                />
+                  <UserProfileModal
+                    isOpen={showUserProfileModal}
+                    onClose={() => setShowUserProfileModal(false)}
+                    userDetails={selectedUser} // Pass the selected user details to the modal
+                  />
                 </Box>
               </Box>
             )}

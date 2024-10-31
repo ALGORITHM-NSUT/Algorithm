@@ -11,7 +11,7 @@ export const getProjects = async (req, res) => {
         path: 'applications',
         populate: {
           path: 'applier',  // Populate the applier field to get names
-          select: 'name linkedinUrl _id email phoneNumber rollNumber githubProfile'     // Only select the name field
+          select: 'name linkedinUrl email phoneNumber rollNumber githubProfile'     // Only select the name field
         }
       });
 

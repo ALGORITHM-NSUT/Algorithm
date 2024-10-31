@@ -4,7 +4,7 @@ import { GitHub, LinkedIn, Close } from '@mui/icons-material';
 
 const UserProfileModal = ({ isOpen, onClose, userDetails }) => {
   return (
-    <Modal open={isOpen} onClose={onClose} closeAfterTransition>
+    <Modal open={isOpen} onClose={onClose} closeAfterTransition onClick={(e) => e.stopPropagation()}>
       <Fade in={isOpen}>
         <Box
           sx={{
@@ -31,7 +31,7 @@ const UserProfileModal = ({ isOpen, onClose, userDetails }) => {
             </IconButton>
           </Box>
           {userDetails ? (
-            <>
+            <React.Fragment>
               <Typography variant="body1" sx={{ mb: 1 }}>
                 <strong>Name:</strong> {userDetails.name}
               </Typography>
@@ -56,7 +56,7 @@ const UserProfileModal = ({ isOpen, onClose, userDetails }) => {
                   {userDetails.linkedinUrl}
                 </Typography>
               </Box>
-            </>
+            </React.Fragment>
           ) : (
             <Typography variant="body2" sx={{ textAlign: 'center' }}>No user details available.</Typography>
           )}

@@ -2,21 +2,12 @@
 import projectSchema from "../models/ProjectModel.js";
 import formDataSchema from "../models/formDataModel.js";
 import cloudinary from 'cloudinary';
-import CloudinaryStorage from 'multer'
-import multer from 'multer';
-
-
-// const storage = new CloudinaryStorage({
-//   cloudinary,
-//   params: {
-//     folder: 'CloudinaryDemo',
-//     allowedFormats: ['jpeg', 'png', 'jpg'],
-//   }
-// });
-
+import { Octokit } from '@octokit/rest';
 
 export const addProject = async (req, res) => {
   try {
+    const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+
     cloudinary.v2.config({
       cloud_name: process.env.CLOUD_NAME,
       api_key: process.env.CLOUDINARY_API,
@@ -30,14 +21,28 @@ export const addProject = async (req, res) => {
     if (!admin) {
       return res.status(401).json({ message: 'unauthorized' });
     }
-    if (!title || !description) {
-      return res.status(406).json({ message: 'check title and description' });
+    if (!title || !description || !lead) {
+      return res.status(406).json({ message: 'check title, description and lead' });
     }
-
-    // Find the lead by email
     const leadUser = await formDataSchema.findOne({ email: lead });
     if (!leadUser) {
       return res.status(404).json({ message: 'Lead user not found' });
+    }
+    const [owner, repo] = githubUrl.split('/').slice(-2);
+    if (owner !== "ALGORITHM-NSUT") {
+      return res.status(422).json({ message: 'URL outside organization' });
+    }
+    try {
+      const response = await octokit.rest.repos.get({
+        owner,
+        repo,
+      });
+    } catch (error) {
+      if (error.status === 404) {
+        return res.status(404).json({ message: 'Repository does not exist.', error: error.message });
+      } else {
+        return res.status(500).json({ message: 'Error saving project', error: error.message });
+      }
     }
 
     console.log('Starting image uploads...');

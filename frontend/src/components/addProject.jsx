@@ -123,11 +123,12 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
         credentials: "include",
         body: formData
       });
-
-      refreshProjects();
-      handleCancel();
       const data = await response.json();
-      handleSnackbarOpen(data.message);
+      alert(data.message);
+      if (response.status === 201) {
+        refreshProjects();
+        handleCancel();
+      }
     } catch (error) {
       console.error('Error posting data:', error);
     }

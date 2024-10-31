@@ -28,53 +28,70 @@ export const updateProject = async (req, res) => {
       return res.status(404).json({ message: 'project not found' });
     }
     var contributorList;
-    var contributorIDs = project.contributors;
-    if (contributors != '') {
-      if (typeof contributors === 'string') {
-        contributorList = [contributors];
+    var newContributorIDs = project.contributors;
+
+    if (githubUrl !== project.githubUrl) {
+      const [owner, repo] = githubUrl.split('/').slice(-2);
+      if (owner !== "ALGORITHM-NSUT") {
+        return res.status(422).json({ message: 'URL outside organization', error: error.message });
       }
-      else {
-        contributorList = contributors;
-      }
-      const contributorEmails = contributorList;
-      const foundContributors = await FormData.find({ email: { $in: contributorEmails } });
-
-      if (foundContributors.length !== contributorEmails.length) {
-        return res.status(404).json({ message: 'Some contributors not found' });
-      }
-
-      contributorIDs = foundContributors.map(contributor => contributor._id.toString());
-      const contributorGitProfiles = foundContributors.map(contributor => contributor.githubProfile.split('/').pop());
-
-      const previousContributorIDs = project.contributors.map(contributor => contributor.toString());
-      const removedContributorIDs = previousContributorIDs.filter(id => !contributorIDs.includes(id));
-
-      const removedContributors = await FormData.find({ _id: { $in: removedContributorIDs } });
-      const removedContributorGitProfiles = removedContributors.map(contributor => contributor.githubProfile);
-      // GitHub API instance
-      if (removedContributorGitProfiles.length != 0) {
-        const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-        const [owner, repo] = githubUrl.split('/').slice(-2);
-
-        // Remove old contributors from GitHub
-        for (const username of removedContributorGitProfiles) {
-          try {
-            await octokit.repos.removeCollaborator({
-              owner,
-              repo,
-              username
-            });
-          } catch (error) {
-            console.log(`Failed to remove ${username} as a collaborator:`, error.message);
-          }
+      try {
+        const response = await octokit.rest.repos.get({
+          owner,
+          repo,
+        });
+      } catch (error) {
+        if (error.status === 404) {
+          return res.status(404).json({ message: 'Repository does not exist.', error: error.message });
+        } else {
+          return res.status(500).json({ message: 'Error saving project', error: error.message });
         }
       }
+    }
 
+    newContributorIDs = [];
+    if (typeof contributors === 'string') {
+      contributorList = [contributors];
+    }
+    else {
+      contributorList = contributors;
+    }
+    const allContributors = await FormData.find(
+      { _id: { $in: project.contributors } }
+    );
+
+    const existingEmailToIDMap = new Map(
+      allContributors.map(contributor => [contributor.email, contributor._id])
+    );
+    const removedContributorGitProfiles = [];
+
+    for (const contributor of allContributors) {
+      if (contributorList.includes(contributor.email)) {
+        newContributorIDs.push(contributor._id);
+      } else {
+        removedContributorGitProfiles.push(contributor.githubProfile);
+      }
+    }
+
+    // GitHub API instance
+    if (removedContributorGitProfiles.length != 0) {
+      const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+      const [owner, repo] = githubUrl.split('/').slice(-2);
+      for (const username of removedContributorGitProfiles) {
+        try {
+          await octokit.repos.removeCollaborator({
+            owner,
+            repo,
+            username
+          });
+        } catch (error) {
+          console.log(`Failed to remove ${username} as a collaborator:`, error.message);
+        }
+      }
     }
 
     const photoUrls = await Promise.all(
       uploadImages.map(file => {
-        console.log('Uploading file:', file.originalname);
         return new Promise((resolve, reject) => {
           cloudinary.v2.uploader.upload_stream(
             { folder: "projects" },
@@ -83,7 +100,6 @@ export const updateProject = async (req, res) => {
                 console.error('Cloudinary upload error:', error);
                 reject(error);
               } else {
-                console.log('Uploaded:', result.secure_url);
                 resolve(result.secure_url);
               }
             }
@@ -94,12 +110,14 @@ export const updateProject = async (req, res) => {
 
     // Delete old images from Cloudinary
     const oldImages = project.images || [];
-    const imagesToDelete = oldImages.filter(image => !images.includes(image)); // Identify images to delete
+    const imagesToDelete = oldImages.filter(image => !images.includes(image));
 
     for (const imageUrl of imagesToDelete) {
       const publicId = imageUrl.split('/').pop().split('.')[0]; // Extract public ID from the URL
       try {
-        await cloudinary.v2.uploader.destroy(publicId); // Delete image from Cloudinary
+        await cloudinary.v2.api
+          .delete_resources(['projects/' + publicId],
+            { type: 'upload', resource_type: 'image' })
       } catch (error) {
         console.log(`Failed to delete image ${imageUrl}:`, error.message);
       }
@@ -111,8 +129,8 @@ export const updateProject = async (req, res) => {
     // Update project details
     project.description = description;
     project.githubUrl = githubUrl;
-    project.contributors = contributorIDs;
-    project.images = finalImages; // Update to the new images
+    project.contributors = newContributorIDs;
+    project.images = finalImages;
 
     const savedProject = await project.save();
 
