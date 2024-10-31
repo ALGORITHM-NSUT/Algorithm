@@ -28,7 +28,25 @@ export const register = async (req, res, next) => {
                 message: "Please provide all required fields",
             });
         }
-
+        if (githubProfile) {
+            const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+            try {
+                const response = await octokit.rest.users.getByUsername({
+                    username: githubProfile.split('/').pop(),
+                });
+            } catch (error) {
+                if (error.status === 404) {
+                    return res.status(422).json({
+                        message: "Github Profile not found",
+                    });
+                } else {
+                    return res.status(500).json({
+                        message: "Internal Server Error",
+                        error: error.message,
+                    })
+                }
+            }
+        }
         // Check if user already exists with NSUT email
         let user = await FormData.findOne({ email });
         const Admin = await CoreMember.findOne({ email });
@@ -228,12 +246,33 @@ export const editProfile = async (req, res, next) => {
                 message: "User not found",
             });
         }
+        if (githubProfile) {
+            if (user.githubProfile !== githubProfile) {
+                const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+                try {
+                    const response = await octokit.rest.users.getByUsername({
+                        username: githubProfile.split('/').pop(),
+                    });
+                } catch (error) {
+                    if (error.status === 404) {
+                        return res.status(422).json({
+                            message: "Github Profile not found",
+                        });
+                    } else {
+                        return res.status(500).json({
+                            message: "Internal Server Error",
+                            error: error.message,
+                        })
+                    }
+                }
 
+            }
+        }
         // Overwrite user's information
         user.name = name || user.name;
         user.personalEmail = personalEmail || ""; // If not provided, set to previous
         user.phoneNumber = phoneNumber || "";
-        user.githubProfile = githubProfile || user.githubProfile;
+        user.githubProfile = githubProfile || "";
         user.leetcodeProfile = leetcodeProfile || "";
         user.codeforcesProfile = codeforcesProfile || "";
         user.linkedinUrl = linkedinUrl || user.linkedinUrl;

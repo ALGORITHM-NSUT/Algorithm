@@ -172,12 +172,13 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
         <Paper
           sx={{
             background: 'linear-gradient(to right, #ffffff)',
+            backgroundColor: "#15142F",
             borderRadius: 3,
             boxShadow: 6,
             transition: 'all 0.3s ease-in-out',
             overflow: 'hidden',
             cursor: 'pointer',
-
+            zIndex: -2,
             color: 'black', // Corrected this line
             '&:hover': { boxShadow: 12 },
             width: '100%', // Ensure the paper takes full width
@@ -198,19 +199,19 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
             />
           </div>
           <div style={{
-            background: '#330080', // Changed from 'white' to '#330080'
+            background: 'white', // Changed from 'white' to '#330080'
             height: '150px',
             display: 'flex',
             alignItems: 'center',
             position: 'relative',
-            zIndex: 0,
             clipPath: 'path("M0,100 C200,200 400,0 600,100 L600,0 L0,0 Z")',
+            marginBottom: "0px"
           }}>
             <Typography
               variant={isExpanded ? 'h5' : 'h4'}
               component="h3"
               sx={{
-                background: '#330080', // Changed from 'white' to '#330080'
+                background: '#18142F', // Changed from 'white' to '#330080'
                 WebkitBackgroundClip: 'text',
                 color: 'white', // Changed from 'transparent' to 'white'
                 transition: 'all 0.3s',
@@ -226,83 +227,80 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               <span style={{
                 position: 'relative',
                 zIndex: 2,
-                color: 'white', // Changed from '#330080' to 'white'
+                color: '#330080', // Changed from '#330080' to 'white'
                 padding: '60px 10px 30px',
               }}>
                 {project.title}
               </span>
             </Typography>
           </div>
+
           {/* Carousel for Project Images */}
-          {project.images && project.images.length > 0 && (
-            project.images.length === 1 ? (
+          <div style={{ backgroundColor: "#18142F" }}>
+            {project.images && project.images.length > 0 && (
               <Box
                 sx={{
-                  position: 'relative',
-                  width: '100%', // Take full width of the parent
+                  position: 'relative', // Makes gradient overlays position correctly
+                  width: '100%',
                   maxWidth: '100%',
-                  aspectRatio: '4 / 3', // Maintain 3:4 aspect ratio
+                  aspectRatio: '4 / 3',
                   borderRadius: '10px',
                   overflow: 'hidden',
-                  margin: '20px auto' // Center within parent
+                  background: '#18142F'
                 }}
               >
-                <Box
-                  component="img"
-                  src={project.images[0]}
-                  loading="lazy"
-                  alt="Project image"
-                  sx={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    borderRadius: '10px'
-                  }}
-                />
-              </Box>
-            ) : (
-              <Slider {...carouselSettings} style={{ margin: '20px auto', maxWidth: '100%', overflow: 'hidden' }}>
-                {project.images.map((image, index) => (
+
+                {/* Carousel or Single Image */}
+                {project.images.length === 1 ? (
                   <Box
-                    key={index}
+                    component="img"
+                    src={project.images[0]}
+                    loading="lazy"
+                    alt="Project image"
                     sx={{
-                      position: 'relative',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
                       width: '100%',
-                      maxWidth: '100%',
-                      aspectRatio: '4 / 3', // Keep 3:4 ratio
-                      borderRadius: '10px',
-                      overflow: 'hidden',
-                      margin: '0 auto' // Center within carousel
+                      height: '100%',
+                      objectFit: 'cover',
+                      zIndex: 1,
                     }}
-                  >
-                    <Box
-                      component="img"
-                      src={image}
-                      loading="lazy"
-                      alt={`Project image ${index + 1}`}
-                      sx={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        borderRadius: '10px'
-                      }}
-                    />
-                  </Box>
-                ))}
-              </Slider>
-            )
-          )}
+                  />
+                ) : (
+                  <Slider {...carouselSettings} style={{ marginLeft: "2.5%", maxWidth: '95%', overflow: 'hidden', borderRadius: '10px', zIndex: 1, background: '#18142F' }}>
+                    {project.images.map((image, index) => (
+                      <Box key={index} sx={{ position: 'relative', width: '100%', maxWidth: '100%', aspectRatio: '4 / 3', borderRadius: '10px', overflow: 'hidden', background: '#18142F' }}>
+                        <Box
+                          component="img"
+                          src={image}
+                          loading="lazy"
+                          alt={`Project image ${index + 1}`}
+                          sx={{
+                            background: '#18142F',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            border: 'none',        // Remove any border
+                            margin: 0,            // Remove any margin
+                            padding: 0,           // Remove any padding
+                            display: 'block',      // Prevent line under the image
+                          }}
+                        />
+
+                      </Box>
+                    ))}
+                  </Slider>
+                )}
+              </Box>
+            )}
+          </div>
 
 
-
-
-          <Box sx={{ p: 3 }}>
+          <Box sx={{ backgroundColor: '#18142F', p: 3 }}>
 
 
 
@@ -310,9 +308,11 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
 
             <Typography
               variant="body1"
-              sx={{ color: 'black', animation: 'fadeIn 0.5s ease-in-out', height: '100px', fontSize: '17px', mb: 10 }}
+              sx={{ position: 'realtive', display: 'flex', color: 'white', animation: 'fadeIn 0.5s ease-in-out', fontSize: '17px', mb: 2 }}
             >
-              {project.description}
+              {!isExpanded && project.description.length > 150
+                ? `${project.description.slice(0, 150)}...`
+                : project.description}
             </Typography>
 
             {/* Action Buttons for Project Lead */}
@@ -323,6 +323,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                 {user && project.lead._id === user._id && (
                   <Box
                     sx={{
+                      postion: 'relative',
                       display: 'flex',
                       gap: 2,
                       mt: 2,
@@ -364,11 +365,11 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                 )}
 
                 {/* Project Lead Section */}
-                <Typography variant="h6" sx={{ color: '#330080', fontWeight: 'bold' }}>
+                <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}> {/* #330080 */}
                   Project Lead:
                 </Typography>
-                <Box sx={{ backgroundColor: '#330075', p: 2, borderRadius: 2, mt: 2 }}>
-                  <Typography variant="body1" color="white">{project.lead.name}</Typography>
+                <Box sx={{ backgroundColor: 'white', p: 2, borderRadius: 2, mt: 2, mb: 3 }}>
+                  <Typography variant="body1" color="#330080" sx={{ fontWeight: 'bold' }}>{project.lead.name}</Typography>
                   <Link
                     href="#"
                     onClick={(e) => {
@@ -378,20 +379,21 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
 
                       console.log(project.lead);
                     }}
-                    sx={{ color: 'white', textDecoration: 'none', '&:hover': { color: 'red' } }}
+                    sx={{ color: '#330080', textDecoration: 'none', '&:hover': { color: 'red' } }}
                   >
                     View Profile
                   </Link>
                 </Box>
 
                 {/* Contributors Section */}
-                {project.contributors.length != 0 && <Typography variant="h6" sx={{ mt: 3, mb: 3, fontWeight: 'bold', color: '#330080' }}>
+                {project.contributors.length != 0 && <Typography variant="h6" sx={{ mb: 3.5, color: 'white', fontWeight: 'bold' }}> {/* #330080 */}
                   Contributors:
                 </Typography>}
                 <Grid
                   container
                   spacing={2}
                   sx={{
+                    mb: 3,
                     maxHeight: '140px',
                     overflowY: 'auto',
                     pr: 1,
@@ -412,9 +414,9 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                     {project.contributors.map((contributor, index) => (
                       <div
                         key={index}
-                        className="bg-[#330075] p-2 rounded-lg shadow-md w-full"
+                        className="bg-white p-2 rounded-lg shadow-md w-full"
                       >
-                        <p className="font-semibold text-white">{contributor.name}</p>
+                        <p className="font-semibold text-[#330080]">{contributor.name}</p>
                         <Link
                           href="#"
                           onClick={(e) => {
@@ -422,7 +424,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                             e.stopPropagation();
                             handleViewProfile(contributor); // Pass contributor details
                           }}
-                          sx={{ color: 'white', textDecoration: 'none', '&:hover': { color: 'red' } }}
+                          sx={{ fontSize: '0.9rem', color: '#330080', textDecoration: 'none', '&:hover': { color: 'red' } }}
                         >
                           View Profile
                         </Link>
@@ -439,8 +441,13 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                 />
 
                 {/* Applicants Section */}
+                {project.applicants.length !== 0 &&
+                  <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold', mb: 2 }}> {/* #330080 */}
+                    Applications:
+                  </Typography>
+                }
                 <Box sx={{
-                  mt: 5, maxHeight: '100px',
+                  maxHeight: '100px',
                   overflowY: 'auto',
                   pr: 1,
                   scrollBehavior: 'smooth',
@@ -454,14 +461,15 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                   '&::-webkit-scrollbar-thumb:hover': {
                     backgroundColor: '#888',
                   },
-                }}>
+                }}>{/*#281450 */}
+
                   {project.applicants.map((applicant, index) => (
                     <Box
                       key={index}
                       sx={{
-                        backgroundColor: '#374151',
-                        p: 2,
-                        mt: 1,
+                        backgroundColor: 'white',
+                        p: 1,
+                        mb: 1,
                         borderRadius: 2,
                         display: 'flex',
                         justifyContent: 'space-between',
@@ -469,23 +477,34 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
 
                       }}
                     >
-                      <Typography variant="body2" color="white">{applicant.name}</Typography>
-                      <Link
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleViewProfile(applicant); // Pass contributor details
-                        }}
-                        sx={{ color: 'white', textDecoration: 'none', '&:hover': { color: 'red' } }}
-                      >
-                        View Profile
-                      </Link>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                        <Typography color="#330080">
+                          {applicant.name}
+                        </Typography>
+                        <Link
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleViewProfile(applicant); // Pass contributor details
+                          }}
+                          sx={{ color: '#330080', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 400, '&:hover': { color: 'red' } }}
+
+                        >
+                          View Profile
+                        </Link>
+                      </Box>
+
                       <Box>
                         <Button
                           variant="contained"
                           color="success"
-                          sx={{ mr: 1, fontSize: "small" }}
+                          sx={{
+                            mr: 1,
+                            fontSize: '0.7rem',    // Smaller font size
+                            padding: '5px 8px',     // Reduced padding
+                            minWidth: 'auto',       // Remove default minWidth
+                          }}
                           onClick={(e) => {
                             e.stopPropagation();
                             handleApplication(applicant._id, 1);
@@ -496,7 +515,11 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                         <Button
                           variant="contained"
                           color="error"
-                          sx={{ fontSize: "small" }}
+                          sx={{
+                            fontSize: '0.7rem',     // Smaller font size
+                            padding: '5px 8px',     // Reduced padding
+                            minWidth: 'auto',       // Remove default minWidth
+                          }}
                           onClick={(e) => {
                             e.stopPropagation();
                             handleApplication(applicant._id, 0);
@@ -505,6 +528,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                           Decline
                         </Button>
                       </Box>
+
                     </Box>
                   ))}
                   <UserProfileModal
@@ -530,7 +554,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                       }}
                     >Request to Join </button>) :
                       (<button
-                        className="mt-2 py-2 px-4 bg-[#0a242d] text-white rounded-lg cursor-not-allowed"
+                        className="mt-2 py-2 px-4 bg-[#330080] text-white rounded-lg cursor-not-allowed"
                         disabled
                       >
                         Add Github to apply
@@ -538,7 +562,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
 
                   ) : (
                     <button
-                      className="mt-2 py-2 px-4 bg-[#0a242d] text-white rounded-lg cursor-not-allowed"
+                      className="mt-2 py-2 px-4 bg-[#330080] text-white rounded-lg cursor-not-allowed"
                       disabled
                     >
                       Already Applied
@@ -579,16 +603,50 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
             )}
 
             {/* GitHub Link */}
-            <Box sx={{ mt: 4 }}>
+            <Box sx={{ mt: 2 }}>
               <Link
                 href={project.githubUrl}
                 target="_blank"
                 rel="noreferrer"
-                sx={{ color: 'black', textDecoration: 'none', fontSize: '20px', '&:hover': { color: '#330080' } }}
+                sx={{
+                  padding: "5px",
+                  borderRadius: '6px',
+                  color: 'white',
+                  textDecoration: 'none',
+                  fontSize: '20px',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  display: 'inline-block',
+                  transition: 'color 0.3s ease',
+                  zIndex: 2,
+
+                  '&:hover': {
+                    color: '#330080',
+                    zIndex: 2,// Transition text color on hover
+                  },
+
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    width: '0',
+                    height: '100%',
+                    backgroundColor: 'white',
+                    transition: 'width 0.3s ease, left 0.5s ease',
+                    transform: 'translate(-50%, -50%)',
+                    zIndex: -1, // Ensures background is behind the text
+                  },
+
+                  '&:hover::before': {
+                    width: '100%'
+                  },
+                }}
               >
                 View Project on GitHub
               </Link>
             </Box>
+
           </Box>
         </Paper>
       </div>

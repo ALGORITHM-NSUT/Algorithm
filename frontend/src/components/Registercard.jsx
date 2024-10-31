@@ -94,8 +94,40 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   }, []);
 
+  const validateEmail = (email) => {
+    // Check if email ends with @nsut.ac.in
+    return email.endsWith("@nsut.ac.in");
+  };
+
+  const validatePersonalEmail = (email) => {
+    // Simple regex for validating email format
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+  };
+
+  const validateRollNumber = (rollNumber) => {
+    // Check if roll number is exactly 11 characters long and alphanumeric
+    const rollNumberPattern = /^[a-zA-Z0-9]{11}$/;
+    return rollNumberPattern.test(rollNumber);
+  };
+
   const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
+
+    // Perform validations
+    if (!validateEmail(formData.email)) {
+      alert("NSUT Email must end with @nsut.ac.in");
+      return;
+    }
+    if (!validatePersonalEmail(formData.personalEmail)) {
+      alert("Please enter a valid personal email address");
+      return;
+    }
+    if (!validateRollNumber(formData.rollNumber)) {
+      alert("Please enter a valid roll number");
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:5000/register", {
         method: "POST",
@@ -105,15 +137,11 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
       });
 
       const data = await response.json();
-      if (response.ok) {
-        alert("Register successful!");
+      alert(data.message);
+      if (response.status === 201) {
+        localStorage.clear();
         localStorage.setItem("userProfile", JSON.stringify(data.user));
         navigate("/userprofile");
-      }
-      else {
-        const errorData = await response.json();
-        alert(`Error: ${errorData.message || "An error occurred while editing the profile."}`);
-        return;
       }
     } catch (error) {
       console.error("Error registering user:", error);
@@ -122,6 +150,21 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
 
   const handleEdit = useCallback(async (event) => {
     event.preventDefault();
+
+    // Perform validations
+    if (!validateEmail(formData.email)) {
+      alert("NSUT Email must end with @nsut.ac.in");
+      return;
+    }
+    if (!validatePersonalEmail(formData.personalEmail)) {
+      alert("Please enter a valid personal email address");
+      return;
+    }
+    if (!validateRollNumber(formData.rollNumber)) {
+      alert("Please enter a valid roll number");
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:5000/editProfile", {
         method: "POST",
@@ -130,21 +173,18 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        alert(`Error: ${errorData.message || "An error occurred while editing the profile."}`);
-        return;
-      }
-
       const data = await response.json();
-      alert("Account edit successful!");
-      localStorage.clear();
-      localStorage.setItem("userProfile", JSON.stringify(data.user));
+      alert(data.message);
+      if (response.status === 201) {
+        localStorage.clear();
+        localStorage.setItem("userProfile", JSON.stringify(data.user));
+      }
       canceledit();
     } catch (error) {
       alert(`Network error: ${error.message}`);
     }
   }, [formData]);
+
 
   const canceledit = useCallback(() => {
     setEditForm(false);
@@ -200,7 +240,7 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
                   <FormField label="NSUT Email" name="email" value={formData.email} onChange={handleChange} required disabled={!!user} />
                   <FormField label="Personal Email" name="personalEmail" value={formData.personalEmail} onChange={handleChange} />
                   <FormField label="Phone Number" name="phoneNumber" type="tel" value={formData.phoneNumber} onChange={handleChange} />
-                  <FormField label="GitHub Profile" name="githubProfile" value={formData.githubProfile} onChange={handleChange} disabled={!!user?.githubProfile} />
+                  <FormField label="GitHub Profile" name="githubProfile" value={formData.githubProfile} onChange={handleChange} />
                   <FormField label="LeetCode Profile" name="leetcodeProfile" value={formData.leetcodeProfile} onChange={handleChange} />
                   <FormField label="Codeforces Profile" name="codeforcesProfile" value={formData.codeforcesProfile} onChange={handleChange} />
                   <FormField label="Password" name="password" type="password" value={formData.password} onChange={handleChange} required disabled={!!user} />
@@ -208,7 +248,7 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
                   <FormField label="Roll Number" name="rollNumber" value={formData.rollNumber} onChange={handleChange} required />
                   <YearSelection value={formData.year} onChange={handleChange} />
 
-                  <Grid container spacing={2}>
+                  {setEditForm ? <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
                       <Button
                         type="submit"
@@ -229,7 +269,15 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
                         Cancel
                       </Button>
                     </Grid>
-                  </Grid>
+                  </Grid> :
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      sx={{ width: "100%" }}
+                    >
+                      {user ? "Confirm" : "Register"}
+                    </Button>}
                 </Grid>
               </form>
             </div>

@@ -40,12 +40,12 @@ export default function HeroSection() {
             alt="Logo"
             className="w-24 h-18 md:w-32 md:h-24 lg:w-40 lg:h-30 mr-4"
           />
-          <h1 className="text-[4rem] sm:text-[5rem] md:text-[6rem] lg:text-[180px] text-gray-200 font-bold mt-2 font-sans">
-            Algorithm
+          <h1 className="text-[4rem] sm:text-[5rem] md:text-[6rem] lg:text-[180px] text-gray-200 font-bold mt-2 font-mono">
+            ALGORITHM
           </h1>
         </div>
 
-        <div className="text-gray-300 font-bold text-center mb-4">
+        <div className="text-gray-300 font-bold text-center mb-4 font-mono">
           <p className="text-xl lg:text-5xl">Code . Set . Go</p>
         </div>
 
