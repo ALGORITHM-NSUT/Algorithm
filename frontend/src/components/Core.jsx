@@ -3,14 +3,33 @@ import React, { useEffect, useState } from 'react';
 const Core = () => {
   const [members, setMembers] = useState({ withSubPosition: [], withoutSubPosition: [] });
   useEffect(() => {
-    fetch('http://localhost:5000/core')
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchMembers = async () => {
+      const cachedNews = sessionStorage.getItem('Core');
+
+      if (cachedNews) {
+        const data = JSON.parse(cachedNews);
         const withSubPosition = data.members.filter(member => member.subPosition);
         const withoutSubPosition = data.members.filter(member => !member.subPosition);
-        setMembers({ withSubPosition, withoutSubPosition });
-      })
-      .catch((error) => console.error('Error fetching members:', error));
+        setMembers({ withSubPosition, withoutSubPosition })
+      } else {
+        try {
+          const response = await fetch("http://localhost:5000/core", {
+            method: "GET",
+          });
+          const data = await response.json();
+          if (response.status === 200) {
+            sessionStorage.setItem("Core", JSON.stringify(data));
+            const withSubPosition = data.members.filter(member => member.subPosition);
+            const withoutSubPosition = data.members.filter(member => !member.subPosition);
+            setMembers({ withSubPosition, withoutSubPosition });
+          }
+
+        } catch (error) {
+          alert(`Error fetching members: ${error.message}`);
+        }
+      }
+    }
+    fetchMembers();
   }, []);
 
 
