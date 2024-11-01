@@ -2,7 +2,7 @@ import FormData from "../models/formDataModel.js";
 import { sendToken } from "../utils/sendToken.js";
 import CoreMember from "../models/CoreMember.js";
 import { transporter } from "../utils/MailClient.js";
-
+import { Octokit } from "@octokit/rest";
 
 export const register = async (req, res) => {
     try {
@@ -19,14 +19,32 @@ export const register = async (req, res) => {
             rollNumber,
             year
         } = req.body;
-        
+
         // Check if all required fields are provided
         if (!name || !email || !password) {
             return res.status(400).json({
                 message: "Please provide all required fields",
             });
         }
-
+        if (githubProfile) {
+            const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+            try {
+                const response = await octokit.rest.users.getByUsername({
+                    username: githubProfile.split('/').pop(),
+                });
+            } catch (error) {
+                if (error.status === 404) {
+                    return res.status(422).json({
+                        message: "Github Profile not found",
+                    });
+                } else {
+                    return res.status(500).json({
+                        message: "Internal Server Error",
+                        error: error.message,
+                    })
+                }
+            }
+        }
         // Check if user already exists with NSUT email
         let user = await FormData.findOne({ email });
         const Admin = await CoreMember.findOne({ email });
@@ -55,9 +73,9 @@ export const register = async (req, res) => {
             verified: false
         });
 
-       
 
-     
+
+
         const verificationLink = `${process.env.CLIENT_URL}/verify/${user.id}`;
 
         try {
@@ -79,8 +97,8 @@ export const register = async (req, res) => {
             });
         }
 
-        res.status(200).send({
-            message: "success"
+        res.status(201).send({
+            message: "Check your Inbox or spam folder to verify"
         })
 
     } catch (error) {
@@ -116,7 +134,7 @@ export const login = async (req, res, next) => {
             });
         }
 
-        if(!user.verified){
+        if (!user.verified) {
             return res.status(401).json({
                 message: "User Not Verified",
             });
@@ -246,14 +264,38 @@ export const editProfile = async (req, res, next) => {
                 message: "User not found",
             });
         }
+        if (githubProfile !== '') {
+            console.log('derijfvberiuf');
+            if (user.githubProfile !== githubProfile) {
+                console.log('derijfvberiuf');
 
+                const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+                try {
+                    const response = await octokit.rest.users.getByUsername({
+                        username: githubProfile.split('/').pop(),
+                    });
+                } catch (error) {
+                    if (error.status === 404) {
+                        return res.status(422).json({
+                            message: "Github Profile not found",
+                        });
+                    } else {
+                        return res.status(500).json({
+                            message: "Internal Server Error",
+                            error: error.message,
+                        })
+                    }
+                }
+
+            }
+        }
         // Overwrite user's information
-        user.name = name;
-        user.personalEmail = personalEmail || user.personalEmail; // If not provided, set to previous
-        user.phoneNumber = phoneNumber || user.phoneNumber;
-        user.githubProfile = githubProfile || user.githubProfile;
-        user.leetcodeProfile = leetcodeProfile || user.leetcodeProfile;
-        user.codeforcesProfile = codeforcesProfile || user.codeforcesProfile;
+        user.name = name || user.name;
+        user.personalEmail = personalEmail || ""; // If not provided, set to previous
+        user.phoneNumber = phoneNumber || "";
+        user.githubProfile = githubProfile || "";
+        user.leetcodeProfile = leetcodeProfile || "";
+        user.codeforcesProfile = codeforcesProfile || "";
         user.linkedinUrl = linkedinUrl || user.linkedinUrl;
         user.rollNumber = rollNumber || user.rollNumber;
         user.year = year || user.year;
@@ -272,3 +314,4 @@ export const editProfile = async (req, res, next) => {
         );
     }
 };
+

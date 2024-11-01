@@ -62,6 +62,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
     contributors: [],
     githubUrl: '',
     images: [],
+    updateImages: []
   });
 
   useEffect(() => {
@@ -72,6 +73,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
       projectData.contributors = project.contributors.map((contributor) => contributor.email);
       projectData.lead = project.lead._id;
       projectData.images = project.images || [];
+      projectData.updateImages = [];
     }
   }, [project, showForm]);
 
@@ -105,22 +107,31 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formData = new FormData();
+    for (const key in projectData) {
+      if (Array.isArray(projectData[key])) {
+        projectData[key].forEach((value) => {
+          formData.append(key, value);
+        });
+      } else {
+        formData.append(key, projectData[key]);
+      }
+    }
     try {
       const response = await fetch('http://localhost:5000/addProject', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         credentials: "include",
-        body: JSON.stringify({
-          projectData
-        })
+        body: formData
       });
-      refreshProjects();
-      handleCancel(); // Close the form after submission
-      // resetProjectData();
       const data = await response.json();
-      console.log('Response data:', data);
+      if (response.status === 201) {
+        refreshProjects();
+        handleCancel();
+        handleSnackbarOpen(data.message);
+      }
+      else {
+        alert(data.message);
+      }
     } catch (error) {
       console.error('Error posting data:', error);
     }
@@ -128,22 +139,38 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
 
   const updateProject = async (e) => {
     e.preventDefault();
+    projectData.updateImages = projectData.images.filter(image => typeof image !== 'string');
+    projectData.images = projectData.images.filter(image => typeof image === 'string');
+    const formData = new FormData();
+    for (const key in projectData) {
+      if (Array.isArray(projectData[key])) {
+        if (projectData[key].length === 0) {
+          formData.append(key, []);  // Append an empty array as a string
+        } else {
+          projectData[key].forEach((value) => {
+            formData.append(key, value);
+          });
+        }
+      } else {
+        formData.append(key, projectData[key]);
+      }
+    }
     try {
       const response = await fetch('http://localhost:5000/updateProject', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         credentials: "include",
-        body: JSON.stringify({
-          projectData
-        })
+        body: formData
       });
-      refreshProjects();
-      handleCancel(); // Close the form after submission
-      // resetProjectData();
       const data = await response.json();
-      console.log('Response data:', data);
+      if (response.status === 201) {
+        refreshProjects();
+        handleCancel();
+        handleSnackbarOpen(data.message);
+      }
+      else {
+        alert(data.message);
+      }
+
     } catch (error) {
       console.error('Error posting data:', error);
     }
@@ -181,7 +208,8 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
     setSnackbarOpen(true);
   };
 
-  const handleSnackbarClose = () => {
+  const handleSnackbarClose = (e) => {
+    e.stopPropagation();
     setSnackbarOpen(false);
   };
 
@@ -190,7 +218,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
       {/* Plus card to open form */}
       {showadd && (
         <div
-          className="absolute inset-0 w-full h-auto bg-gray-700/30 rounded-lg shadow-lg cursor-pointer flex items-center justify-center text-white align-middle hover:bg-gray-700/60 backdrop-blur-xl transition duration-300 ease-in-out transform z-10"
+          className="absolute inset-0 w-full h-auto bg-gray-700/30 rounded-2xl shadow-lg cursor-pointer flex items-center justify-center text-white align-middle hover:bg-gray-700/60 backdrop-blur-xl transition duration-300 ease-in-out transform z-10"
           onClick={() => setShowForm(!showForm)}
         >
           <span className="text-5xl">+</span>
@@ -346,8 +374,9 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
                 {projectData.images.map((image, index) => (
                   <Grid item xs={4} key={index}>
                     <Box position="relative">
+
                       <img
-                        src={URL.createObjectURL(image)}
+                        src={typeof (image) === 'string' ? image : URL.createObjectURL(image)}
                         alt={`Project Image ${index + 1}`}
                         style={{ width: '100%', borderRadius: '8px' }}
                       />
@@ -375,8 +404,8 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
           </Box>
         </span>
       )}
-      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={(e) => { handleSnackbarClose(e) }}>
+        <Alert onClose={(e) => { handleSnackbarClose(e) }} severity="success" sx={{ width: '100%' }}>
           {snackbarMessage}
         </Alert>
       </Snackbar>

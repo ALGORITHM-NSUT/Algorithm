@@ -2,32 +2,27 @@
 import express from 'express';
 import { submitFormData } from '../controllers/formController.js';
 import { home } from '../controllers/home.js';
-import { getProjects } from '../controllers/ProjectController.js';
+import { getProjects, updateProject, addProject, deleteProject } from '../controllers/ProjectController.js';
 import { getCoreMembers } from '../controllers/coreMemberController.js';
-import { submitapplication } from '../controllers/applicationController.js';
-import { checkapplication } from '../controllers/checkApplication.js';
+import { submitapplication, handleApplication } from '../controllers/applicationController.js';
 import { isAuthenticated } from '../middlewares/auth.js';
-import { handleApplication } from '../controllers/handleApplication.js';
-import { addProject } from '../controllers/addProject.js'
-import { deleteProject } from '../controllers/deleteProject.js';
-import { updateProject } from '../controllers/updateProject.js';
-import {emailVerify} from '../controllers/emailVerify.js';
-
+import multer from 'multer';
+import upload from '../config/multerconfig.js';
+import { emailVerify } from '../controllers/emailVerify.js';
 const router = express.Router();
 
 // get
 router.get('/', home)
 router.get("/core", getCoreMembers)
 router.route("/projects").get(isAuthenticated, getProjects);
-router.get("/verify/:id",emailVerify)
+router.get("/verify/:id", emailVerify)
 
 
 // post
 router.post('/form', submitFormData);
 router.route("/application").post(isAuthenticated, submitapplication);
-router.route("/checkapplication").post(isAuthenticated, checkapplication);
 router.route("/handleApplication").post(isAuthenticated, handleApplication);
-router.route("/addProject").post(isAuthenticated, addProject);
+router.route("/addProject").post(isAuthenticated, upload.array('images'), addProject);
 router.route("/deleteProject").post(isAuthenticated, deleteProject);
-router.route("/updateProject").post(isAuthenticated, updateProject);
+router.route("/updateProject").post(isAuthenticated, upload.array('updateImages'), updateProject);
 export default router;

@@ -27,11 +27,8 @@ const EmailVerify = () => {
 		<div>
 			{validUrl ? (
 				<div    >
-					
+
 					<h1>Email verified successfully</h1>
-					<Link to="/login">
-						<button >Login</button>
-					</Link>
 				</div>
 			) : (
 				<h1>404 Not Found</h1>
