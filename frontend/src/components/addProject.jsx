@@ -208,7 +208,8 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
     setSnackbarOpen(true);
   };
 
-  const handleSnackbarClose = () => {
+  const handleSnackbarClose = (e) => {
+    e.stopPropagation();
     setSnackbarOpen(false);
   };
 
@@ -403,8 +404,8 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
           </Box>
         </span>
       )}
-      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={(e) => { handleSnackbarClose(e) }}>
+        <Alert onClose={(e) => { handleSnackbarClose(e) }} severity="success" sx={{ width: '100%' }}>
           {snackbarMessage}
         </Alert>
       </Snackbar>

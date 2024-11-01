@@ -107,8 +107,6 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
 
   const handleSendRequest = () => {
     if (postData()) {
-      setApplication(false);
-    } else {
       refreshProjects();
     }
     setShowappModal(false);
@@ -144,7 +142,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
       )}
       <div
         onClick={toggleExpand}
-        className={`relative p-4 w-full rounded-lg transition-all duration-300 ease-in-out cursor-pointer 
+        className={`relative p-1 w-full rounded-lg transition-all duration-300 ease-in-out cursor-pointer 
         ${isExpanded ? 'scale-110 z-30' : 'z-10'}`}
       >
         <Paper
@@ -178,11 +176,11 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
           </div>
           <div style={{
             background: 'white', // Changed from 'white' to '#330080'
-            height: '150px',
+            height: '120px',
             display: 'flex',
             alignItems: 'center',
             position: 'relative',
-            clipPath: 'path("M0,100 C200,200 400,0 600,100 L600,0 L0,0 Z")',
+            clipPath: 'path("M0,90 C200,150 300,0 600,90 L600,0 L0,0 Z")',
             marginBottom: "0px"
           }}>
             <Typography
@@ -195,7 +193,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                 transition: 'all 0.3s',
                 fontWeight: 'bold',
                 mb: 2,
-                fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' },
+                fontSize: { xs: '1.8rem', sm: '2rem', md: '2.3rem' },
                 position: 'relative',
                 zIndex: 1,
                 textAlign: 'center', // Center text horizontally
@@ -278,7 +276,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
           </div>
 
 
-          <Box sx={{ backgroundColor: '#18142F', p: 3 }}>
+          <Box sx={{ backgroundColor: '#18142F', p: 2 }}>
 
 
 
@@ -286,7 +284,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
 
             <Typography
               variant="body1"
-              sx={{ position: 'realtive', display: 'flex', color: 'white', animation: 'fadeIn 0.5s ease-in-out', fontSize: '17px', mb: 2 }}
+              sx={{ position: 'realtive', display: 'flex', color: 'white', animation: 'fadeIn 0.5s ease-in-out', fontSize: '17px', mb: 2, minHeight: '76px' }}
             >
               {!isExpanded && project.description.length > 150
                 ? `${project.description.slice(0, 150)}...`
@@ -298,49 +296,6 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
             {/* Expanded View */}
             {isExpanded && (
               <Box sx={{ mt: 0 }}>
-                {user && project.lead._id === user._id && (
-                  <Box
-                    sx={{
-                      postion: 'relative',
-                      display: 'flex',
-                      gap: 2,
-                      mt: 2,
-                      justifyContent: 'flex-end', // Aligns the buttons to the right
-                    }}
-                  >
-                    <Tooltip title="Delete" arrow>
-                      <IconButton
-                        sx={{
-                          backgroundColor: '#b91c1c',
-                          '&:hover': { backgroundColor: '#991b1b' },
-                          transition: 'background-color 0.3s ease',
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteRequest();
-                        }}
-                      >
-                        <DeleteIcon fontSize="large" />
-                      </IconButton>
-                    </Tooltip>
-
-                    <Tooltip title={editProject ? "Cancel Edit" : "Edit"} arrow>
-                      <IconButton
-                        sx={{
-                          backgroundColor: '#f59e0b',
-                          '&:hover': { backgroundColor: '#d97706' },
-                          transition: 'background-color 0.3s ease',
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setEditProject((prev) => !prev);
-                        }}
-                      >
-                        <EditIcon fontSize="large" />
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
-                )}
 
                 {/* Project Lead Section */}
                 <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}> {/* #330080 */}
@@ -515,48 +470,111 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                     userDetails={selectedUser} // Pass the selected user details to the modal
                   />
                 </Box>
+                {user && project.lead._id === user._id && (
+
+                  <Box
+                    sx={{
+                      postion: 'relative',
+                      display: 'flex',
+                      gap: 2,
+                      mt: 2,
+                      justifyContent: 'flex-end', // Aligns the buttons to the right
+                    }}
+                  >
+                    <Tooltip title="Delete" arrow>
+                      <IconButton
+                        sx={{
+                          backgroundColor: '#b91c1c',
+                          '&:hover': { backgroundColor: '#991b1b' },
+                          transition: 'background-color 0.3s ease',
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteRequest();
+                        }}
+                      >
+                        <DeleteIcon fontSize="large" />
+                      </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title={editProject ? "Cancel Edit" : "Edit"} arrow>
+                      <IconButton
+                        sx={{
+                          backgroundColor: '#f59e0b',
+                          '&:hover': { backgroundColor: '#d97706' },
+                          transition: 'background-color 0.3s ease',
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditProject((prev) => !prev);
+                        }}
+                      >
+                        <EditIcon fontSize="large" />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                )}
               </Box>
+
             )}
+
 
             {isOngoing && (
               <React.Fragment>
-                {user ? (
-                  project.applicable && project.lead._id !== user._id ? (
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    {user ? (
+                      project.applicable && project.lead._id !== user._id ? (
 
 
-                    user.githubProfile ? (<button
-                      className="mt-2 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleJoinRequest();
-                      }}
-                    >Request to Join </button>) :
-                      (<button
-                        className="mt-2 py-2 px-4 bg-[#330080] text-white rounded-lg cursor-not-allowed"
-                        disabled
+                        user.githubProfile ? (<button
+                          className="mt-2 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 w-full"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleJoinRequest();
+                          }}
+                        >Request to Join </button>) :
+                          (<button
+                            className="mt-2 py-2 px-4 bg-[#330080] text-white rounded-lg cursor-not-allowed w-full"
+                            disabled
+                          >
+                            Add Github to apply
+                          </button>)
+
+                      ) : (
+                        <button
+                          className="mt-2 py-2 px-4 bg-[#330080] text-white rounded-lg cursor-not-allowed w-full"
+                          disabled
+                        >
+                          Already Applied
+                        </button>
+                      )
+                    ) : (
+                      <button
+                        className="mt-2 py-2 px-4 bg-[#40199a] hover:bg-green-800 text-white rounded-lg w-full"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate('/login');
+                        }}
                       >
-                        Add Github to apply
-                      </button>)
+                        Login to apply
+                      </button>
+                    )}
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <a href={project.githubUrl} rel="noreferrer" target="_blank">
+                      <button
+                        className="mt-2 py-2 px-4 bg-[#40199a] hover:bg-[#330080] text-white rounded-lg w-full"
 
-                  ) : (
-                    <button
-                      className="mt-2 py-2 px-4 bg-[#330080] text-white rounded-lg cursor-not-allowed"
-                      disabled
-                    >
-                      Already Applied
-                    </button>
-                  )
-                ) : (
-                  <button
-                    className="mt-8 py-2 px-4 bg-[#40199a] hover:bg-green-800 text-white rounded-lg"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate('/login');
-                    }}
-                  >
-                    Login to apply
-                  </button>
-                )}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
+                        View on GitHub
+                      </button>
+                    </a>
+                  </Grid>
+                </Grid>
               </React.Fragment>
             )}
 
@@ -580,7 +598,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               />
             )}
 
-            {/* GitHub Link */}
+            {/* GitHub Link 
             <Box sx={{ mt: 2 }}>
               <Link
                 href={project.githubUrl}
@@ -623,7 +641,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               >
                 View Project on GitHub
               </Link>
-            </Box>
+            </Box>*/}
 
           </Box>
         </Paper>

@@ -7,22 +7,32 @@ const Articles = () => {
 
   useEffect(() => {
     const fetchNews = async () => {
-      try {
-        const response = await axios.get(
-          `https://newsapi.org/v2/top-headlines?category=technology&apiKey=9f5a8ba0c088414aa14c69daf44fe18d`
-        );
-        setNews(response.data.articles);
+      const cachedNews = sessionStorage.getItem('newsData');
+
+      if (cachedNews) {
+        setNews(JSON.parse(cachedNews));
         setLoading(false);
-      } catch (error) {
-        console.error('Error fetching news:', error);
-        setLoading(false);
+      } else {
+        try {
+          const response = await axios.get(
+            `https://newsapi.org/v2/top-headlines?category=technology&apiKey=9f5a8ba0c088414aa14c69daf44fe18d`
+          );
+          const articles = response.data.articles;
+          setNews(articles);
+          sessionStorage.setItem('newsData', JSON.stringify(articles));
+          setLoading(false);
+        } catch (error) {
+          console.error('Error fetching news:', error);
+          setLoading(false);
+        }
       }
     };
+
     fetchNews();
   }, []);
 
   return (
-    <div className='flex flex-col items-center min-h-screen py-10 w-full   text-white'>
+    <div className='flex flex-col items-center min-h-screen py-10 w-full text-white'>
       <h1 className='text-3xl font-bold mb-8'>Latest Technology News</h1>
 
       {loading ? (

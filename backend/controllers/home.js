@@ -1,6 +1,6 @@
 
-export const home = (req,res)=>{
+export const home = (req, res) => {
     res.json({
-        message: "Hello Saumil"
+        message: "Algorithm Society Backend"
     })
 }

@@ -246,7 +246,7 @@ export const editProfile = async (req, res, next) => {
                 message: "User not found",
             });
         }
-        if (githubProfile) {
+        if (githubProfile !== '') {
             if (user.githubProfile !== githubProfile) {
                 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
                 try {
