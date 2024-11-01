@@ -1,30 +1,42 @@
 import Project from "../models/ProjectModel.js";
-import apply from "../models/joinProject.js"; // Make sure you have the right path
+import apply from "../models/joinProject.js";
 
 export const getProjects = async (req, res) => {
   try {
-    const user = req.user._id;
+    const userId = req.user._id;
+
+    // Fetch all projects with populated fields
     const projects = await Project.find()
       .populate('lead', 'name linkedinUrl email phoneNumber rollNumber githubProfile')
       .populate('contributors', 'name linkedinUrl email phoneNumber rollNumber githubProfile')
       .populate({
         path: 'applications',
         populate: {
-          path: 'applier',  // Populate the applier field to get names
-          select: 'name linkedinUrl email phoneNumber rollNumber githubProfile'     // Only select the name field
+          path: 'applier',
+          select: 'name linkedinUrl email phoneNumber rollNumber githubProfile'
         }
       });
 
-    // Fetch all applications from the apply model
-    const applications = await apply.find().populate('applier', 'name linkedinUrl _id email phoneNumber rollNumber githubProfile');
+    // Fetch all applications and populate the applier field
+    const applications = await apply.find()
+      .populate('applier', 'name linkedinUrl _id email phoneNumber rollNumber githubProfile');
 
-    // Iterate through each project and match applications based on the title
+    // Format projects and set the applicable field based on user applications
     const formattedProjects = projects.map(project => {
-      const matchedApplications = applications.filter(app => app.title === project.title);
+      // Check if the current user has applied to this project by title
+      const hasUserApplied = applications.some(app =>
+        app.title === project.title && String(app.applier._id) === String(userId)
+      );
 
+      // Set the applicable field based on the user's application status
       return {
         title: project.title,
         lead: project.lead,
+        githubUrl: project.githubUrl,
+        description: project.description,
+        images: project.images,
+        status: !project.status,
+        applicable: !hasUserApplied, // true if user hasn't applied, false if they have
         contributors: project.contributors.map(contributor => ({
           name: contributor.name,
           linkedinUrl: contributor.linkedinUrl,
@@ -33,24 +45,23 @@ export const getProjects = async (req, res) => {
           phoneNumber: contributor.phoneNumber,
           githubProfile: contributor.githubProfile
         })),
-        githubUrl: project.githubUrl,
-        description: project.description,
-        images: project.images,
-        status: project.status === false ? "Ongoing" : "Completed",
-        applicants: user == project.lead._id ? matchedApplications.map(app => ({
-          name: app.applier.name,
-          linkedinUrl: app.applier.linkedinUrl,
-          _id: app.applier._id,
-          email: app.applier.email,
-          rollNumber: app.applier.rollNumber,
-          phoneNumber: app.applier.phoneNumber,
-          githubProfile: app.applier.githubProfile
-
-        })) : []// Extract applicant names
+        applicants: String(userId) === String(project.lead._id)
+          ? applications
+            .filter(app => app.title === project.title)
+            .map(app => ({
+              name: app.applier.name,
+              linkedinUrl: app.applier.linkedinUrl,
+              _id: app.applier._id,
+              email: app.applier.email,
+              rollNumber: app.applier.rollNumber,
+              phoneNumber: app.applier.phoneNumber,
+              githubProfile: app.applier.githubProfile
+            }))
+          : []
       };
     });
 
-    // Send back the formatted projects in JSON format
+    // Send the formatted projects in JSON format
     res.status(200).json(formattedProjects);
   } catch (error) {
     console.error('Error fetching projects:', error);

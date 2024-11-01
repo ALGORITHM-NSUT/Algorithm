@@ -25,7 +25,6 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   const [editModal, setEditModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('userProfile')));
-  const [application, setApplication] = useState(false);
   const navigate = useNavigate();
   const [editProject, setEditProject] = useState(false);
   const theme = useTheme();
@@ -34,7 +33,6 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   const [selectedUser, setSelectedUser] = useState(null); // State for the selected user
 
   const postData = async () => {
-    console.log(project.lead);
     try {
       const response = await fetch('http://localhost:5000/application', {
         method: 'POST',
@@ -49,26 +47,6 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
       console.error('Error posting data:', error);
     }
   };
-
-  useEffect(() => {
-    const fetchApplication = async () => {
-      try {
-        const availability = await fetch('http://localhost:5000/checkapplication', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ title: project.title })
-        });
-
-        const data = await availability.json();
-        setApplication(data.message !== 'Application already exists');
-      } catch (error) {
-        console.error('Error checking open applications:', error);
-      }
-    };
-
-    fetchApplication();
-  }, [user, application, project]);
 
   const handleApplication = async (id, state) => {
     try {
@@ -543,7 +521,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
             {isOngoing && (
               <React.Fragment>
                 {user ? (
-                  application && project.lead._id !== user._id ? (
+                  project.applicable && project.lead._id !== user._id ? (
 
 
                     user.githubProfile ? (<button

@@ -5,6 +5,7 @@ import cloudinary from 'cloudinary';
 
 export const updateProject = async (req, res) => {
   try {
+    const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
     cloudinary.v2.config({
       cloud_name: process.env.CLOUD_NAME,
       api_key: process.env.CLOUDINARY_API,
@@ -14,8 +15,12 @@ export const updateProject = async (req, res) => {
 
     const { title, description, lead, contributors, githubUrl, images } = req.body;
     const uploadImages = req.files;
+    const project = await projectSchema.findOne({ title: title });
+    if (!project) {
+      return res.status(404).json({ message: 'project not found' });
+    }
 
-    if (req.user._id != lead) {
+    if (req.user._id != project.lead) {
       return res.status(401).json({ message: 'unauthorized' });
     }
 
@@ -23,12 +28,6 @@ export const updateProject = async (req, res) => {
       return res.status(406).json({ message: 'check description' });
     }
 
-    const project = await projectSchema.findOne({ title: title });
-    if (!project) {
-      return res.status(404).json({ message: 'project not found' });
-    }
-    var contributorList;
-    var newContributorIDs = project.contributors;
 
     if (githubUrl !== project.githubUrl) {
       const [owner, repo] = githubUrl.split('/').slice(-2);
@@ -49,7 +48,9 @@ export const updateProject = async (req, res) => {
       }
     }
 
-    newContributorIDs = [];
+    const newContributorIDs = [];
+    const newContributorGithub = [];
+    var contributorList;
     if (typeof contributors === 'string') {
       contributorList = [contributors];
     }
@@ -68,24 +69,58 @@ export const updateProject = async (req, res) => {
     for (const contributor of allContributors) {
       if (contributorList.includes(contributor.email)) {
         newContributorIDs.push(contributor._id);
+        if (githubUrl !== project.githubUrl) {
+          newContributorGithub.push(contributor.githubProfile);
+        }
       } else {
         removedContributorGitProfiles.push(contributor.githubProfile);
       }
     }
 
     // GitHub API instance
-    if (removedContributorGitProfiles.length != 0) {
-      const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+    if (removedContributorGitProfiles.length != 0 && project.githubUrl === githubUrl) {
       const [owner, repo] = githubUrl.split('/').slice(-2);
-      for (const username of removedContributorGitProfiles) {
+      for (var username of removedContributorGitProfiles) {
+        username = username.split('/').pop();
         try {
-          await octokit.repos.removeCollaborator({
+          const { data: invitations } = await octokit.rest.repos.listInvitations({
             owner,
             repo,
-            username
           });
+          const invitation = invitations.find(inv => inv.invitee.login === username);
+          if (!invitation) {
+            await octokit.repos.removeCollaborator({
+              owner,
+              repo,
+              username
+            });
+          }
+          else {
+            const invitationId = invitation.id;
+            const response = await octokit.repos.deleteInvitation({
+              owner,
+              repo,
+              invitation_id: invitationId,
+            });
+          }
         } catch (error) {
           console.log(`Failed to remove ${username} as a collaborator:`, error.message);
+        }
+      }
+    }
+    if (project.githubUrl !== githubUrl) {
+      const [owner, repo] = githubUrl.split('/').slice(-2);
+      for (var username of newContributorGithub) {
+        username = username.split('/').pop();
+        try {
+          await octokit.repos.addCollaborator({
+            owner,
+            repo,
+            username,
+            permission: "write",
+          });
+        } catch (error) {
+          console.log(`Failed to add ${username} as a collaborator:`, error.message);
         }
       }
     }

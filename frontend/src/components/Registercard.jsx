@@ -94,40 +94,37 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   }, []);
 
-  const validateEmail = (email) => {
-    // Check if email ends with @nsut.ac.in
-    return email.endsWith("@nsut.ac.in");
-  };
-
-  const validatePersonalEmail = (email) => {
-    // Simple regex for validating email format
+  const validateForm = (email, personalEmail, rollNumber, githubProfile, linkedinUrl) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailPattern.test(email);
-  };
-
-  const validateRollNumber = (rollNumber) => {
-    // Check if roll number is exactly 11 characters long and alphanumeric
     const rollNumberPattern = /^[a-zA-Z0-9]{11}$/;
-    return rollNumberPattern.test(rollNumber);
-  };
+    if (!email.endsWith("@nsut.ac.in")) {
+      alert("NSUT Email must end with @nsut.ac.in");
+      return false;
+    }
+    if (!emailPattern.test(personalEmail)) {
+      alert("Please enter a valid personal email address");
+      return false;
+    }
+    if (!rollNumberPattern.test(rollNumber)) {
+      alert("Please enter a valid roll number");
+      return false;
+    }
+    if (!linkedinUrl.startsWith("https://www.linkedin.com/in/")) {
+      alert("Please enter a valid linkedinUrl");
+      return false;
+    }
+    if (githubProfile !== "" && !githubProfile.startsWith("https://github.com/")) {
+      alert("Please enter a valid GitHub Url");
+      return false;
+    }
+    return true;
+  }
 
   const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
-
-    // Perform validations
-    if (!validateEmail(formData.email)) {
-      alert("NSUT Email must end with @nsut.ac.in");
+    if (!validateForm(formData.email, formData.personalEmail, formData.rollNumber, formData.githubProfile, formData.linkedinUrl)) {
       return;
     }
-    if (!validatePersonalEmail(formData.personalEmail)) {
-      alert("Please enter a valid personal email address");
-      return;
-    }
-    if (!validateRollNumber(formData.rollNumber)) {
-      alert("Please enter a valid roll number");
-      return;
-    }
-
     try {
       const response = await fetch("http://localhost:5000/register", {
         method: "POST",
@@ -150,21 +147,9 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
 
   const handleEdit = useCallback(async (event) => {
     event.preventDefault();
-
-    // Perform validations
-    if (!validateEmail(formData.email)) {
-      alert("NSUT Email must end with @nsut.ac.in");
+    if (!validateForm(formData.email, formData.personalEmail, formData.rollNumber, formData.githubProfile, formData.linkedinUrl)) {
       return;
     }
-    if (!validatePersonalEmail(formData.personalEmail)) {
-      alert("Please enter a valid personal email address");
-      return;
-    }
-    if (!validateRollNumber(formData.rollNumber)) {
-      alert("Please enter a valid roll number");
-      return;
-    }
-
     try {
       const response = await fetch("http://localhost:5000/editProfile", {
         method: "POST",
@@ -175,7 +160,7 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
 
       const data = await response.json();
       alert(data.message);
-      if (response.status === 201) {
+      if (response.status === 200) {
         localStorage.clear();
         localStorage.setItem("userProfile", JSON.stringify(data.user));
       }

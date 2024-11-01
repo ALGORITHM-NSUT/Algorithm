@@ -124,10 +124,13 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
         body: formData
       });
       const data = await response.json();
-      alert(data.message);
       if (response.status === 201) {
         refreshProjects();
         handleCancel();
+        handleSnackbarOpen(data.message);
+      }
+      else {
+        alert(data.message);
       }
     } catch (error) {
       console.error('Error posting data:', error);
@@ -158,12 +161,16 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
         credentials: "include",
         body: formData
       });
-
-      refreshProjects();
-      handleCancel();
-
       const data = await response.json();
-      handleSnackbarOpen(data.message);
+      if (response.status === 201) {
+        refreshProjects();
+        handleCancel();
+        handleSnackbarOpen(data.message);
+      }
+      else {
+        alert(data.message);
+      }
+
     } catch (error) {
       console.error('Error posting data:', error);
     }
