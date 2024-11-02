@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { UserContext } from '../auth/UserProvider';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProjectCard from '../components/ProjectCard';
@@ -7,7 +8,8 @@ import FloatingBackground from './FloatingBackground';
 
 const Projects = () => {
   const [projects, setProjects] = useState({ onGoing: [], completed: [] });
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('userProfile')));
+  const { user } = useContext(UserContext);
+
 
   const fetchProjects = async () => {
     try {

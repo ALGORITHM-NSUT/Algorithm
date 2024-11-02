@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { UserContext } from '../auth/UserProvider';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -7,10 +8,13 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('userProfile')));
-  if (user) {
-    navigate('/userprofile');
-  }
+  const { user, setUser } = useContext(UserContext);
+  useEffect(() => {
+    if (user) {
+      navigate('/userprofile');
+    }
+  })
+
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent the default form submission
 
@@ -31,7 +35,7 @@ const Login = () => {
 
       if (response.ok) {
         alert('Login successful!');
-        localStorage.setItem('userProfile', JSON.stringify(data.user));
+        setUser(data.user);
         navigate('/userprofile');
       } else {
         setErrorMessage(data.message);
@@ -88,7 +92,7 @@ const Login = () => {
                 required
               />
             </div>
-           
+
             <button
               type="submit"
               className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"

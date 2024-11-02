@@ -105,6 +105,9 @@ export const updateProject = async (req, res) => {
     });
     const { title, description, lead, contributors, githubUrl, images } = req.body;
     const uploadImages = req.files;
+    if (req.user._id === '') {
+      return res.status(403).json({ message: 'Session Expired, Login again!' });
+    }
     const project = await Project.findOne({ title: title });
     if (!project) {
       return res.status(404).json({ message: 'project not found' });
@@ -220,7 +223,7 @@ export const updateProject = async (req, res) => {
     project.contributors = newContributorIDs;
     project.images = finalImages;
     const savedProject = await project.save();
-    res.status(201).json({ message: 'Project updated successfully', project: savedProject });
+    res.status(200).json({ message: 'Project updated successfully', project: savedProject });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: 'Error saving project', error: error.message });
@@ -242,6 +245,9 @@ export const addProject = async (req, res) => {
     const { title, description, lead, githubUrl } = req.body;
     const images = req.files;
     const admin = req.user.admin;
+    if (req.user._id === '') {
+      return res.status(403).json({ message: 'Session Expired, Login again!' });
+    }
     if (!admin) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
@@ -299,6 +305,9 @@ export const deleteProject = async (req, res) => {
       secure: true,
     });
     const user = req.user._id;
+    if (user === '') {
+      return res.status(403).json({ message: 'Session Expired, Login again!' });
+    }
     const { title } = req.body;
     const project = await Project.findOne({ title: title, lead: user });
     if (!project) {

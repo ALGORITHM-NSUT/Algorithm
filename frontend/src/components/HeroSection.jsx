@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { motion, useAnimation } from "framer-motion";
+import { UserContext } from "../auth/UserProvider";
 
 export default function HeroSection() {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const controls = useAnimation();
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('userProfile')));
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     setIsVisible(true);
