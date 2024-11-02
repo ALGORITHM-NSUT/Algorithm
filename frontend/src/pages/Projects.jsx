@@ -20,6 +20,7 @@ const Projects = () => {
       const onGoing = data.filter(project => project.status);
       const completed = data.filter(project => !project.status);
       setProjects({ onGoing, completed });
+      
     } catch (error) {
       console.error('Error fetching projects:', error);
     }

@@ -7,16 +7,15 @@ const Articles = () => {
 
   useEffect(() => {
     const fetchNews = async () => {
+      setLoading(true);
       const cachedNews = sessionStorage.getItem('newsData');
-
+      
       if (cachedNews) {
         setNews(JSON.parse(cachedNews));
         setLoading(false);
       } else {
         try {
-          const response = await axios.get(
-            `https://newsapi.org/v2/top-headlines?category=technology&apiKey=9f5a8ba0c088414aa14c69daf44fe18d`
-          );
+          const response = await axios.get(import.meta.env.VITE_NEWS_URL);
           const articles = response.data.articles;
           setNews(articles);
           sessionStorage.setItem('newsData', JSON.stringify(articles));
@@ -27,6 +26,7 @@ const Articles = () => {
         }
       }
     };
+
 
     fetchNews();
   }, []);

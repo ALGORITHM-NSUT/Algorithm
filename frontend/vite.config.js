@@ -10,4 +10,7 @@ export default defineConfig({
       protocol: "ws",
     },
   },
+  optimizeDeps: {
+    exclude: ['chunk-GYYMRS4U', 'chunk-TRC6RKZS'], // Add the dependencies you want to exclude here
+  },
 })
