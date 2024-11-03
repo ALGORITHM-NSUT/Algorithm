@@ -1,8 +1,15 @@
+
+/* Example styles for your main application */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #121212; 
+  color: white; /* Text color */
+}
+
+/* Ensure the main app container has the same background */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  min-height: 100vh; /* Ensure it covers the entire viewport */
 }
 
 .logo {
@@ -57,6 +64,24 @@
     background-position: 0% 50%;
   }
 }
+
+/* CSS for fade transitions */
+.fade-enter {
+  opacity: 0;
+  background-color: transparent; /* Ensure transparent background on enter */
+}
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease-in;
+}
+.fade-exit {
+  opacity: 1;
+}
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 300ms ease-in;
+}
+
 
 /* Customize scrollbar using Tailwind */
 .scrollbar-blue {
@@ -126,5 +151,92 @@
   }
   100% {
     background-position: 0% 50%;
+  }
+}
+
+@keyframes bounceCompress {
+    0%, 100% {
+        transform: translateY(0) scaleY(1);
+    }
+    50% {
+        transform: translateY(-20px) scaleY(0.8); /* Move up and compress */
+    }
+    70% {
+        transform: translateY(0) scaleY(1.1); /* Decompress slightly */
+    }
+    90% {
+        transform: translateY(-10px) scaleY(0.95); /* Small bounce */
+    }
+}
+
+@keyframes custom-bounce {
+  0%, 100% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(-20px);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+.custom-bounce {
+  animation: custom-bounce 1.2s infinite;
+}
+
+/* app.css */
+
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.lds-ring {
+  color: #4b55d5; /* Adjust loader color here */
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid currentColor;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: currentColor transparent transparent transparent;
+}
+
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }

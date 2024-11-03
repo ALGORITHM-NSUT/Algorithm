@@ -1,18 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-const Core = () => {
-  const [members, setMembers] = useState({ withSubPosition: [], withoutSubPosition: [] });
-  useEffect(() => {
-    fetch('http://localhost:5000/core')
-      .then((response) => response.json())
-      .then((data) => {
-        const withSubPosition = data.members.filter(member => member.subPosition);
-        const withoutSubPosition = data.members.filter(member => !member.subPosition);
-        setMembers({ withSubPosition, withoutSubPosition });
-      })
-      .catch((error) => console.error('Error fetching members:', error));
-  }, []);
-
+const Core = ({members}) => {
+ 
 
   return (
     <div className='flex flex-col items-center min-h-screen text-white py-10 w-full'>

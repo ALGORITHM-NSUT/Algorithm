@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
@@ -9,5 +8,8 @@ export default defineConfig({
       host: "localhost",
       protocol: "ws",
     },
+  },
+  optimizeDeps: {
+    exclude: ['chunk-GYYMRS4U', 'chunk-TRC6RKZS'],
   },
 })
