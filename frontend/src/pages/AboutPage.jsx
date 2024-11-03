@@ -11,8 +11,8 @@ const AboutPage = () => {
 
   useEffect(() => {
     const checkDataValidity = () => {
-      const storedMembers = localStorage.getItem('members');
-      const lastFetchTime = localStorage.getItem('lastFetchTime');
+      const storedMembers = sessionStorage.getItem('members');
+      const lastFetchTime = sessionStorage.getItem('lastFetchTime');
       const currentTime = new Date().getTime();
       
       // If there is no last fetch time or it's been more than 7 days (7 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds)
@@ -37,8 +37,8 @@ const AboutPage = () => {
           const withoutSubPosition = data.members.filter(member => !member.subPosition);
 
           // Store fetched data in local storage
-          localStorage.setItem('members', JSON.stringify({ withSubPosition, withoutSubPosition }));
-          localStorage.setItem('lastFetchTime', new Date().getTime()); // Store the current time
+          sessionStorage.setItem('members', JSON.stringify({ withSubPosition, withoutSubPosition }));
+          sessionStorage.setItem('lastFetchTime', new Date().getTime()); // Store the current time
 
           // Set state with the fetched data
           setMembers({ withSubPosition, withoutSubPosition });
