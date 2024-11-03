@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../auth/UserProvider';
 import { useNavigate } from 'react-router-dom';
 import Register from './Registercard';
+
 import {
   Card,
   CardContent,
@@ -15,7 +17,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import EditIcon from '@mui/icons-material/Edit';
 
 const Profile = () => {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('userProfile')));
+  const { user, setUser } = useContext(UserContext);
   const [editAcc, setEditAcc] = useState(false);
   const [password, setPassword] = useState('');
   const [editform, setEditForm] = useState(false);
@@ -29,7 +31,6 @@ const Profile = () => {
 
   useEffect(() => {
     setPassword('');
-    setUser(JSON.parse(localStorage.getItem('userProfile')));
   }, [editAcc, editform])
 
   const showpass = () => {
@@ -75,7 +76,6 @@ const Profile = () => {
       });
 
       if (response.ok) {
-        localStorage.clear();
         setUser(null);
         alert('Logged out successfully!');
         navigate('/');

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
+import { UserContext } from "../auth/UserProvider";
 import { useNavigate } from "react-router-dom";
 import {
   TextField,
@@ -71,7 +72,8 @@ const YearSelection = React.memo(({ value, onChange }) => (
 
 
 YearSelection.displayName = 'YearSelection';
-const Register = ({ user = null, setEditForm, setEditAcc }) => {
+const Register = ({ setEditForm, setEditAcc }) => {
+  const { user, setUser } = useContext(UserContext);
   const [formData, setFormData] = useState({
     name: user?.name || "",
     email: user?.email || "",
@@ -167,8 +169,7 @@ const Register = ({ user = null, setEditForm, setEditAcc }) => {
       const data = await response.json();
       alert(data.message);
       if (response.status === 200) {
-        localStorage.clear();
-        localStorage.setItem("userProfile", JSON.stringify(data.user));
+        setUser(data.user);
         canceledit();
       }
 

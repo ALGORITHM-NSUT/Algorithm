@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
 const Core = ({members}) => {
- 
 
   return (
     <div className='flex flex-col items-center min-h-screen text-white py-10 w-full'>

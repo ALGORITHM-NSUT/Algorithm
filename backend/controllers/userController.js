@@ -115,7 +115,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res, next) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, remember } = req.body;
 
         // Check if both email and password are provided
         if (!email || !password) {
@@ -150,7 +150,7 @@ export const login = async (req, res, next) => {
         }
 
         // Send token response
-        sendToken(res, user, "Login successful", 200);
+        sendToken(res, user, "Login successful", 200, remember);
     } catch (error) {
         return next(
             res.status(500).json({
@@ -165,9 +165,10 @@ export const logout = async (req, res, next) => {
     try {
         res
             .status(200)
-            .cookie("token", null, {
-                expires: new Date(Date.now()),
+            .clearCookie("token", {
                 httpOnly: true,
+                secure: true,
+                sameSite: "none"
             })
             .json({
                 success: true,
@@ -186,6 +187,9 @@ export const logout = async (req, res, next) => {
 export const getMyProfile = async (req, res, next) => {
     try {
         const user = req.user._id;
+        if (user === '') {
+            return res.status(404).json({ message: 'Session Expired, Login again!' });
+        }
         const member = await FormData.findOne({ _id: user });
         if (!member) {
             return res.status(404).json({
@@ -265,10 +269,7 @@ export const editProfile = async (req, res, next) => {
             });
         }
         if (githubProfile !== '') {
-            console.log('derijfvberiuf');
             if (user.githubProfile !== githubProfile) {
-                console.log('derijfvberiuf');
-
                 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
                 try {
                     const response = await octokit.rest.users.getByUsername({

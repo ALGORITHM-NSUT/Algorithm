@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { UserContext } from '../auth/UserProvider';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProjectCard from '../components/ProjectCard';
@@ -7,8 +8,8 @@ import FloatingBackground from './FloatingBackground';
 import Loader from '../components/Loader';
 
 const Projects = () => {
-  const [projects, setProjects] = useState({ onGoing: [], completed: [] });{/* Pass members as props to Core */}
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('userProfile')));
+  const [projects, setProjects] = useState({ onGoing: [], completed: [] });
+  const { user } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true)
 
   const fetchProjects = async () => {
@@ -54,7 +55,7 @@ const Projects = () => {
                 refreshProjects={fetchProjects}
               />
             ))}
-            <div className='relative w-full max-w-[600px] h-full'>
+            <div className='relative w-full max-w-[600px] h-full min-h-[640px] max-h-[640px]'>
               {user && user.admin && <AddProject refreshProjects={fetchProjects} edit={false} showadd={true} />}</div>
           </div>
         </div>

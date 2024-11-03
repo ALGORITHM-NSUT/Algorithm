@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../auth/UserProvider';
 import JoinRequestModal from './JoinRequestModal';
 import DeleteRequestModal from './deleteProjectModal';
 import Slider from 'react-slick';
@@ -26,7 +27,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('userProfile')));
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const [editProject, setEditProject] = useState(false);
   const theme = useTheme();
@@ -52,7 +53,12 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
         body: JSON.stringify({ title: project.title, lead: project.lead._id })
       });
       const data = await response.json();
-      console.log(data.message);
+      if (response.status !== 201) {
+        alert(data.message)
+      }
+      else {
+        refreshProjects();
+      }
       return true;
     } catch (error) {
       console.error('Error posting data:', error);
@@ -70,8 +76,12 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
         body: JSON.stringify({ title: project.title, applicant: id, state: state })
       });
       const data = await applicants.json();
-      console.log(data.message);
-      refreshProjects();
+      if (applicants.status !== 200) {
+        alert(data.message)
+      }
+      else {
+        refreshProjects();
+      }
     } catch (error) {
       console.error('Error updating application state:', error);
     }
@@ -104,14 +114,20 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
     showLoader()
 
     try {
-      await fetch('http://localhost:5000/deleteProject', {
+      const response = await fetch('http://localhost:5000/deleteProject', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ title: project.title })
       });
-      refreshProjects();
-      toggleExpand();
+      const data = await response.json();
+      if (response.status !== 200) {
+        alert(data.message);
+      }
+      else {
+        refreshProjects();
+        toggleExpand();
+      }
     } catch (error) {
       console.error('Error deleting project:', error);
     }

@@ -162,7 +162,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
         body: formData
       });
       const data = await response.json();
-      if (response.status === 201) {
+      if (response.status === 200) {
         refreshProjects();
         handleCancel();
         handleSnackbarOpen(data.message);

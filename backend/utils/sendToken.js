@@ -1,14 +1,24 @@
-export const sendToken = (res, user, message, statusCode = 200) => {
+export const sendToken = (res, user, message, statusCode = 200, expire) => {
     const token = user.getJWTToken();
 
     // Define cookie options
-    const options = {
-        expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // Cookie expiration (15 days)
-        httpOnly: true, // Ensure cookie is not accessible via JavaScript
-        secure: true, // Send cookie over HTTPS only (for production)
-        sameSite: "none", // Allow cross-site cookie usage
-    };
-
+    var options;
+    if (expire) {
+        options = {
+            // expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000), // Cookie expiration (15 days)
+            expires: new Date(Date.now() + 10 * 360 * 24 * 60 * 60 * 1000),
+            httpOnly: true, // Ensure cookie is not accessible via JavaScript
+            secure: true, // Send cookie over HTTPS only (for production)
+            sameSite: "none", // Allow cross-site cookie usage
+        };
+    }
+    else {
+        options = {
+            httpOnly: true, // Ensure cookie is not accessible via JavaScript
+            secure: true, // Send cookie over HTTPS only (for production)
+            sameSite: "none", // Allow cross-site cookie usage
+        };
+    }
     // Remove sensitive fields like password from the user object
     const userProfile = {
         _id: user._id,
