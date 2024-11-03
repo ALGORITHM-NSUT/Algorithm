@@ -115,7 +115,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res, next) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, remember } = req.body;
 
         // Check if both email and password are provided
         if (!email || !password) {
@@ -150,7 +150,7 @@ export const login = async (req, res, next) => {
         }
 
         // Send token response
-        sendToken(res, user, "Login successful", 200);
+        sendToken(res, user, "Login successful", 200, remember);
     } catch (error) {
         return next(
             res.status(500).json({

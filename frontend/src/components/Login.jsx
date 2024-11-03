@@ -17,7 +17,7 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent the default form submission
-
+    const remember = document.getElementById('remember').checked;
     try {
       const response = await fetch("http://localhost:5000/login", {
         method: "POST",
@@ -28,6 +28,7 @@ const Login = () => {
         body: JSON.stringify({
           email,
           password,
+          remember
         }),
       });
 
@@ -92,6 +93,25 @@ const Login = () => {
                 required
               />
             </div>
+            <div className="flex items-start">
+              <div className="flex items-center h-5">
+                <input
+                  id="remember"
+                  type="checkbox"
+                  className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300"
+                />
+              </div>
+              <label
+                htmlFor="remember"
+                className="ms-2 text-sm font-medium text-gray-900"
+              >
+                Remember me
+              </label>
+              <a href="#" className="ms-auto text-sm text-blue-700 hover:underline">
+                Lost Password?
+              </a>
+            </div>
+
 
             <button
               type="submit"
