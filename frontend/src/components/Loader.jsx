@@ -19,9 +19,9 @@ const Loader = () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-900 relative">
       <img
-        src="src/assets/algo.png"
+        src="src/assets/loading_algo.gif"
+        width={'100px'}
         alt="Bouncing Logo"
-        className="h-16 custom-bounce"
       />
       <p className="mt-4 text-xl font-semibold text-white animate-text">Did You Know?</p>
       <p className="mt-2 text-md text-neutral-300 animate-fact">{fact}</p>

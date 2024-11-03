@@ -63,6 +63,7 @@ export const getProjects = async (req, res) => {
         description: project.description,
         images: project.images,
         status: !project.status,
+        liveLink: project.liveLink,
         applicable: !hasUserApplied,
         contributors: project.contributors.map(contributor => ({
           name: contributor.name,
@@ -103,7 +104,7 @@ export const updateProject = async (req, res) => {
       api_secret: process.env.CLOUDINARY_SECRET,
       secure: true,
     });
-    const { title, description, lead, contributors, githubUrl, images } = req.body;
+    const { title, description, lead, contributors, githubUrl, images, liveLink, status } = req.body;
     const uploadImages = req.files;
     if (req.user._id === '') {
       return res.status(403).json({ message: 'Session Expired, Login again!' });
@@ -222,6 +223,10 @@ export const updateProject = async (req, res) => {
     project.githubUrl = githubUrl;
     project.contributors = newContributorIDs;
     project.images = finalImages;
+    project.status = status;
+    if (liveLink != '') {
+      project.liveLink = liveLink;
+    }
     const savedProject = await project.save();
     res.status(200).json({ message: 'Project updated successfully', project: savedProject });
   } catch (error) {
@@ -242,7 +247,7 @@ export const addProject = async (req, res) => {
       api_secret: process.env.CLOUDINARY_SECRET,
       secure: true,
     });
-    const { title, description, lead, githubUrl } = req.body;
+    const { title, description, lead, githubUrl, liveLink } = req.body;
     const images = req.files;
     const admin = req.user.admin;
     if (req.user._id === '') {
@@ -283,7 +288,8 @@ export const addProject = async (req, res) => {
       lead: leadUser._id,
       contributors: [],
       githubUrl,
-      images: photoUrls
+      images: photoUrls,
+      liveLink
     });
     const savedProject = await newProject.save();
     res.status(201).json({ message: 'Project saved successfully', project: savedProject });

@@ -11,7 +11,8 @@ const projectSchema = new mongoose.Schema({
   description: { type: String, required: true },
   status: { type: Boolean, required: false },
   applications: [{ type: mongoose.Schema.Types.ObjectId, ref: FormData }],
-  images: [{ type: String, required: false }]
+  images: [{ type: String, required: false }],
+  liveLink: [{ type: String, required: false }]
 });
 
 const Project = mongoose.model('Project', projectSchema, 'ProjectCard');
