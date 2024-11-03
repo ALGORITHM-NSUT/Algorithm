@@ -23,7 +23,7 @@ const UserProfileModal = ({ isOpen, onClose, userDetails }) => {
           }}
         >
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-            <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+            <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold', textAlign: 'center', color: 'black' }}>
               User Profile
             </Typography>
             <IconButton onClick={onClose} sx={{ color: 'text.secondary' }}>
@@ -32,33 +32,47 @@ const UserProfileModal = ({ isOpen, onClose, userDetails }) => {
           </Box>
           {userDetails ? (
             <React.Fragment>
-              <Typography variant="body1" sx={{ mb: 1 }}>
+              <Typography variant="body1" sx={{ mb: 1, color: 'black' }}>
                 <strong>Name:</strong> {userDetails.name}
               </Typography>
-              <Typography variant="body1" sx={{ mb: 1 }}>
+              <Typography variant="body1" sx={{ mb: 1, color: 'black' }}>
                 <strong>Email:</strong> {userDetails.email}
               </Typography>
-              <Typography variant="body1" sx={{ mb: 1 }}>
+              <Typography variant="body1" sx={{ mb: 1, color: 'black' }}>
                 <strong>Roll Number:</strong> {userDetails.rollNumber}
               </Typography>
-              <Typography variant="body1" sx={{ mb: 1 }}>
+              <Typography variant="body1" sx={{ mb: 1, color: 'black' }}>
                 <strong>Phone Number:</strong> {userDetails.phoneNumber}
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                 <GitHub sx={{ color: 'text.primary', mr: 1 }} />
-                <Typography variant="body1" component="a" href={userDetails.githubProfile} target="_blank" rel="noreferrer" sx={{ textDecoration: 'none', color: 'inherit' }}>
+                <Typography 
+                  variant="body1" 
+                  component="a" 
+                  href={userDetails.githubProfile} 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  sx={{ textDecoration: 'none', color: 'black' }}
+                >
                   {userDetails.githubProfile}
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <LinkedIn sx={{ color: 'text.primary', mr: 1 }} />
-                <Typography variant="body1" component="a" href={userDetails.linkedinUrl} target="_blank" rel="noreferrer" sx={{ textDecoration: 'none', color: 'inherit' }}>
+                <Typography 
+                  variant="body1" 
+                  component="a" 
+                  href={userDetails.linkedinUrl} 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  sx={{ textDecoration: 'none', color: 'black' }}
+                >
                   {userDetails.linkedinUrl}
                 </Typography>
               </Box>
             </React.Fragment>
           ) : (
-            <Typography variant="body2" sx={{ textAlign: 'center' }}>No user details available.</Typography>
+            <Typography variant="body2" sx={{ textAlign: 'center', color: 'black' }}>No user details available.</Typography>
           )}
           <Button onClick={onClose} fullWidth variant="contained" sx={{ mt: 3, bgcolor: '#330075', color: 'white' }}>
             Close

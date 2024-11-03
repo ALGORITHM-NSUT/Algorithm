@@ -5,11 +5,12 @@ import Footer from '../components/Footer';
 import ProjectCard from '../components/ProjectCard';
 import AddProject from '../components/addProject';
 import FloatingBackground from './FloatingBackground';
+import Loader from '../components/Loader';
 
 const Projects = () => {
   const [projects, setProjects] = useState({ onGoing: [], completed: [] });
   const { user } = useContext(UserContext);
-
+  const [isLoading, setIsLoading] = useState(true)
 
   const fetchProjects = async () => {
     try {
@@ -22,6 +23,8 @@ const Projects = () => {
       const onGoing = data.filter(project => project.status);
       const completed = data.filter(project => !project.status);
       setProjects({ onGoing, completed });
+      setIsLoading(false)
+      
     } catch (error) {
       console.error('Error fetching projects:', error);
     }
@@ -30,6 +33,10 @@ const Projects = () => {
   useEffect(() => {
     fetchProjects();
   }, []);
+
+  if(isLoading){
+    return <Loader />
+  }
 
   return (
     <div className="flex flex-col min-h-screen relative">

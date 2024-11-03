@@ -16,7 +16,9 @@ import "slick-carousel/slick/slick-theme.css";
 import UserProfileModal from './UserProfileModal';
 
 
+
 import { IconButton, Tooltip } from '@mui/material';
+import OpacityLoader from './OpacityLoader';
 
 
 
@@ -32,8 +34,17 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [showUserProfileModal, setShowUserProfileModal] = useState(false); // State for user profile modal
   const [selectedUser, setSelectedUser] = useState(null); // State for the selected user
+  const [loading, setLoading] = useState(false);
+
+  const showLoader = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000); // Loader displays for 1 second
+  };
 
   const postData = async () => {
+    showLoader()
     try {
       const response = await fetch('http://localhost:5000/application', {
         method: 'POST',
@@ -55,6 +66,8 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   };
 
   const handleApplication = async (id, state) => {
+    showLoader()
+
     try {
       const applicants = await fetch('http://localhost:5000/handleApplication', {
         method: 'POST',
@@ -93,10 +106,13 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   };
 
   const handleDeleteRequest = () => {
+
     setDeleteModal(true);
   };
 
   const handleDeletesend = async () => {
+    showLoader()
+
     try {
       const response = await fetch('http://localhost:5000/deleteProject', {
         method: 'POST',
@@ -118,16 +134,21 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   };
 
   const handleJoinRequest = () => {
+    showLoader()
+
     setShowappModal(true);
   };
 
   const handleSendRequest = () => {
+    showLoader()
+
     if (postData()) {
       refreshProjects();
     }
     setShowappModal(false);
   };
   const handleViewProfile = (userDetails) => {
+
     setSelectedUser(userDetails); // Set the selected user details
     setShowUserProfileModal(true); // Open the user profile modal
   };
@@ -150,6 +171,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   };
   return (
     <React.Fragment>
+       {loading && <OpacityLoader /> }
       {isExpanded && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-20"
@@ -614,51 +636,6 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               />
             )}
 
-            {/* GitHub Link 
-            <Box sx={{ mt: 2 }}>
-              <Link
-                href={project.githubUrl}
-                target="_blank"
-                rel="noreferrer"
-                sx={{
-                  padding: "5px",
-                  borderRadius: '6px',
-                  color: 'white',
-                  textDecoration: 'none',
-                  fontSize: '20px',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  display: 'inline-block',
-                  transition: 'color 0.3s ease',
-                  zIndex: 2,
-
-                  '&:hover': {
-                    color: '#330080',
-                    zIndex: 2,// Transition text color on hover
-                  },
-
-                  '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    width: '0',
-                    height: '100%',
-                    backgroundColor: 'white',
-                    transition: 'width 0.3s ease, left 0.5s ease',
-                    transform: 'translate(-50%, -50%)',
-                    zIndex: -1, // Ensures background is behind the text
-                  },
-
-                  '&:hover::before': {
-                    width: '100%'
-                  },
-                }}
-              >
-                View Project on GitHub
-              </Link>
-            </Box>*/}
-
           </Box>
         </Paper>
       </div>
@@ -667,3 +644,5 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
 };
 
 export default ProjectCard;
+
+

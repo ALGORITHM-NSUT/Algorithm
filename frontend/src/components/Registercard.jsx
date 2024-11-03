@@ -54,15 +54,22 @@ FormField.displayName = 'FormField';
 const YearSelection = React.memo(({ value, onChange }) => (
   <Grid item xs={12}>
     <FormControl component="fieldset" required>
-      <FormLabel component="legend">Year</FormLabel>
+      <FormLabel component="legend" sx={{ color: 'black' }}>Year</FormLabel>
       <RadioGroup row name="year" value={value} onChange={onChange}>
         {[1, 2, 3].map((year) => (
-          <FormControlLabel key={year} value={year} control={<Radio />} label={`${year} Year`} />
+          <FormControlLabel
+            key={year}
+            value={year}
+            control={<Radio />}
+            label={`${year} Year`}
+            sx={{ color: 'black' }} // Set label color to black
+          />
         ))}
       </RadioGroup>
     </FormControl>
   </Grid>
 ));
+
 
 YearSelection.displayName = 'YearSelection';
 const Register = ({ setEditForm, setEditAcc }) => {
@@ -121,6 +128,7 @@ const Register = ({ setEditForm, setEditAcc }) => {
     }
     return true;
   }
+  
 
   const handleSubmit = useCallback(async (event) => {
     event.preventDefault();

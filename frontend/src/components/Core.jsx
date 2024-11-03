@@ -1,37 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const Core = () => {
-  const [members, setMembers] = useState({ withSubPosition: [], withoutSubPosition: [] });
-  useEffect(() => {
-    const fetchMembers = async () => {
-      const cachedNews = sessionStorage.getItem('Core');
-
-      if (cachedNews) {
-        const data = JSON.parse(cachedNews);
-        const withSubPosition = data.members.filter(member => member.subPosition);
-        const withoutSubPosition = data.members.filter(member => !member.subPosition);
-        setMembers({ withSubPosition, withoutSubPosition })
-      } else {
-        try {
-          const response = await fetch("http://localhost:5000/core", {
-            method: "GET",
-          });
-          const data = await response.json();
-          if (response.status === 200) {
-            sessionStorage.setItem("Core", JSON.stringify(data));
-            const withSubPosition = data.members.filter(member => member.subPosition);
-            const withoutSubPosition = data.members.filter(member => !member.subPosition);
-            setMembers({ withSubPosition, withoutSubPosition });
-          }
-
-        } catch (error) {
-          alert(`Error fetching members: ${error.message}`);
-        }
-      }
-    }
-    fetchMembers();
-  }, []);
-
+const Core = ({members}) => {
 
   return (
     <div className='flex flex-col items-center min-h-screen text-white py-10 w-full'>
