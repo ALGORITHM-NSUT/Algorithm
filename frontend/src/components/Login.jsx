@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../auth/UserProvider';
 import { useNavigate } from 'react-router-dom';
+import PasswordReset from './PasswordRest';
 
 
 const Login = () => {
@@ -8,7 +9,9 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
+  const [showReset, setShowReset] = useState(false);
   const { user, setUser } = useContext(UserContext);
+
   useEffect(() => {
     if (user) {
       navigate('/userprofile');
@@ -46,6 +49,11 @@ const Login = () => {
       setErrorMessage("Something went wrong. Please try again.");
     }
   };
+
+  if (showReset) {
+    // Render PasswordReset component if showReset is true
+    return <PasswordReset onBack={() => setShowReset(false)} />;
+  }
 
   return (
     <div className="flex justify-center items-center h-screen ">
@@ -107,9 +115,7 @@ const Login = () => {
               >
                 Remember me
               </label>
-              <a href="#" className="ms-auto text-sm text-blue-700 hover:underline">
-                Lost Password?
-              </a>
+               <button type="button" className="ms-auto text-sm text-blue-700 hover:underline" onClick={() => setShowReset(true)}>Lost Password?</button>
             </div>
 
 

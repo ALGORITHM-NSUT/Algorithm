@@ -3,6 +3,7 @@ import { sendToken } from "../utils/sendToken.js";
 import CoreMember from "../models/CoreMember.js";
 import { transporter } from "../utils/MailClient.js";
 import { Octokit } from "@octokit/rest";
+import bcrypt from 'bcrypt'
 
 export const register = async (req, res) => {
     try {
@@ -115,7 +116,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res, next) => {
     try {
-        const { email, password, remember } = req.body;
+        const { email, password } = req.body;
 
         // Check if both email and password are provided
         if (!email || !password) {
@@ -150,7 +151,7 @@ export const login = async (req, res, next) => {
         }
 
         // Send token response
-        sendToken(res, user, "Login successful", 200, remember);
+        sendToken(res, user, "Login successful", 200);
     } catch (error) {
         return next(
             res.status(500).json({
@@ -316,3 +317,48 @@ export const editProfile = async (req, res, next) => {
     }
 };
 
+
+export const changePassword = async (req, res )=>{
+    try{
+        const {email} = req.body;
+
+        let user = await FormData.findOne({email: email})
+        if(!user){
+            return res.status(404).json({
+                message: "User not registered"
+            })
+        }
+
+         const verificationLink = `${process.env.CLIENT_URL}/resetpass/${user.id}`;
+
+        try {
+            const info = await transporter.sendMail({
+                from: '"Algorithm" <algorithmnsut@gmail.com>',
+                to: email,
+                subject: "Email Verification",
+                text: `Please verify your email by clicking on the following link: ${verificationLink}`,
+                html: `<p>Please verify your email by clicking on the following link:</p><a href="${verificationLink}">Verify Email</a>`,
+            });
+
+            console.log("Message sent: %s", info.messageId);
+        } catch (emailError) {
+            console.error("Error sending verification email:", emailError.message);
+            return res.status(500).json({
+                message: "Registration successful, but email verification failed",
+                error: emailError.message,
+            });
+        }
+
+        res.status(201).send({
+            message: "Check your Inbox or spam folder to verify"
+        })
+
+
+
+    }catch(e){
+        return res.status(500).json({
+            message: "Internal Server Error",
+            error: e.message
+        })
+    }
+}
