@@ -74,6 +74,8 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
       projectData.lead = project.lead._id;
       projectData.images = project.images || [];
       projectData.updateImages = [];
+      projectData.status = project.status || 0;
+      projectData.liveLink = project.liveLink
     }
   }, [project, showForm]);
 
@@ -84,7 +86,8 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
       lead: '',
       contributors: [],
       githubUrl: '',
-      images: []
+      images: [],
+      status: 0
     });
   };
 
@@ -259,11 +262,17 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
               border: `2px solid ${primaryColor}`,
             }}
           >
-
-            <Typography variant="h5" sx={{ color: primaryColor, fontWeight: 'bold', mb: 2 }}>
-              {project ? 'Edit Project' : 'Add New Project'}
-            </Typography>
-
+            <Box display={'flex'} justifyContent="space-between">
+              <Typography variant="h5" sx={{ color: primaryColor, fontWeight: 'bold', mb: 2 }}>
+                {project ? 'Edit Project' : 'Add New Project'}
+              </Typography>
+              {project && <StyledButton variant="contained" component="span" sx={{ mb: 2 }} onClick={(e) => {
+                projectData.status = !project.status;
+                updateProject(e);
+              }}>
+                {!project.status ? 'Compelete' : 'Ongoing'}
+              </StyledButton>}
+            </Box>
             {/* Project form */}
 
             <Grow in={true} timeout={600}>
@@ -318,6 +327,20 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
                 fullWidth
                 value={projectData.githubUrl}
                 onChange={(e) => setProjectData({ ...projectData, githubUrl: e.target.value })}
+                margin="normal"
+                variant="outlined"
+                InputProps={{
+                  style: { borderRadius: '10px' },
+                }}
+              />
+            </Grow>
+
+            <Grow in={true} timeout={1400}>
+              <CustomTextField
+                label="Live Link"
+                fullWidth
+                value={projectData.liveLink}
+                onChange={(e) => setProjectData({ ...projectData, liveLink: e.target.value })}
                 margin="normal"
                 variant="outlined"
                 InputProps={{

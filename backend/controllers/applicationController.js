@@ -28,9 +28,6 @@ export const submitapplication = async (req, res) => {
 export const handleApplication = async (req, res) => {
   const { title, applicant, state } = req.body;
   const user = req.user._id;
-  if (applier === '') {
-    return res.status(403).json({ message: 'Session Expired, Login again!' });
-  }
   const project = await Project.findOne({ title });
   const userProfile = await FormData.findOne({ _id: applicant });
   const userGit = userProfile.githubProfile.split('/').pop();

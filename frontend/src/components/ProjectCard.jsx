@@ -171,7 +171,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   };
   return (
     <React.Fragment>
-       {loading && <OpacityLoader /> }
+      {loading && <OpacityLoader />}
       {isExpanded && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-20"
@@ -218,9 +218,10 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
             display: 'flex',
             alignItems: 'center',
             position: 'relative',
-            clipPath: 'path("M0,90 C200,150 300,0 600,90 L600,0 L0,0 Z")',
+            clipPath: 'path("M0,90 C200,150 400,0 600,90 L600,0 L0,0 Z")',
             marginBottom: "0px"
           }}>
+
             <Typography
               variant={isExpanded ? 'h5' : 'h4'}
               component="h3"
@@ -246,7 +247,14 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               }}>
                 {project.title}
               </span>
+
+
             </Typography>
+            {project.liveLink != '' && <a href={project.liveLink} rel="noreferrer" target="_blank" onClick={(e) => {
+              e.stopPropagation();
+            }}>
+              <span className={"absolute top-0 right-0 mr-[5px] mt-[5px] pr-[10px] pl-[5px] text-[20px] text-white bg-[#b91c1c] hover:bg-[#991b1b] rounded-lg"}><sup className='animate-pulse mr-[2px]'>•</sup>Live</span>
+            </a>}
           </div>
 
           {/* Carousel for Project Images */}
@@ -557,14 +565,12 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
             )}
 
 
-            {isOngoing && (
+            {isOngoing ? (
               <React.Fragment>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     {user ? (
                       project.applicable && project.lead._id !== user._id ? (
-
-
                         user.githubProfile ? (<button
                           className="mt-2 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 w-full"
                           onClick={(e) => {
@@ -614,7 +620,19 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                   </Grid>
                 </Grid>
               </React.Fragment>
-            )}
+            ) :
+              <a href={project.githubUrl} rel="noreferrer" target="_blank">
+                <button
+                  className="mt-2 py-2 px-4 bg-[#40199a] hover:bg-[#330080] text-white rounded-lg w-full"
+
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  View on GitHub
+                </button>
+              </a>
+            }
 
 
             {deleteModal && (

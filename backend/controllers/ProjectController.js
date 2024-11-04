@@ -62,7 +62,7 @@ export const getProjects = async (req, res) => {
         githubUrl: project.githubUrl,
         description: project.description,
         images: project.images,
-        status: !project.status,
+        status: project.status,
         liveLink: project.liveLink,
         applicable: !hasUserApplied,
         contributors: project.contributors.map(contributor => ({
@@ -224,9 +224,7 @@ export const updateProject = async (req, res) => {
     project.contributors = newContributorIDs;
     project.images = finalImages;
     project.status = status;
-    if (liveLink != '') {
-      project.liveLink = liveLink;
-    }
+    project.liveLink = liveLink;
     const savedProject = await project.save();
     res.status(200).json({ message: 'Project updated successfully', project: savedProject });
   } catch (error) {

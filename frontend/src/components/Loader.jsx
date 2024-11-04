@@ -20,10 +20,10 @@ const Loader = () => {
     <div className="flex flex-col items-center justify-center h-screen bg-gray-900 relative">
       <img
         src="src/assets/loading_algo.gif"
-        width={'100px'}
+        width={'150px'}
         alt="Bouncing Logo"
       />
-      <p className="mt-4 text-xl font-semibold text-white animate-text">Did You Know?</p>
+      <p className="text-xl font-semibold text-white animate-text z-10">Did You Know?</p>
       <p className="mt-2 text-md text-neutral-300 animate-fact">{fact}</p>
     </div>
   );
