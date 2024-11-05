@@ -21,7 +21,7 @@ const AboutPage = () => {
       setMembers(storedMembers);
       setIsLoading(false);
     } else {
-      fetch('http://localhost:5000/core')
+      fetch(import.meta.env.VITE_BACKEND_URL+ `/core`)
         .then((response) => response.json())
         .then((data) => {
           const withSubPosition = data.members.filter(member => member.subPosition);

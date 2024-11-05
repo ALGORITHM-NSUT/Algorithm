@@ -13,7 +13,7 @@ const PasswordReset = ({ onBack }) => {
   const handlePasswordReset = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(import.meta.env.VITE_RESET_PASSWORD, {
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL+ `/changePassword`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
