@@ -99,7 +99,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   const postData = async () => {
     showLoader()
     try {
-      const response = await fetch(import.meta.env.VITE_SEND_APPLICATION, {
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/application`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -122,7 +122,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
     showLoader()
 
     try {
-      const applicants = await fetch(import.meta.env.VITE_HANDLE_APPLICATION, {
+      const applicants = await fetch(import.meta.env.VITE_BACKEND_URL + `/handleApplication`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -144,7 +144,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
     showLoader()
 
     try {
-      const response = await fetch(import.meta.env.VITE_DELETE_PROJECT, {
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/deleteProject`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
