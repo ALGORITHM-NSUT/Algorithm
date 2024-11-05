@@ -11,7 +11,7 @@ const PasswordReset = () => {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent the default form submission
     try {
-      const url = `http://localhost:5000/resetpass/${param.id}`; // POST endpoint to reset password
+      const url = import.meta.env.VITE_BACKEND_URL + `/resetpass/${param.id}`; // POST endpoint to reset password
       const { data } = await axios.post(url, { password: newPassword });
       setMessage(data.message || "Password updated successfully");
       // Optionally, navigate to the login page or another page

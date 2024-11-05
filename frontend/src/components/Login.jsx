@@ -17,7 +17,7 @@ const Login = () => {
     e.preventDefault(); // Prevent the default form submission
     const remember = document.getElementById('remember').checked;
     try {
-      const response = await fetch(import.meta.env.VITE_LOGIN, {
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL+`/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

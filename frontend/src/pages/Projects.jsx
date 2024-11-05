@@ -14,7 +14,7 @@ const Projects = () => {
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch(import.meta.env.VITE_FETCH_PROJECT, {
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/projects`, {
         method: "GET",
         credentials: "include"
       });

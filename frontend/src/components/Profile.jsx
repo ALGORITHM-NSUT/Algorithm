@@ -43,7 +43,7 @@ const Profile = () => {
 
   const submitpass = async () => {
     try {
-      const response = await fetch(import.meta.env.VITE_CHECK_PASSWORD, {
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/check`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,7 +67,7 @@ const Profile = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch(import.meta.env.VITE_LOGOUT, {
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/logout`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

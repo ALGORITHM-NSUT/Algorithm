@@ -140,7 +140,7 @@ const Register = ({ setEditForm, setEditAcc }) => {
       formData.githubProfile = "https://github.com/" + formData.githubProfile;
     }
     try {
-      const response = await fetch(import.meta.env.VITE_REGISTER, {
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -163,7 +163,7 @@ const Register = ({ setEditForm, setEditAcc }) => {
       return;
     }
     try {
-      const response = await fetch(import.meta.env.VITE_EDIT_ACCOUNT, {
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/editProfile`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
