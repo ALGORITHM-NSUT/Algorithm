@@ -27,7 +27,7 @@ const PasswordReset = () => {
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="bg-white p-8 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-4">Reset Your Password</h2>
+        <h2 className="text-2xl font-bold mb-4 text-black">Reset Your Password</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="password" className="block text-sm font-semibold text-gray-900">
