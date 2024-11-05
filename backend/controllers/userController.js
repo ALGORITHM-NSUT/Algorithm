@@ -3,6 +3,8 @@ import { sendToken } from "../utils/sendToken.js";
 import CoreMember from "../models/CoreMember.js";
 import { transporter } from "../utils/MailClient.js";
 import { Octokit } from "@octokit/rest";
+import bcrypt from 'bcrypt'
+import crypto from 'crypto'
 
 export const register = async (req, res) => {
     try {
@@ -115,7 +117,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res, next) => {
     try {
-        const { email, password, remember } = req.body;
+        const { email, password } = req.body;
 
         // Check if both email and password are provided
         if (!email || !password) {
@@ -150,7 +152,7 @@ export const login = async (req, res, next) => {
         }
 
         // Send token response
-        sendToken(res, user, "Login successful", 200, remember);
+        sendToken(res, user, "Login successful", 200);
     } catch (error) {
         return next(
             res.status(500).json({
@@ -316,3 +318,54 @@ export const editProfile = async (req, res, next) => {
     }
 };
 
+export const changePassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        // Check if the user exists
+        let user = await FormData.findOne({ email: email });
+        if (!user) {
+            return res.status(404).json({
+                message: "User not registered",
+            });
+        }
+
+        // Generate a password reset token
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        user.resetPasswordToken = resetToken; // Ensure your FormData model has this field
+        user.resetPasswordExpires = Date.now() + 3600000; // Token valid for 1 hour
+        await user.save();
+
+        // Create reset link
+        const resetLink = `${process.env.CLIENT_URL}/resetpass/${resetToken}`;
+
+        try {
+            // Send password reset email
+            const info = await transporter.sendMail({
+                from: '"Algorithm" <algorithmnsut@gmail.com>',
+                to: email,
+                subject: "Password Reset Request",
+                text: `You requested a password reset. Click on the following link to reset your password: ${resetLink}`,
+                html: `<p>You requested a password reset. Click on the following link to reset your password:</p><a href="${resetLink}">Reset Password</a>`,
+            });
+
+            console.log("Message sent: %s", info.messageId);
+        } catch (emailError) {
+            console.error("Error sending password reset email:", emailError.message);
+            return res.status(500).json({
+                message: "Password reset email sent, but there was an error sending the email.",
+                error: emailError.message,
+            });
+        }
+
+        res.status(200).send({
+            message: "Check your inbox or spam folder for the password reset link.",
+        });
+
+    } catch (e) {
+        return res.status(500).json({
+            message: "Internal Server Error",
+            error: e.message,
+        });
+    }
+};

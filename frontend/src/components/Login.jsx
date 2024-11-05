@@ -1,13 +1,16 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../auth/UserProvider';
 import { useNavigate } from 'react-router-dom';
-import Profile from './Profile'
+import Profile from './Profile';
+import PasswordReset from './PasswordRest';
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
+  const [showReset, setShowReset] = useState(false);
   const { user, setUser } = useContext(UserContext);
 
   const handleLogin = async (e) => {
@@ -40,6 +43,11 @@ const Login = () => {
       setErrorMessage("Something went wrong. Please try again.");
     }
   };
+
+  if (showReset) {
+    // Render PasswordReset component if showReset is true
+    return <PasswordReset onBack={() => setShowReset(false)} />;
+  }
 
   return (
 
@@ -102,9 +110,7 @@ const Login = () => {
               >
                 Remember me
               </label>
-              <a href="#" className="ms-auto text-sm text-blue-700 hover:underline">
-                Lost Password?
-              </a>
+              <button type="button" className="ms-auto text-sm text-blue-700 hover:underline" onClick={() => setShowReset(true)}>Lost Password?</button>
             </div>
 
 

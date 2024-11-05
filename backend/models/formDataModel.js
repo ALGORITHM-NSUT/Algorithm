@@ -1,33 +1,34 @@
 import mongoose from "mongoose";
-import jwt from "jsonwebtoken"
-import bcrypt, { hash } from "bcrypt"
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const formDataSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true }, // NSUT email, must be unique
+    email: { type: String, required: true, unique: true },
     personalEmail: { type: String, required: true },
     phoneNumber: { type: String, required: true },
-    githubProfile: { type: String }, // Optional field
-    leetcodeProfile: { type: String }, // Optional field
-    codeforcesProfile: { type: String }, // Optional field
+    githubProfile: { type: String },
+    leetcodeProfile: { type: String },
+    codeforcesProfile: { type: String },
     linkedinUrl: { type: String },
     rollNumber: { type: String },
     year: { type: Number },
     password: { type: String, required: true },
     admin: { type: Boolean },
-    verified: {type: Boolean}
-}, { timestamps: true }); // Adds createdAt and updatedAt fields
+    verified: { type: Boolean },
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date }
+}, { timestamps: true });
 
 formDataSchema.index({ email: 1 }, { unique: true });
 
 formDataSchema.pre("save", async function (next) {
     if (!this.isModified("password")) {
-        return next()
+        return next();
     }
-    const hashPassword = await bcrypt.hash(this.password, 10)
-    this.password = hashPassword
-    next()
-})
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
+});
 
 formDataSchema.methods.getJWTToken = function () {
     const userProfile = {
@@ -43,14 +44,18 @@ formDataSchema.methods.getJWTToken = function () {
     };
 
     return jwt.sign(userProfile, process.env.JWT_SECRET, {
-        expiresIn: "15d"  // Set expiration to 15 days
+        expiresIn: "15d"
     });
 };
 
-
 formDataSchema.methods.comparePassword = async function (password) {
     return await bcrypt.compare(password, this.password);
-}
+};
+
+formDataSchema.methods.setResetToken = function (token) {
+    this.resetPasswordToken = token;
+    this.resetPasswordExpires = Date.now() + 3600000;
+};
 
 const FormData = mongoose.model('FormData', formDataSchema, 'Algorithm_members');
 export default FormData;
