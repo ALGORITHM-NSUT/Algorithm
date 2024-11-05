@@ -9,6 +9,7 @@ import { isAuthenticated } from '../middlewares/auth.js';
 import multer from 'multer';
 import upload from '../config/multerconfig.js';
 import { emailVerify } from '../controllers/emailVerify.js';
+import { resetpass } from '../controllers/passreset.js';
 const router = express.Router();
 
 // get
@@ -18,6 +19,7 @@ router.route("/projects").get(isAuthenticated, getProjects);
 router.get("/verify/:id", emailVerify)
 
 
+
 // post
 router.post('/form', submitFormData);
 router.route("/application").post(isAuthenticated, submitapplication);
@@ -25,4 +27,6 @@ router.route("/handleApplication").post(isAuthenticated, handleApplication);
 router.route("/addProject").post(isAuthenticated, upload.array('images'), addProject);
 router.route("/deleteProject").post(isAuthenticated, deleteProject);
 router.route("/updateProject").post(isAuthenticated, upload.array('updateImages'), updateProject);
+router.route("/resetpass/:id").post(resetpass)
+
 export default router;

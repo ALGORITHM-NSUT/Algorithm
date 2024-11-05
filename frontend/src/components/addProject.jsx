@@ -121,7 +121,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
       }
     }
     try {
-      const response = await fetch('http://localhost:5000/addProject', {
+      const response = await fetch(import.meta.env.VITE_ADD_PROJECT, {
         method: 'POST',
         credentials: "include",
         body: formData
@@ -159,7 +159,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
       }
     }
     try {
-      const response = await fetch('http://localhost:5000/updateProject', {
+      const response = await fetch(import.meta.env.VITE_UPDATE_PROJECT, {
         method: 'POST',
         credentials: "include",
         body: formData

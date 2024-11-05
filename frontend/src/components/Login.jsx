@@ -1,20 +1,23 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../auth/UserProvider';
 import { useNavigate } from 'react-router-dom';
-import Profile from './Profile'
+import Profile from './Profile';
+import PasswordReset from './PasswordRest';
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
+  const [showReset, setShowReset] = useState(false);
   const { user, setUser } = useContext(UserContext);
 
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent the default form submission
     const remember = document.getElementById('remember').checked;
     try {
-      const response = await fetch("http://localhost:5000/login", {
+      const response = await fetch(import.meta.env.VITE_LOGIN, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,6 +43,11 @@ const Login = () => {
       setErrorMessage("Something went wrong. Please try again.");
     }
   };
+
+  if (showReset) {
+    // Render PasswordReset component if showReset is true
+    return <PasswordReset onBack={() => setShowReset(false)} />;
+  }
 
   return (
 
@@ -102,9 +110,7 @@ const Login = () => {
               >
                 Remember me
               </label>
-              <a href="#" className="ms-auto text-sm text-blue-700 hover:underline">
-                Lost Password?
-              </a>
+              <button type="button" className="ms-auto text-sm text-blue-700 hover:underline" onClick={() => setShowReset(true)}>Lost Password?</button>
             </div>
 
 
