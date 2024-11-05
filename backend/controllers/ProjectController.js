@@ -52,10 +52,18 @@ export const getProjects = async (req, res) => {
       });
     const applications = await apply.find()
       .populate('applier', 'name linkedinUrl _id email phoneNumber rollNumber githubProfile');
+    
     const formattedProjects = projects.map(project => {
+      // Check if the user has already applied
       const hasUserApplied = applications.some(app =>
         app.title === project.title && String(app.applier._id) === String(userId)
       );
+
+      // Check if the user is already a contributor
+      const isUserContributor = project.contributors.some(
+        contributor => String(contributor._id) === String(userId)
+      );
+
       return {
         title: project.title,
         lead: project.lead,
@@ -64,7 +72,7 @@ export const getProjects = async (req, res) => {
         images: project.images,
         status: project.status,
         liveLink: project.liveLink,
-        applicable: !hasUserApplied,
+        applicable: !(hasUserApplied || isUserContributor),
         contributors: project.contributors.map(contributor => ({
           name: contributor.name,
           linkedinUrl: contributor.linkedinUrl,
@@ -88,12 +96,14 @@ export const getProjects = async (req, res) => {
           : []
       };
     });
+
     res.status(200).json(formattedProjects);
   } catch (error) {
     console.error('Error fetching projects:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
 export const updateProject = async (req, res) => {
   try {

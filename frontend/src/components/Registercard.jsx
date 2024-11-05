@@ -103,7 +103,7 @@ const Register = ({ setEditForm, setEditAcc }) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   }, []);
 
-  const validateForm = (email, personalEmail, rollNumber, githubProfile, linkedinUrl, phoneNumber) => {
+  const validateForm = (email, personalEmail, rollNumber, linkedinUrl, phoneNumber) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const rollNumberPattern = /^[a-zA-Z0-9]{11}$/;
     if (!email.endsWith("@nsut.ac.in")) {
@@ -122,10 +122,7 @@ const Register = ({ setEditForm, setEditAcc }) => {
       alert("Please enter a valid linkedinUrl");
       return false;
     }
-    if (githubProfile !== "" && !githubProfile.startsWith("https://github.com/")) {
-      alert("Please enter a valid GitHub Url");
-      return false;
-    }
+    
     if (phoneNumber.length !== 10) {
       alert("Please enter a valid Phone Number");
       return false;
@@ -136,8 +133,11 @@ const Register = ({ setEditForm, setEditAcc }) => {
 
   const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
-    if (!validateForm(formData.email, formData.personalEmail, formData.rollNumber, formData.githubProfile, formData.linkedinUrl, formData.phoneNumber)) {
+    if (!validateForm(formData.email, formData.personalEmail, formData.rollNumber, formData.linkedinUrl, formData.phoneNumber)) {
       return;
+    }
+    if (githubProfile !== "" && !githubProfile.startsWith("https://github.com/")) {
+      formData.githubProfile = "https://github.com/" + formData.githubProfile;
     }
     try {
       const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/register`, {
@@ -190,11 +190,11 @@ const Register = ({ setEditForm, setEditAcc }) => {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="flex flex-col min-h-screen overflow-hidden mt-2 mb-2">
+      <div className="mx-3 flex flex-col min-h-screen overflow-hidden mt-2 mb-2">
         <Container
           component="main"
           maxWidth="md"
-          className="mt-2 mb-2 rounded-2xl relative z-10 bg-white backdrop-blur-2xl"
+          className="mx-3 mt-2 mb-2 rounded-2xl relative z-10 bg-white backdrop-blur-2xl"
         >
           <motion.div
             initial={{ opacity: 0, y: 50 }}

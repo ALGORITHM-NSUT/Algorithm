@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Facebook, Twitter, Linkedin, Instagram, Phone, Mail } from "lucide-react";
+import { GitHub } from '@mui/icons-material';
 
 export default function Footer() {
   
@@ -19,9 +20,8 @@ export default function Footer() {
   };
   
   const socialLinks = [
-    { name: 'Facebook', icon: Facebook, url: 'https://facebook.com' },
-    { name: 'Twitter', icon: Twitter, url: 'https://twitter.com' },
-    { name: 'LinkedIn', icon: Linkedin, url: 'https://linkedin.com' },
+    { name: 'Github', icon: GitHub, url: 'https://github.com/ALGORITHM-NSUT' },
+    { name: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/company/algorithm-nsut/?viewAsMember=true' },
     { name: 'Instagram', icon: Instagram, url: 'https://instagram.com' }
   ];
 
@@ -67,11 +67,8 @@ export default function Footer() {
         </div>
 
         {/* Right: Quick Links Section */}
-        <motion.div 
+        <div 
           className="flex flex-col items-start mb-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
         >
           <h2 className="text-2xl font-bold mb-2">Quick Links</h2>
           <div className="grid grid-cols-1 gap-2">
@@ -93,7 +90,7 @@ export default function Footer() {
               </motion.div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Horizontal Line */}
@@ -107,11 +104,8 @@ export default function Footer() {
         >
           Copyright © 2024 All Rights Reserved by Algorithm Society, NSUT.
         </h2>
-        <motion.div 
+        <div 
           className="flex justify-center space-x-4 mt-4 sm:mt-0"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
         >
           {socialLinks.map((social, index) => (
             <motion.a 
@@ -130,7 +124,7 @@ export default function Footer() {
               <span className="sr-only">{social.name}</span>
             </motion.a>
           ))}
-        </motion.div>
+        </div>
       </div>
     </footer>
   );
