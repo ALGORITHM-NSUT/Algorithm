@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../auth/UserProvider';
 import { useNavigate } from 'react-router-dom';
-
+import Profile from './Profile'
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -9,11 +9,6 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
   const { user, setUser } = useContext(UserContext);
-  useEffect(() => {
-    if (user) {
-      navigate('/userprofile');
-    }
-  })
 
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent the default form submission
@@ -37,7 +32,6 @@ const Login = () => {
       if (response.ok) {
         alert('Login successful!');
         setUser(data.user);
-        navigate('/userprofile');
       } else {
         setErrorMessage(data.message);
       }
@@ -48,8 +42,9 @@ const Login = () => {
   };
 
   return (
+
     <div className="flex justify-center items-center h-screen ">
-      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 rounded-lg shadow-lg overflow-hidden">
+      {!user ? <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 rounded-lg shadow-lg overflow-hidden">
         {/* Left side: Login form */}
         <div className="bg-white p-8 md:p-10 flex flex-col justify-center">
           <form className="space-y-6" onSubmit={handleLogin}>
@@ -155,8 +150,9 @@ const Login = () => {
         </div>
 
 
-      </div>
+      </div> : <Profile />}
     </div>
+
   );
 };
 

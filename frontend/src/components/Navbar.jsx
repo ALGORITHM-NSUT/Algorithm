@@ -46,7 +46,7 @@ const Navbar = () => {
 
         {/* User Profile Icon (for large screens) */}
         <div className="hidden md:flex items-center">
-          <Link to="/userProfile" className="hover:text-gray-300">
+          <Link to="/Login" className="hover:text-gray-300">
             <FaUserCircle className="w-8 h-8 text-white" />
           </Link>
         </div>
@@ -66,7 +66,7 @@ const Navbar = () => {
               </Link>
             ))}
             {/* User Profile Link in the dropdown */}
-            <Link to="/userProfile" className="block text-center text-white hover:text-gray-300 relative group">
+            <Link to="/Login" className="block text-center text-white hover:text-gray-300 relative group">
               Profile
               <span className="absolute left-0 bottom-0 w-full h-0.5 bg-white transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
             </Link>

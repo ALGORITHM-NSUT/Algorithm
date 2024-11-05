@@ -30,7 +30,6 @@ const AnimatedRoutes = () => {
           <Route path="/technews" element={<Tech_news />} />
           <Route path="/join-us" element={<ProfileForm />} />
           <Route path="/projects" element={<Projects />} />
-          <Route path="/userProfile" element={<UserProfile />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/verify/:id" element={<EmailVerify />} />
           <Route path="*" element={<NotFound />} />
