@@ -8,7 +8,7 @@ export const UserProvider = ({ children }) => {
   // Function to fetch user data on app load
   const fetchUserData = async () => {
     try {
-      const response = await fetch("http://localhost:5000/me", {
+      const response = await fetch(import.meta.env.VITE_ACCOUNT, {
         credentials: "include",
       });
       const data = await response.json();

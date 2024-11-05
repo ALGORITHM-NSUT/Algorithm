@@ -41,7 +41,7 @@ const Articles = ({news}) => {
 
   return (
     <div className='flex flex-col items-center min-h-screen py-10 w-full text-white'>
-      <h1 className='text-3xl font-bold mb-8'>Latest Technology News</h1>
+      <h1 className='text-[10vw] md:text-[100px] font-bold mb-10 font-mono'>Latest Technology News</h1>
       {renderArticles()}
     </div>
   );

@@ -17,7 +17,7 @@ const Login = () => {
     e.preventDefault(); // Prevent the default form submission
     const remember = document.getElementById('remember').checked;
     try {
-      const response = await fetch("http://localhost:5000/login", {
+      const response = await fetch(import.meta.env.VITE_LOGIN, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

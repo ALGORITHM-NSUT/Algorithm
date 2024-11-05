@@ -140,7 +140,7 @@ const Register = ({ setEditForm, setEditAcc }) => {
       return;
     }
     try {
-      const response = await fetch("http://localhost:5000/register", {
+      const response = await fetch(import.meta.env.VITE_REGISTER, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -163,7 +163,7 @@ const Register = ({ setEditForm, setEditAcc }) => {
       return;
     }
     try {
-      const response = await fetch("http://localhost:5000/editProfile", {
+      const response = await fetch(import.meta.env.VITE_EDIT_ACCOUNT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

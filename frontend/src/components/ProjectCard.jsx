@@ -28,13 +28,19 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   const [editModal, setEditModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const { user } = useContext(UserContext);
-  const navigate = useNavigate();
   const [editProject, setEditProject] = useState(false);
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [showUserProfileModal, setShowUserProfileModal] = useState(false); // State for user profile modal
   const [selectedUser, setSelectedUser] = useState(null); // State for the selected user
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+  useEffect(() => {
+    if (editProject) {
+      setEditProject(false);
+    }
+  }, [isExpanded])
 
   const showLoader = () => {
     setLoading(true);
@@ -43,10 +49,57 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
     }, 1000); // Loader displays for 1 second
   };
 
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const handleCloseModal = (e) => {
+    e.stopPropagation();
+    setShowappModal(false);
+    setDeleteModal(false);
+    setEditModal(false);
+    setShowUserProfileModal(false);
+  };
+
+  const handleDeleteRequest = () => {
+    setDeleteModal(true);
+  };
+
+  const handleJoinRequest = () => {
+    showLoader()
+
+    setShowappModal(true);
+  };
+
+  const handleSendRequest = () => {
+    showLoader()
+
+    if (postData()) {
+      refreshProjects();
+    }
+    setShowappModal(false);
+  };
+  const handleViewProfile = (userDetails) => {
+
+    setSelectedUser(userDetails); 
+    setShowUserProfileModal(true); 
+  };
+
+  const carouselSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+    autoplay: true,       
+    autoplaySpeed: 3000, 
+  };
+
   const postData = async () => {
     showLoader()
     try {
-      const response = await fetch('http://localhost:5000/application', {
+      const response = await fetch(import.meta.env.VITE_SEND_APPLICATION, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -69,7 +122,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
     showLoader()
 
     try {
-      const applicants = await fetch('http://localhost:5000/handleApplication', {
+      const applicants = await fetch(import.meta.env.VITE_HANDLE_APPLICATION, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -87,34 +140,11 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
     }
   };
 
-  useEffect(() => {
-    if (editProject) {
-      setEditProject(false);
-    }
-  }, [isExpanded])
-
-  const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
-  };
-
-  const handleCloseModal = (e) => {
-    e.stopPropagation();
-    setShowappModal(false);
-    setDeleteModal(false);
-    setEditModal(false);
-    setShowUserProfileModal(false);
-  };
-
-  const handleDeleteRequest = () => {
-
-    setDeleteModal(true);
-  };
-
   const handleDeletesend = async () => {
     showLoader()
 
     try {
-      const response = await fetch('http://localhost:5000/deleteProject', {
+      const response = await fetch(import.meta.env.VITE_DELETE_PROJECT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -132,43 +162,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
       console.error('Error deleting project:', error);
     }
   };
-
-  const handleJoinRequest = () => {
-    showLoader()
-
-    setShowappModal(true);
-  };
-
-  const handleSendRequest = () => {
-    showLoader()
-
-    if (postData()) {
-      refreshProjects();
-    }
-    setShowappModal(false);
-  };
-  const handleViewProfile = (userDetails) => {
-
-    setSelectedUser(userDetails); // Set the selected user details
-    setShowUserProfileModal(true); // Open the user profile modal
-  };
-
-  useEffect(() => {
-    if (editProject) {
-      setEditProject(false);
-    }
-  }, [isExpanded])
-
-  const carouselSettings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: false,
-    autoplay: true,           // Enables autoplay
-    autoplaySpeed: 3000,      // Speed in milliseconds (3 seconds per slide)
-  };
+  
   return (
     <React.Fragment>
       {loading && <OpacityLoader />}
@@ -193,11 +187,11 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
             overflow: 'hidden',
             cursor: 'pointer',
             zIndex: -2,
-            color: 'black', // Corrected this line
+            color: 'black',
             '&:hover': { boxShadow: 12 },
-            width: '100%', // Ensure the paper takes full width
-            maxWidth: '600px', // Max width to prevent stretching on large screens
-            mx: 'auto', // Center the paper on larger screens
+            width: '100%', 
+            maxWidth: '600px', 
+            mx: 'auto',
           }}
           onClick={toggleExpand}
         >
@@ -228,21 +222,21 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               sx={{
                 background: '#18142F', // Changed from 'white' to '#330080'
                 WebkitBackgroundClip: 'text',
-                color: 'white', // Changed from 'transparent' to 'white'
+                color: 'white', 
                 transition: 'all 0.3s',
                 fontWeight: 'bold',
                 mb: 2,
                 fontSize: { xs: '1.8rem', sm: '2rem', md: '2.3rem' },
                 position: 'relative',
                 zIndex: 1,
-                textAlign: 'center', // Center text horizontally
-                fontFamily: "'Cursive', sans-serif", // Fancy font
+                textAlign: 'center',
+                fontFamily: "sans-serif", 
               }}
             >
               <span style={{
                 position: 'relative',
                 zIndex: 2,
-                color: '#330080', // Changed from '#330080' to 'white'
+                color: '#330080',
                 padding: '60px 10px 30px',
               }}>
                 {project.title}
@@ -262,8 +256,8 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
             {project.images && project.images.length > 0 && (
               <Box
                 sx={{
-                  position: 'relative', // Makes gradient overlays position correctly
-                  width: '100%',
+                  position: 'relative',
+                  width: '99.99%',
                   maxWidth: '100%',
                   aspectRatio: '4 / 3',
                   borderRadius: '10px',
@@ -292,7 +286,15 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                 ) : (
                   <Slider {...carouselSettings} style={{ marginLeft: "2.5%", maxWidth: '95%', overflow: 'hidden', borderRadius: '10px', zIndex: 1, background: '#18142F' }}>
                     {project.images.map((image, index) => (
-                      <Box key={index} sx={{ position: 'relative', width: '100%', maxWidth: '100%', aspectRatio: '4 / 3', borderRadius: '10px', overflow: 'hidden', background: '#18142F' }}>
+                      <Box key={index} sx={{ 
+                        position: 'relative', 
+                        width: '100%', 
+                        maxWidth: '100%', 
+                        aspectRatio: '4 / 3', 
+                        borderRadius: '10px', 
+                        overflow: 'hidden', 
+                        background: '#18142F'
+                        }}>
                         <Box
                           component="img"
                           src={image}
@@ -303,13 +305,14 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                             position: 'absolute',
                             top: 0,
                             left: 0,
-                            width: '100%',
+                            width: '105%',
                             height: '100%',
                             objectFit: 'cover',
                             border: 'none',        // Remove any border
                             margin: 0,            // Remove any margin
                             padding: 0,           // Remove any padding
                             display: 'block',      // Prevent line under the image
+                            
                           }}
                         />
 
@@ -354,7 +357,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      handleViewProfile(project.lead); // Pass the lead directly
+                      handleViewProfile(project.lead);
 
                       console.log(project.lead);
                     }}
@@ -401,7 +404,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            handleViewProfile(contributor); // Pass contributor details
+                            handleViewProfile(contributor);
                           }}
                           sx={{ fontSize: '0.9rem', color: '#330080', textDecoration: 'none', '&:hover': { color: 'red' } }}
                         >
@@ -416,7 +419,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                 <UserProfileModal
                   isOpen={showUserProfileModal}
                   onClose={() => setShowUserProfileModal(false)}
-                  userDetails={selectedUser} // Pass the selected user details to the modal
+                  userDetails={selectedUser}
                 />
 
                 {/* Applicants Section */}
@@ -465,7 +468,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            handleViewProfile(applicant); // Pass contributor details
+                            handleViewProfile(applicant);
                           }}
                           sx={{ color: '#330080', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 400, '&:hover': { color: 'red' } }}
 
@@ -480,9 +483,9 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                           color="success"
                           sx={{
                             mr: 1,
-                            fontSize: '0.7rem',    // Smaller font size
-                            padding: '5px 8px',     // Reduced padding
-                            minWidth: 'auto',       // Remove default minWidth
+                            fontSize: '0.7rem',    
+                            padding: '5px 8px',     
+                            minWidth: 'auto',       
                           }}
                           onClick={(e) => {
                             e.stopPropagation();
@@ -495,9 +498,9 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                           variant="contained"
                           color="error"
                           sx={{
-                            fontSize: '0.7rem',     // Smaller font size
-                            padding: '5px 8px',     // Reduced padding
-                            minWidth: 'auto',       // Remove default minWidth
+                            fontSize: '0.7rem',     
+                            padding: '5px 8px',     
+                            minWidth: 'auto',       
                           }}
                           onClick={(e) => {
                             e.stopPropagation();
@@ -513,7 +516,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                   <UserProfileModal
                     isOpen={showUserProfileModal}
                     onClose={() => setShowUserProfileModal(false)}
-                    userDetails={selectedUser} // Pass the selected user details to the modal
+                    userDetails={selectedUser} 
                   />
                 </Box>
                 {user && project.lead._id === user._id && (
@@ -524,7 +527,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                       display: 'flex',
                       gap: 2,
                       mt: 2,
-                      justifyContent: 'flex-end', // Aligns the buttons to the right
+                      justifyContent: 'flex-end', 
                     }}
                   >
                     <Tooltip title="Delete" arrow>

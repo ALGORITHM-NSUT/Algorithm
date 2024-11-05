@@ -5,15 +5,6 @@ import Footer from '../components/Footer';
 import OpacityLoader from '../components/OpacityLoader';
 
 const Home = () => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 200);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <>
@@ -24,8 +15,6 @@ const Home = () => {
         </div>
         <Footer />
       </div>
-      
-      {isLoading && <OpacityLoader />} {/* Display loader on top of content */}
     </>
   );
 };
