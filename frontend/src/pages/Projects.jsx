@@ -45,7 +45,7 @@ const Projects = () => {
       <FloatingBackground />
       <div className="flex flex-col items-center  text-white py-10 w-full relative z-10">
         {projects.onGoing.length > 0 && <div className="w-full mb-24">
-          <h1 className="md:text-[100px] font-bold text-center mb-16 font-mono">Current Projects</h1>
+          <h1 className="md:text-[100px] text-4xl font-bold text-center mb-16 font-mono">Current Projects</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 px-4 md:px-10">
             {projects.onGoing.map((project, index) => (
               <ProjectCard
@@ -55,13 +55,13 @@ const Projects = () => {
                 refreshProjects={fetchProjects}
               />
             ))}
-            <div className='relative w-full max-w-[600px] h-full min-h-[640px] max-h-[640px]'>
-              {user && user.admin && <AddProject refreshProjects={fetchProjects} edit={false} showadd={true} />}
-            </div>
+            {user && user.admin && <div className='relative w-full max-w-[600px] h-full min-h-[640px] max-h-[640px]'>
+               <AddProject refreshProjects={fetchProjects} edit={false} showadd={true} />
+          </div>}
           </div>
         </div>}
         {projects.completed.length > 0 && <div className="w-full">
-          <h1 className="text-5xl md:text-[100px] font-bold text-center mb-14 font-mono">Compeleted Projects</h1>
+          <h1 className="text-4xl md:text-[100px] font-bold text-center mb-14 font-mono">Compeleted Projects</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 px-4 md:px-10">
             {projects.completed.map((project, index) => (
               <ProjectCard key={index} project={project} isOngoing={false} refreshProjects={fetchProjects} />

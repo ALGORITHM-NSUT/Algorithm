@@ -51,8 +51,8 @@ const Login = () => {
 
   return (
 
-    <div className="flex justify-center items-center h-screen ">
-      {!user ? <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 rounded-lg shadow-lg overflow-hidden">
+    <div className="mx-3 flex justify-center items-center h-screen ">
+      {!user ? <div className=" w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 rounded-lg shadow-lg overflow-hidden">
         {/* Left side: Login form */}
         <div className="bg-white p-8 md:p-10 flex flex-col justify-center">
           <form className="space-y-6" onSubmit={handleLogin}>

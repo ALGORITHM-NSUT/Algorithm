@@ -174,7 +174,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
       )}
       <div
         onClick={toggleExpand}
-        className={`relative p-1 w-full rounded-lg transition-all duration-300 ease-in-out cursor-pointer 
+        className={` relative p-1 w-full rounded-lg transition-all duration-300 ease-in-out cursor-pointer 
         ${isExpanded ? 'scale-110 z-30' : 'z-10'}`}
       >
         <Paper
