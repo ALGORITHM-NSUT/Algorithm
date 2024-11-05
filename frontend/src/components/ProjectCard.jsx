@@ -253,7 +253,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
             {project.liveLink != '' && <a href={project.liveLink} rel="noreferrer" target="_blank" onClick={(e) => {
               e.stopPropagation();
             }}>
-              <span className={"absolute top-0 right-0 mr-[5px] mt-[5px] pr-[10px] pl-[5px] text-[20px] text-white bg-[#b91c1c] hover:bg-[#991b1b] rounded-lg"}><sup className='animate-pulse mr-[2px]'>•</sup>Live</span>
+              <span className={"absolute top-0 right-0 mr-[5px] mt-[5px] pr-[5px] pl-[7px] text-[20px] text-white bg-[#b91c1c] hover:bg-[#991b1b] rounded-lg"}>Live<sup className='animate-pulse ml-[1px]'>•</sup></span>
             </a>}
           </div>
 

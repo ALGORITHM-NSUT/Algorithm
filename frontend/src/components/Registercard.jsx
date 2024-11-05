@@ -103,7 +103,7 @@ const Register = ({ setEditForm, setEditAcc }) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   }, []);
 
-  const validateForm = (email, personalEmail, rollNumber, githubProfile, linkedinUrl) => {
+  const validateForm = (email, personalEmail, rollNumber, githubProfile, linkedinUrl, phoneNumber) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const rollNumberPattern = /^[a-zA-Z0-9]{11}$/;
     if (!email.endsWith("@nsut.ac.in")) {
@@ -126,13 +126,17 @@ const Register = ({ setEditForm, setEditAcc }) => {
       alert("Please enter a valid GitHub Url");
       return false;
     }
+    if (phoneNumber.length !== 10) {
+      alert("Please enter a valid Phone Number");
+      return false;
+    }
     return true;
   }
-  
+
 
   const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
-    if (!validateForm(formData.email, formData.personalEmail, formData.rollNumber, formData.githubProfile, formData.linkedinUrl)) {
+    if (!validateForm(formData.email, formData.personalEmail, formData.rollNumber, formData.githubProfile, formData.linkedinUrl, formData.phoneNumber)) {
       return;
     }
     try {
@@ -155,7 +159,7 @@ const Register = ({ setEditForm, setEditAcc }) => {
 
   const handleEdit = useCallback(async (event) => {
     event.preventDefault();
-    if (!validateForm(formData.email, formData.personalEmail, formData.rollNumber, formData.githubProfile, formData.linkedinUrl)) {
+    if (!validateForm(formData.email, formData.personalEmail, formData.rollNumber, formData.githubProfile, formData.linkedinUrl, formData.phoneNumber)) {
       return;
     }
     try {

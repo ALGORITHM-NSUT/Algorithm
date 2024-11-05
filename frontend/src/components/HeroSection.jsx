@@ -63,7 +63,7 @@ export default function HeroSection() {
         className="relative z-10 mb-20"
       >
         <Link
-          to={user ? '/userProfile' : '/join-us'}
+          to={user ? '/Login' : '/join-us'}
           className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white bg-[#4c56d7] rounded-full overflow-hidden transition-all duration-300 ease-in-out hover:bg-[#3a42a5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4c56d7]"
         >
           <span className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#6a11cb] to-[#2575fc] opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></span>
