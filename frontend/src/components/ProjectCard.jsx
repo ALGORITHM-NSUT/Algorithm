@@ -258,7 +258,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
             {project.images.length === 0 && (
               <Box
                 component="img"
-                src= "../src/assets/loading_algo.gif"
+                src= "/static/loading_algo.gif"
                 loading="lazy"
                 // alt="Project image"
                 sx={{

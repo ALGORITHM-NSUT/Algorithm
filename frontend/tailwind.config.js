@@ -3,14 +3,12 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      backgroundImage:
-      {
-        'polygon': "url('/src/assets/Polygon Luminary.svg')"
-      }
+      backgroundImage: {
+        'polygon': "url('/static/Polygon Luminary.svg')",
+      },
     },
   },
   plugins: [
     import('tailwind-scrollbar'),
   ],
-
 };

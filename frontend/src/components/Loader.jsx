@@ -19,11 +19,11 @@ const Loader = () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-900 relative">
       <img
-        src="src/assets/loading_algo.gif"
+        src="/static/loading_algo.gif"
         width={'150px'}
         alt="Bouncing Logo"
       />
-      <p className="text-xl font-semibold text-white animate-text z-10">Did You Know?</p>
+      <p className="text-xl font-semibold text-white animate-text z-10 ">Did You Know?</p>
       <p className="mt-2 text-md text-neutral-300 animate-fact">{fact}</p>
     </div>
   );

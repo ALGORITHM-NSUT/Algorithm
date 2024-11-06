@@ -25,11 +25,11 @@ export default function HeroSection() {
         autoPlay
         loop
         muted
-        poster="src/assets/vid_ss.png"
+        poster="/static/vid_ss.png"
         preload="none"
         className="absolute top-0 left-0 w-full h-full object-cover"
       >
-        <source src="src/assets/vid.mp4" type="video/mp4" />
+        <source src="/static/vid.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
@@ -37,7 +37,7 @@ export default function HeroSection() {
       <div className="relative z-10 flex flex-col items-center mt-10 p-4">
         <div className="flex items-center justify-center mb-4 flex-wrap">
           <img
-            src="src/assets/algo.png"
+            src="/static/algo.png"
             alt="Logo"
             className="w-24 h-18 md:w-32 md:h-24 lg:w-40 lg:h-30 mr-4"
           />

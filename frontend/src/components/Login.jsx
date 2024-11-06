@@ -136,7 +136,7 @@ const Login = () => {
           <div className="relative z-10 flex flex-col mt-4 items-center mb-8 ">
             <div className="flex items-center justify-center mb-4 flex-wrap">
               <img
-                src="src/assets/algo.png"
+                src="/static/algo.png"
                 alt="Logo"
                 className="w-24 h-18 md:w-32 md:h-24 lg:w-40 lg:h-30 mr-4"
               />
