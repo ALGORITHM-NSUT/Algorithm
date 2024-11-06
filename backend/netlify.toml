@@ -1,2 +1,9 @@
 [build]
     functions="functions"
+
+[dev]
+  public="dist"
+  framework = "#custom"  
+  command = "npm start"  
+  port = 8888            
+  targetPort = 5000      
