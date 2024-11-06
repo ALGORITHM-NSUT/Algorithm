@@ -19,7 +19,9 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Define allowed origins (adjust these as needed)
 const allowedOrigins = [
-    `${process.env.CLIENT_URL}`
+    process.env.CLIENT_URL,  // Production URL (must be set in your environment variables)
+    'http://localhost:5173', // Local development URL
+    // Add other origins as needed
 ];
 
 app.use(cors({
