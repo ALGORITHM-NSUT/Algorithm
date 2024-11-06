@@ -10,7 +10,7 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch('http://localhost:5000/me', {
+        const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/me`, {
           method: 'GET',
           credentials: 'include', // Include cookies in the request
         });

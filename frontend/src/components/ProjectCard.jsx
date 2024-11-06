@@ -253,11 +253,30 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
 
           {/* Carousel for Project Images */}
           <div style={{ backgroundColor: "#18142F" }}>
-            {project.images && project.images.length > 0 && (
+
+            {project.images.length === 0 && (
+              <Box
+                component="img"
+                src= "../src/assets/loading_algo.gif"
+                loading="lazy"
+                // alt="Project image"
+                sx={{
+                  position: 'relative',
+                  width: '100%',
+                  maxWidth: '100%',
+                  aspectRatio: '4 / 3',
+                  borderRadius: '10px',
+                  overflow: 'hidden',
+                  background: '#18142F'
+                }}
+              />
+            )}
+
+            {project.images.length > 0 && (
               <Box
                 sx={{
                   position: 'relative',
-                  width: '99.99%',
+                  width: '100%',
                   maxWidth: '100%',
                   aspectRatio: '4 / 3',
                   borderRadius: '10px',
@@ -265,8 +284,6 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                   background: '#18142F'
                 }}
               >
-
-                {/* Carousel or Single Image */}
                 {project.images.length === 1 ? (
                   <Box
                     component="img"
@@ -305,17 +322,15 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                             position: 'absolute',
                             top: 0,
                             left: 0,
-                            width: '105%',
+                            width: '100%',
                             height: '100%',
                             objectFit: 'cover',
-                            border: 'none',        // Remove any border
-                            margin: 0,            // Remove any margin
-                            padding: 0,           // Remove any padding
-                            display: 'block',      // Prevent line under the image
-                            
+                            border: 'none',
+                            margin: 0,
+                            padding: 0,
+                            display: 'block',
                           }}
                         />
-
                       </Box>
                     ))}
                   </Slider>
@@ -323,6 +338,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               </Box>
             )}
           </div>
+
 
 
           <Box sx={{ backgroundColor: '#18142F', p: 2 }}>
