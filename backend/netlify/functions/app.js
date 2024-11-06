@@ -50,8 +50,8 @@ mongoose.connect(process.env.MONGO_URI, {
 
 
 // Routes
-app.use('/.netlify/functions/app', routes);
-app.use('/.netlify/functions/app', userRoutes);
+app.use('/', routes);
+app.use('/', userRoutes);
 module.exports.handler = serverless(app);
 
 // app.listen(process.env.PORT || 5000, () => {
