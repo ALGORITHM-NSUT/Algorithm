@@ -43,7 +43,7 @@ const Projects = () => {
 
       <Navbar />
       <FloatingBackground />
-      <div className="flex flex-col items-center  text-white py-10 w-full relative z-10">
+      <div className="flex flex-col items-center flex-grow text-white py-10 w-full relative z-10">
         {projects.onGoing.length > 0 && <div className="w-full mb-24">
           <h1 className="md:text-[100px] text-4xl font-bold text-center mb-16 font-mono">Current Projects</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 px-4 md:px-10">
