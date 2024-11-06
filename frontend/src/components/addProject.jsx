@@ -159,7 +159,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
       }
     }
     try {
-      const response = await fetch(import.meta.env.VITE_UPDATE_PROJECT, {
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/updateProject', {
         method: 'POST',
         credentials: "include",
         body: formData

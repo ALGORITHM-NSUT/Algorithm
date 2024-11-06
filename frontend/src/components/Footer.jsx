@@ -26,7 +26,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-gray-900 text-white py-10">
+    <footer className="bg-gray-900 text-white flex-grow py-10">
       <div className="container mx-auto flex flex-col sm:flex-row justify-between items-start px-5 md:px-[100px]">
         
         {/* Left: Society Name Section */}

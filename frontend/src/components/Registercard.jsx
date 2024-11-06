@@ -159,8 +159,11 @@ const Register = ({ setEditForm, setEditAcc }) => {
 
   const handleEdit = useCallback(async (event) => {
     event.preventDefault();
-    if (!validateForm(formData.email, formData.personalEmail, formData.rollNumber, formData.githubProfile, formData.linkedinUrl, formData.phoneNumber)) {
+    if (!validateForm(formData.email, formData.personalEmail, formData.rollNumber, formData.linkedinUrl, formData.phoneNumber)) {
       return;
+    }
+    if (githubProfile !== "" && !githubProfile.startsWith("https://github.com/")) {
+      formData.githubProfile = "https://github.com/" + formData.githubProfile;
     }
     try {
       const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/editProfile`, {
