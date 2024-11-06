@@ -3,9 +3,10 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import routes from './routes/routes.js';
+import routes from '../routes/routes.js';
 import cookieParser from "cookie-parser"
-import userRoutes from "./routes/userRoutes.js"
+import userRoutes from "../routes/userRoutes.js"
+import serverless from 'serverless-http'
 
 
 dotenv.config();
@@ -49,10 +50,10 @@ mongoose.connect(process.env.MONGO_URI, {
 
 
 // Routes
-app.use('/', routes);
-app.use('/', userRoutes);
+app.use('/.netlify/functions/app', routes);
+app.use('/.netlify/functions/app', userRoutes);
+module.exports.handler = serverless(app);
 
-
-app.listen(process.env.PORT || 5000, () => {
-    console.log(`Server is listening at port : ${process.env.PORT}`);
-});
+// app.listen(process.env.PORT || 5000, () => {
+//     console.log(`Server is listening at port : ${process.env.PORT}`);
+// });
