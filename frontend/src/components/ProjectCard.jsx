@@ -35,6 +35,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  
 
   useEffect(() => {
     if (editProject) {

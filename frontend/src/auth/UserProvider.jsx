@@ -36,25 +36,8 @@ const UserProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  const logout = async () => {
-    try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include',
-      });
-
-      if (response.ok) {
-        setUser(null);
-      } else {
-        console.error('Logout failed');
-      }
-    } catch (error) {
-      console.error('Error during logout:', error);
-    }
-  };
-
   return (
-    <UserContext.Provider value={{ user, setUser, logout, isLoading }}>
+    <UserContext.Provider value={{ user, setUser, isLoading }}>
       {children}
     </UserContext.Provider>
   );
