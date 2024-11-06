@@ -22,7 +22,7 @@ export default function Footer() {
   const socialLinks = [
     { name: 'Github', icon: GitHub, url: 'https://github.com/ALGORITHM-NSUT' },
     { name: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/company/algorithm-nsut/?viewAsMember=true' },
-    { name: 'Instagram', icon: Instagram, url: 'https://instagram.com' }
+    { name: 'Instagram', icon: Instagram, url: 'https://www.instagram.com/algorithm_east/profilecard/?igsh=M21ncnQ3NDE2NHNq' }
   ];
 
   return (
