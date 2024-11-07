@@ -23,8 +23,8 @@ const Loader = () => {
         width={'150px'}
         alt="Bouncing Logo"
       />
-      <p className="text-xl font-semibold text-white animate-text z-10 ">Did You Know?</p>
-      <p className="mt-2 text-md text-neutral-300 animate-fact">{fact}</p>
+      <p className="mx-3 text-xl font-semibold text-white animate-text z-10 ">Did You Know?</p>
+      <p className="mx-3 mt-2 text-md text-neutral-300 animate-fact">{fact}</p>
     </div>
   );
 };

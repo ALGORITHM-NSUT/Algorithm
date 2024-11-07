@@ -67,7 +67,7 @@ const Navbar = () => {
             ))}
             {/* User Profile Link in the dropdown */}
             <Link to="/Login" className="block text-center text-white hover:text-gray-300 relative group">
-              Profile
+              <div className="mb-3">Profile</div>
               <span className="absolute left-0 bottom-0 w-full h-0.5 bg-white transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
             </Link>
           </div>

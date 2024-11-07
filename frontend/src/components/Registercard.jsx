@@ -136,7 +136,7 @@ const Register = ({ setEditForm, setEditAcc }) => {
     if (!validateForm(formData.email, formData.personalEmail, formData.rollNumber, formData.linkedinUrl, formData.phoneNumber)) {
       return;
     }
-    if (githubProfile !== "" && !githubProfile.startsWith("https://github.com/")) {
+    if (formData.githubProfile !== "" && !formData.githubProfile.startsWith("https://github.com/")) {
       formData.githubProfile = "https://github.com/" + formData.githubProfile;
     }
     try {
@@ -162,7 +162,7 @@ const Register = ({ setEditForm, setEditAcc }) => {
     if (!validateForm(formData.email, formData.personalEmail, formData.rollNumber, formData.linkedinUrl, formData.phoneNumber)) {
       return;
     }
-    if (githubProfile !== "" && !githubProfile.startsWith("https://github.com/")) {
+    if (formData.githubProfile !== "" && !formData.githubProfile.startsWith("https://github.com/")) {
       formData.githubProfile = "https://github.com/" + formData.githubProfile;
     }
     try {
@@ -240,11 +240,11 @@ const Register = ({ setEditForm, setEditAcc }) => {
                   <FormField label="NSUT Email" name="email" value={formData.email} onChange={handleChange} required disabled={!!user} />
                   <FormField label="Personal Email" name="personalEmail" value={formData.personalEmail} onChange={handleChange} />
                   <FormField label="Phone Number" name="phoneNumber" type="tel" value={formData.phoneNumber} onChange={handleChange} />
-                  <FormField label="GitHub Profile" name="githubProfile" value={formData.githubProfile} onChange={handleChange} />
+                  <FormField label="GitHub Username" name="githubProfile" value={formData.githubProfile} onChange={handleChange} />
                   <FormField label="LeetCode Profile" name="leetcodeProfile" value={formData.leetcodeProfile} onChange={handleChange} />
                   <FormField label="Codeforces Profile" name="codeforcesProfile" value={formData.codeforcesProfile} onChange={handleChange} />
                   <FormField label="Password" name="password" type="password" value={formData.password} onChange={handleChange} required disabled={!!user} />
-                  <FormField label="LinkedIn ID" name="linkedinUrl" value={formData.linkedinUrl} onChange={handleChange} required />
+                  <FormField label="LinkedIn URL" name="linkedinUrl" value={formData.linkedinUrl} onChange={handleChange} required />
                   <FormField label="Roll Number" name="rollNumber" value={formData.rollNumber} onChange={handleChange} required />
                   <YearSelection value={formData.year} onChange={handleChange} />
 

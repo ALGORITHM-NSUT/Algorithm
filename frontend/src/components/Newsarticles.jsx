@@ -24,7 +24,7 @@ const Articles = ({news}) => {
             >
               <img
                 className='w-full h-48 object-cover rounded-t-xl'
-                src={article.urlToImage || 'https://via.placeholder.com/300'}
+                src={article.image || 'https://via.placeholder.com/300'}
                 alt={article.title}
                 loading='lazy'
               />
