@@ -10,6 +10,6 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ['chunk-GYYMRS4U', 'chunk-TRC6RKZS'],
+    exclude: ['chunk-GYYMRS4U', 'chunk-TRC6RKZS', 'chunk-HT2KZPFB'],
   },
 })
