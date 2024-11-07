@@ -16,11 +16,14 @@ import {
 import LogoutIcon from '@mui/icons-material/Logout';
 import EditIcon from '@mui/icons-material/Edit';
 
+import OpacityLoader from './OpacityLoader'; // Make sure to import your OpacityLoader component
+
 const Profile = () => {
   const { user, setUser } = useContext(UserContext);
   const [editAcc, setEditAcc] = useState(false);
   const [password, setPassword] = useState('');
   const [editform, setEditForm] = useState(false);
+  const [loading, setLoading] = useState(false); // New state for loading
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,7 +34,7 @@ const Profile = () => {
 
   useEffect(() => {
     setPassword('');
-  }, [editAcc, editform])
+  }, [editAcc, editform]);
 
   const showpass = () => {
     setEditAcc(true);
@@ -42,6 +45,7 @@ const Profile = () => {
   };
 
   const submitpass = async () => {
+    setLoading(true); // Start loading when submitting the password
     try {
       const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/check`, {
         method: "POST",
@@ -61,10 +65,13 @@ const Profile = () => {
       }
     } catch (error) {
       console.error('Error verifying:', error);
+    } finally {
+      setLoading(false); // Stop loading after the request completes
     }
   };
 
   const handleLogout = async () => {
+    setLoading(true); // Start loading during logout
     try {
       const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/logout`, {
         method: 'GET',
@@ -83,11 +90,17 @@ const Profile = () => {
       }
     } catch (error) {
       console.error('Error logging out:', error);
+    } finally {
+      setLoading(false); // Stop loading after logout
     }
   };
 
   return (
     <div className='h-fit flex-grow'>
+      {loading && (
+          <OpacityLoader />
+      )}
+
       {editform && user && <Container maxWidth="md">
         <Register user={user} setEditForm={setEditForm} setEditAcc={setEditAcc} />
       </Container>}
@@ -103,7 +116,6 @@ const Profile = () => {
               boxShadow: 4,
               position: 'relative',
               minHeight: '50vh',
-
             }}
           >
             <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
@@ -188,12 +200,10 @@ const Profile = () => {
                   >
                     Cancel
                   </Button>
-
                 </React.Fragment>
               }
             </Box>
           </Card>
-
         </Container>
       )}
     </div>

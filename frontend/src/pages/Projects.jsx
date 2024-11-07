@@ -8,6 +8,12 @@ import FloatingBackground from './FloatingBackground';
 import Loader from '../components/Loader';
 
 const Projects = () => {
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []); 
+
+  
   const [projects, setProjects] = useState({ onGoing: [], completed: [] });
   const { user } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true)

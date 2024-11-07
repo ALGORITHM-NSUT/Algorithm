@@ -5,6 +5,7 @@ import { transporter } from "../utils/MailClient.js";
 import { Octokit } from "@octokit/rest";
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
+import { emailTemplate, passwordResetTemplate } from "../constants/emailTemplate.js";
 
 export const register = async (req, res, next) => {
     try {
@@ -85,13 +86,15 @@ export const register = async (req, res, next) => {
 
         try {
             // Send verification email
-            const info = await transporter.sendMail({
-                from: '"Algorithm" <algorithmnsut@gmail.com>',
-                to: email,
-                subject: "Email Verification",
-                text: `Please verify your email by clicking on the following link: ${verificationLink}`,
-                html: `<p>Please verify your email by clicking on the following link:</p><a href="${verificationLink}">Verify Email</a>`,
-            });
+         
+
+        const info = await transporter.sendMail({
+            from: '"Algorithm" <algorithmnsut@gmail.com>',
+            to: email,
+            subject: "Email Verification - Algorithm Account",
+            text: `Hello!\n\nThank you for signing up with Algorithm. Please verify your email by clicking on the following link: ${verificationLink}\n\nIf you did not create an account, please ignore this email.`,
+            html: emailTemplate(verificationLink),
+        });
 
         } catch (emailError) {
             console.error("Error sending verification email:", emailError.message);
@@ -344,12 +347,12 @@ export const changePassword = async (req, res, next) => {
 
         try {
             // Send password reset email
-            const info = await transporter.sendMail({
-                from: '"Algorithm" <algorithmnsut@gmail.com>',
-                to: email,
-                subject: "Password Reset Request",
-                text: `You requested a password reset. Click on the following link to reset your password: ${resetLink}`,
-                html: `<p>You requested a password reset. Click on the following link to reset your password:</p><a href="${resetLink}">Reset Password</a>`,
+           const info = await transporter.sendMail({
+            from: '"Algorithm" <algorithmnsut@gmail.com>',
+            to: email,
+            subject: "Password Reset Request",
+            text: `You requested a password reset. Click on the following link to reset your password: ${resetLink}`,
+            html: passwordResetTemplate(resetLink), // Use the imported template
             });
 
         } catch (emailError) {

@@ -197,7 +197,9 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  backdrop-filter: blur(10px); /* Apply blur effect */
 }
+
 
 .lds-ring {
   color: #4b55d5; /* Adjust loader color here */

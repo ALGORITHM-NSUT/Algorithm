@@ -24,7 +24,7 @@ const Loader = () => {
         alt="Bouncing Logo"
       />
       <p className="mx-3 text-xl font-semibold text-white animate-text z-10 ">Did You Know?</p>
-      <p className="mx-3 mt-2 text-md text-neutral-300 animate-fact">{fact}</p>
+      <p className="mx-3 mt-2 text-md text-neutral-300 animate-fact text-center">{fact}</p>
     </div>
   );
 };
