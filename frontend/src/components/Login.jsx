@@ -3,7 +3,7 @@ import { UserContext } from '../auth/UserProvider';
 import { useNavigate } from 'react-router-dom';
 import Profile from './Profile';
 import OpacityLoader from './OpacityLoader';
-import PasswordReset from '../pages/PasswordReset';
+import PasswordReset from './PasswordRest';
 
 const Login = () => {
   const [email, setEmail] = useState('');
