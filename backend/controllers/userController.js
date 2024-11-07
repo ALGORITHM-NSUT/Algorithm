@@ -6,7 +6,7 @@ import { Octokit } from "@octokit/rest";
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
 
-export const register = async (req, res) => {
+export const register = async (req, res, next) => {
     try {
         const {
             name,
@@ -51,10 +51,13 @@ export const register = async (req, res) => {
         let user = await FormData.findOne({ email });
         const Admin = await CoreMember.findOne({ email });
 
-        if (user) {
+        if (user && user?.verified) {
             return res.status(401).json({
                 message: "User with this NSUT Email Already Exists",
             });
+        }
+        else if (!user?.verified) {
+            await FormData.deleteOne({ email });
         }
 
         // Create the new user, with admin status if applicable
@@ -106,6 +109,7 @@ export const register = async (req, res) => {
     } catch (error) {
         return next(
             res.status(500).json({
+                
                 message: "Internal Server Error",
                 error: error.message,
             })
@@ -213,7 +217,7 @@ export const getMyProfile = async (req, res, next) => {
     }
 };
 
-export const checkPassword = async (req, res) => {
+export const checkPassword = async (req, res, next) => {
     try {
         const user = req.user._id;
         const member = await FormData.findOne({ _id: user });
@@ -318,7 +322,7 @@ export const editProfile = async (req, res, next) => {
     }
 };
 
-export const changePassword = async (req, res) => {
+export const changePassword = async (req, res, next) => {
     try {
         const { email } = req.body;
 
