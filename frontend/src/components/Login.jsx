@@ -13,15 +13,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [showReset, setShowReset] = useState(false);
   const { user, setUser } = useContext(UserContext);
-  const [showProfile, setShowProfile] = useState(false);
-  useEffect(() => {
-    if (user) {
-      setShowProfile(true);
-    }
-    else {
-      setShowProfile(false);
-    }
-  }, [user]);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     const remember = document.getElementById('remember').checked;
@@ -65,7 +57,6 @@ const Login = () => {
       {loading ? ( // Show loader if loading is true
         <OpacityLoader />
       ) : (
-        !user ? (
           <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 rounded-lg shadow-lg overflow-hidden">
             {/* Left side: Login form */}
             <div className="bg-white p-8 md:p-10 flex flex-col justify-center">
@@ -164,9 +155,7 @@ const Login = () => {
               </div>
             </div>
           </div>
-        ) : (
-          <Profile />
-        )
+        
       )}
     </div>
   );
