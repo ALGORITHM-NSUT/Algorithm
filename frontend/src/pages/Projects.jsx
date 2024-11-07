@@ -15,9 +15,11 @@ const Projects = () => {
 
   
   const [projects, setProjects] = useState({ onGoing: [], completed: [] });
-  const { user } = useContext(UserContext);
+  const { user, isLoading: userLoading } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true)
-
+  if (userLoading) {
+    return <Loader />
+  }
   const fetchProjects = async () => {
     try {
       const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/projects`, {

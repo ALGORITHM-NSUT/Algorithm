@@ -96,14 +96,15 @@ const Profile = () => {
   };
 
   return (
-    <div className='h-fit flex-grow'>
+    
+    <div className='flex flex-col min-h-screen'>
       {loading && (
           <OpacityLoader />
       )}
 
-      {editform && user && <Container maxWidth="md">
+      {editform && user && <div>
         <Register user={user} setEditForm={setEditForm} setEditAcc={setEditAcc} />
-      </Container>}
+        </div>}
 
 
       {!editform && user && (
