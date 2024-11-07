@@ -12,14 +12,15 @@ const Projects = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []); 
-
+  
+  useEffect(() => {
+    fetchProjects();
+  }, []);
   
   const [projects, setProjects] = useState({ onGoing: [], completed: [] });
   const { user, isLoading: userLoading } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true)
-  if (userLoading) {
-    return <Loader />
-  }
+  
   const fetchProjects = async () => {
     try {
       const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/projects`, {
@@ -37,11 +38,8 @@ const Projects = () => {
     }
   };
 
-  useEffect(() => {
-    fetchProjects();
-  }, []);
 
-  if (isLoading) {
+  if (isLoading || userLoading) {
     return <Loader />
   }
 

@@ -375,8 +375,6 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                       e.preventDefault();
                       e.stopPropagation();
                       handleViewProfile(project.lead);
-
-                      console.log(project.lead);
                     }}
                     sx={{ color: '#330080', textDecoration: 'none', '&:hover': { color: 'red' } }}
                   >
