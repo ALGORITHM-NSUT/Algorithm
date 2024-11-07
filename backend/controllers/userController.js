@@ -177,7 +177,7 @@ export const logout = async (req, res, next) => {
                 httpOnly: true,
                 secure: true,
                 sameSite: "none",
-                domain: ".vercel.app"
+                domain: process.env.DOMAIN
             })
             .json({
                 success: true,
