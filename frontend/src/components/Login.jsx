@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { UserContext } from '../auth/UserProvider';
 import { useNavigate } from 'react-router-dom';
-import Profile from './Profile';
 import OpacityLoader from './OpacityLoader';
 import PasswordReset from './PasswordRest';
 

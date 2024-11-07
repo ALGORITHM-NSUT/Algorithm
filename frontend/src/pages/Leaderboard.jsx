@@ -2,7 +2,6 @@ import React, { useContext, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import FloatingBackground from './FloatingBackground';
-import Loader from '../components/Loader';
 import { UserContext } from '../auth/UserProvider';
 import { Link } from 'react-router-dom'; // Assuming you're using React Router for navigation
 

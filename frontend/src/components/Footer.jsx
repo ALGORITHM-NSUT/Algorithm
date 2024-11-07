@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Facebook, Twitter, Linkedin, Instagram, Phone, Mail } from "lucide-react";
+import { Linkedin, Instagram, Phone, Mail } from "lucide-react";
 import { GitHub } from '@mui/icons-material';
 
 export default function Footer() {
