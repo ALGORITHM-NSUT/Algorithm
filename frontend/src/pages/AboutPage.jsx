@@ -10,6 +10,10 @@ const AboutPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []); 
+
+  useEffect(() => {
     const checkDataValidity = () => {
       const storedMembers = sessionStorage.getItem('members');
       return JSON.parse(storedMembers);

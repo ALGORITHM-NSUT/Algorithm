@@ -18,6 +18,7 @@ import {
 import { motion } from "framer-motion";
 import Lottie from "react-lottie";
 import cartoonProfile from "../assets/cartoon-profile.json";
+import OpacityLoader from "./OpacityLoader";
 
 const theme = createTheme({
   palette: {
@@ -74,6 +75,7 @@ const YearSelection = React.memo(({ value, onChange }) => (
 YearSelection.displayName = 'YearSelection';
 const Register = ({ setEditForm, setEditAcc }) => {
   const { user, setUser } = useContext(UserContext);
+  const [loading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: user?.name || "",
     email: user?.email || "",
@@ -139,6 +141,7 @@ const Register = ({ setEditForm, setEditAcc }) => {
     if (formData.githubProfile !== "" && !formData.githubProfile.startsWith("https://github.com/")) {
       formData.githubProfile = "https://github.com/" + formData.githubProfile;
     }
+    setIsLoading(true)
     try {
       const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/register`, {
         method: "POST",
@@ -154,6 +157,8 @@ const Register = ({ setEditForm, setEditAcc }) => {
       }
     } catch (error) {
       console.error("Error registering user:", error);
+    }finally{
+      setIsLoading(false)
     }
   }, [formData, navigate]);
 
@@ -191,9 +196,20 @@ const Register = ({ setEditForm, setEditAcc }) => {
     setEditAcc(false);
   }, [setEditForm, setEditAcc]);
 
+   if (loading) {
+    return (
+      <OpacityLoader />
+    );
+  }
+
   return (
+
     <ThemeProvider theme={theme}>
-      <div className="mx-3 flex flex-col min-h-screen overflow-hidden mt-2 mb-2">
+      {loading && (
+          <OpacityLoader />
+      )}
+
+      {<div className="mx-3 flex flex-col min-h-screen overflow-hidden mt-2 mb-2">
         <Container
           component="main"
           maxWidth="md"
@@ -282,8 +298,11 @@ const Register = ({ setEditForm, setEditAcc }) => {
               </form>
             </div>
           </motion.div>
+          
         </Container>
+         
       </div>
+      }
     </ThemeProvider>
   );
 };

@@ -7,6 +7,10 @@ import FloatingBackground from './FloatingBackground';
 import Loader from '../components/Loader';
 
 const Tech_news = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []); 
+  
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
 
