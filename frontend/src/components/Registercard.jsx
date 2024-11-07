@@ -213,7 +213,7 @@ const Register = ({ setEditForm, setEditAcc }) => {
         <Container
           component="main"
           maxWidth="md"
-          className="mx-3 mt-2 mb-2 rounded-2xl relative z-10 bg-white backdrop-blur-2xl"
+          className="mx-3 mt-2 mb-2 rounded-2xl relative z-10 bg-white "
         >
           <motion.div
             initial={{ opacity: 0, y: 50 }}

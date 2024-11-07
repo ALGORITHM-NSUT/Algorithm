@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Register from '../components/Registercard';
+import FloatingBackground from './FloatingBackground';
 
 const LoginPage = () => {
 
@@ -13,7 +14,8 @@ const LoginPage = () => {
     
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <div className="bg-polygon flex-grow justify-center items-center bg-cover">
+      <div className="mt-6 flex-grow justify-center items-center bg-cover min-h-screen">
+        <FloatingBackground />
         <Register />
       </div>
       <Footer />
