@@ -56,7 +56,6 @@ const Profile = () => {
 
       if (response.ok) {
         setEditForm(true);
-        console.log("verified");
       } else {
         alert("Password does not match")
       }

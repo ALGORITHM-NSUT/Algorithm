@@ -13,7 +13,6 @@ const EmailVerify = () => {
 			try {
 				const url = import.meta.env.VITE_BACKEND_URL + `/verify/${param.id}`;
 				const { data } = await axios.get(url);
-				console.log(data);
 				setValidUrl(true);
 			} catch (error) {
 				console.log(error);

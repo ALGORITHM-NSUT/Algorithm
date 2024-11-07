@@ -12,7 +12,6 @@ export const UserProvider = ({ children }) => {
         credentials: "include",
       });
       const data = await response.json();
-      console.log(data)
       if (response.ok) {
         setUserData(data.user);
       }

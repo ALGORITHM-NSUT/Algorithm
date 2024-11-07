@@ -19,7 +19,6 @@ const Projects = () => {
         credentials: "include"
       });
       const data = await response.json();
-      console.log("Fetched data:", data);
       const onGoing = data.filter(project => !project.status);
       const completed = data.filter(project => project.status);
       setProjects({ onGoing, completed });

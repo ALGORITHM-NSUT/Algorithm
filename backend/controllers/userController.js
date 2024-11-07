@@ -93,7 +93,6 @@ export const register = async (req, res, next) => {
                 html: `<p>Please verify your email by clicking on the following link:</p><a href="${verificationLink}">Verify Email</a>`,
             });
 
-            console.log("Message sent: %s", info.messageId);
         } catch (emailError) {
             console.error("Error sending verification email:", emailError.message);
             return res.status(500).json({
@@ -353,7 +352,6 @@ export const changePassword = async (req, res, next) => {
                 html: `<p>You requested a password reset. Click on the following link to reset your password:</p><a href="${resetLink}">Reset Password</a>`,
             });
 
-            console.log("Message sent: %s", info.messageId);
         } catch (emailError) {
             console.error("Error sending password reset email:", emailError.message);
             return res.status(500).json({

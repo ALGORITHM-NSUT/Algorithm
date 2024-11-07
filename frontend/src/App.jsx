@@ -12,6 +12,7 @@ import EmailVerify from "./pages/EmailVerify";
 import './App.css';
 import NotFound from "./pages/NotFound";
 import PasswordReset from "./pages/PasswordReset";
+import Leaderboard from "./pages/Leaderboard";
 
 
 const AnimatedRoutes = () => {
@@ -34,6 +35,7 @@ const AnimatedRoutes = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/verify/:id" element={<EmailVerify />} />
           <Route path="/resetpass/:id" element={<PasswordReset />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
 
           <Route path="*" element={<NotFound />} />
 

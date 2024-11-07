@@ -5,8 +5,6 @@ export const resetpass = async (req, res) => {
     try {
         const { password } = req.body;
         const token = req.params.id; // Extract the token from request parameters
-
-        console.log(token)
         const user = await FormData.findOne({
             resetPasswordToken: token,
             resetPasswordExpires: { $gt: Date.now() }
