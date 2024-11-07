@@ -14,7 +14,7 @@ const Leaderboard = () => { // Receive `user` as a prop or from context
   const { user } = useContext(UserContext);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen mx-3">
       <Navbar />
       <div className="flex-grow relative flex flex-col items-center justify-center text-center min-h-screen">
         <FloatingBackground />
