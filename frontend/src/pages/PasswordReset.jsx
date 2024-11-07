@@ -1,58 +1,73 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState } from 'react';
+import {
+  Card,
+  Container,
+  TextField,
+} from '@mui/material';
 
-const PasswordReset = () => {
-  const [newPassword, setNewPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const param = useParams();
-  const navigate = useNavigate();
+const PasswordReset = ({ onBack }) => {
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the default form submission
+  const handlePasswordReset = async (e) => {
+    e.preventDefault();
     try {
-      const url = import.meta.env.VITE_BACKEND_URL + `/resetpass/${param.id}`; // POST endpoint to reset password
-      const { data } = await axios.post(url, { password: newPassword });
-      setMessage(data.message || "Password updated successfully");
-      // Optionally, navigate to the login page or another page
-      setTimeout(() => {
-        navigate('/login'); // Redirect after a delay
-      }, 2000);
+      const response = await fetch(import.meta.env.VITE_BACKEND_URL+ `/changePassword`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setMessage(data.message);
+      } else {
+        setError(data.message);
+      }
     } catch (error) {
-      console.error("Error updating password:", error);
-      setMessage("Error updating password. Please try again.");
+      console.error("Error sending password reset request:", error);
+      setError("Failed to send reset request. Please try again.");
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="bg-white p-8 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-4 text-black">Reset Your Password</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="password" className="block text-sm font-semibold text-gray-900">
-              New Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              placeholder="Enter your new password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
-          >
-            Update Password
-          </button>
-        </form>
-        {message && <p className="mt-4 text-center text-red-500">{message}</p>}
-      </div>
-    </div>
+    <Container maxWidth="sm" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+      <Card
+        sx={{
+          width: 'fit',
+          padding: 3,
+          paddingX: 10,
+          borderRadius: 2,
+          boxShadow: 4,
+
+        }}
+      >
+        <div className="flex flex-col justify-center items-center w-full">
+          <h2 className="text-2xl font-bold mb-4">Password Reset</h2>
+          {message ? (
+            <p className="text-green-500">{message}</p>
+          ) : (
+            <form onSubmit={handlePasswordReset} className="space-y-4">
+              <div>
+                <TextField
+                  id="email"
+                  label="Email"
+                  variant="outlined"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  sx={{ width: '100%' }}
+                  required
+                />
+              </div>
+              {error && <p className="text-red-500">{error}</p>}
+              <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5">Send Reset Link</button>
+              <button type="button" onClick={onBack} className="text-sm text-blue-700 hover:underline mt-4">Back to Login</button>
+            </form>
+          )}
+        </div>
+      </Card>
+    </Container >
   );
 };
 

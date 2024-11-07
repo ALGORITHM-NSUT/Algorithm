@@ -13,7 +13,6 @@ const UserProfile = () => {
     <div className="flex flex-col min-h-screen ">
       <Navbar />
       <div className="flex-grow bg-polygon bg-cover bg-center  bg-no-repeat">
-
         <Profile />
       </div>
       <Footer />
