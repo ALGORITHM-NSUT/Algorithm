@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 
-const ToggleSwitch = ({setIsAnonymous}) => {
+const ToggleSwitch = ({setIsAnonymous ,user}) => {
   const [isOn, setIsOn] = useState(false);
 
   const toggleSwitch = () => {
-    setIsOn((prev) => !prev);
-    setIsAnonymous((prev) => !prev);
+    if (user) {
+      setIsOn((prev) => !prev);
+      setIsAnonymous((prev) => !prev);
+    }
   };
 
   return (
