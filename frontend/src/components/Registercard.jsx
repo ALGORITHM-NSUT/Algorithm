@@ -46,9 +46,13 @@ const FormField = React.memo(({ label, name, type, value, onChange, required = f
       onChange={onChange}
       variant="outlined"
       disabled={disabled}
+      InputLabelProps={{
+        style: { color: '#252526' }
+      }}
     />
   </Grid>
 ));
+
 
 FormField.displayName = 'FormField';
 // YearSelection Component
@@ -105,7 +109,7 @@ const Register = ({ setEditForm, setEditAcc }) => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   }, []);
 
-  const validateForm = (email, personalEmail, rollNumber, linkedinUrl, phoneNumber) => {
+  const validateForm = (email, personalEmail, rollNumber, phoneNumber) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const rollNumberPattern = /^[a-zA-Z0-9]{11}$/;
     if (!email.endsWith("@nsut.ac.in")) {
@@ -120,10 +124,6 @@ const Register = ({ setEditForm, setEditAcc }) => {
       alert("Please enter a valid roll number");
       return false;
     }
-    if (!linkedinUrl.startsWith("https://www.linkedin.com/in/")) {
-      alert("Please enter a valid linkedinUrl");
-      return false;
-    }
     
     if (phoneNumber.length !== 10) {
       alert("Please enter a valid Phone Number");
@@ -135,12 +135,18 @@ const Register = ({ setEditForm, setEditAcc }) => {
 
   const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
-    if (!validateForm(formData.email, formData.personalEmail, formData.rollNumber, formData.linkedinUrl, formData.phoneNumber)) {
+    if (!validateForm(formData.email, formData.personalEmail, formData.rollNumber, formData.phoneNumber)) {
       return;
     }
     if (formData.githubProfile !== "" && !formData.githubProfile.startsWith("https://github.com/")) {
       formData.githubProfile = "https://github.com/" + formData.githubProfile;
     }
+
+    if (formData.linkedinUrl !== "" && !formData.linkedinUrl.startsWith("https://www.linkedin.com/in/")) {
+      alert("Please enter a valid linkedinUrl");
+      return false;
+    }
+    
     setIsLoading(true)
     try {
       const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/register`, {
@@ -164,11 +170,15 @@ const Register = ({ setEditForm, setEditAcc }) => {
 
   const handleEdit = useCallback(async (event) => {
     event.preventDefault();
-    if (!validateForm(formData.email, formData.personalEmail, formData.rollNumber, formData.linkedinUrl, formData.phoneNumber)) {
+    if (!validateForm(formData.email, formData.personalEmail, formData.rollNumber, formData.phoneNumber)) {
       return;
     }
     if (formData.githubProfile !== "" && !formData.githubProfile.startsWith("https://github.com/")) {
       formData.githubProfile = "https://github.com/" + formData.githubProfile;
+    }
+     if (formData.linkedinUrl !== "" && !formData.linkedinUrl.startsWith("https://www.linkedin.com/in/")) {
+      alert("Please enter a valid linkedinUrl");
+      return false;
     }
     try {
       const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/editProfile`, {
@@ -210,11 +220,14 @@ const Register = ({ setEditForm, setEditAcc }) => {
       )}
 
       {<div className="mx-3 flex flex-col min-h-screen overflow-hidden mt-2 mb-2">
+      
         <Container
           component="main"
           maxWidth="md"
           className="mx-3 mt-2 mb-2 rounded-2xl relative z-10 bg-white "
         >
+          <p className="text-red-600 ml-5 top-0 right-0 absolute mt-3 mr-3"> *Required</p>
+
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -239,9 +252,12 @@ const Register = ({ setEditForm, setEditAcc }) => {
                     width={100}
                   />
                 </motion.div>
-                <Typography component="h1" variant="h4" align="center" color="#10111f" className="mb-8">
-                  {!user ? "Join Us" : "Edit Profile"}
-                </Typography>
+                <div className="flex items-center justify-center">
+                  <Typography component="h1" variant="h4" align="center" color="#10111f" className="mb-8">
+                    {!user ? "Join Us" : "Edit Profile"}
+                  </Typography>
+                </div>
+                
               </div>
 
               <form onSubmit={(e) => {
@@ -260,7 +276,7 @@ const Register = ({ setEditForm, setEditAcc }) => {
                   <FormField label="LeetCode Profile" name="leetcodeProfile" value={formData.leetcodeProfile} onChange={handleChange} />
                   <FormField label="Codeforces Profile" name="codeforcesProfile" value={formData.codeforcesProfile} onChange={handleChange} />
                   <FormField label="Password" name="password" type="password" value={formData.password} onChange={handleChange} required disabled={!!user} />
-                  <FormField label="LinkedIn URL" name="linkedinUrl" value={formData.linkedinUrl} onChange={handleChange} required />
+                  <FormField label="LinkedIn URL" name="linkedinUrl" value={formData.linkedinUrl} onChange={handleChange} />
                   <FormField label="Roll Number" name="rollNumber" value={formData.rollNumber} onChange={handleChange} required />
                   <YearSelection value={formData.year} onChange={handleChange} />
 
