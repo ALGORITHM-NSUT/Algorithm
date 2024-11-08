@@ -7,7 +7,7 @@ const Navbar = () => {
   const [selectedLink, setSelectedLink] = useState(''); // State for active link
   const location = useLocation();
 
-  const navLinks = ['Home', 'About', 'Leaderboard', 'Projects', 'TechNews'];
+  const navLinks = ['Home', 'About', 'Leaderboard', 'Projects', 'TechNews', 'Feedback'];
 
   useEffect(() => {
     const currentPath = location.pathname.split('/')[1];

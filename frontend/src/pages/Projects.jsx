@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../auth/UserProvider';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import ProjectCard from '../components/ProjectCard';
 import AddProject from '../components/addProject';
 import FloatingBackground from './FloatingBackground';
@@ -26,9 +24,6 @@ const Projects = () => {
     fetchProjects(); // Fetch latest data in the background
   }, []);
 
-
-
-
   const fetchProjects = async () => {
     try {
       const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/projects`, {
@@ -50,19 +45,16 @@ const Projects = () => {
     }
   };
 
-
   if (userLoading || isLoading) {
     return <Loader />;
-
-
-
   }
 
   return (
     <div className="flex flex-col min-h-screen relative">
-      <Navbar />
       <FloatingBackground />
-      <div className="flex flex-col items-center flex-grow text-white py-10 w-full relative z-10">
+      <div
+        className={`flex flex-col items-center flex-grow text-white py-10 w-full relative z-10  ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+      >
         {projects.onGoing.length > 0 ? (
           <div className="w-full mb-24">
             <h1 className="md:text-[100px] md:leading-[6rem] text-4xl leading-tight font-bold text-center mb-16 font-mono">Current Projects</h1>
@@ -100,7 +92,6 @@ const Projects = () => {
           </div>
         )}
       </div>
-      <Footer />
     </div>
   );
 };

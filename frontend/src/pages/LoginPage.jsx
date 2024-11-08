@@ -1,7 +1,5 @@
 import React, { useEffect, useContext } from 'react'
 import { UserContext } from "../auth/UserProvider";
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
 import Login from '../components/Login';
 
 import Profile from '../components/Profile';
@@ -21,15 +19,12 @@ const LoginPage = () => {
   
 
   return (
-    <div className="flex flex-col min-h-screen ">
-      <Navbar />
-      
+    <div className="flex flex-col min-h-screen ">      
       <div className="flex-grow">
       <FloatingBackground />
         {!user ? <Login />: <Profile />}
       </div>
 
-      <Footer />
     </div>
   )
 }

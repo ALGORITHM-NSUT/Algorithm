@@ -13,18 +13,16 @@ import './App.css';
 import NotFound from "./pages/NotFound";
 import PasswordReset from "./pages/PasswordReset";
 import Leaderboard from "./pages/Leaderboard";
-
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import Feedback from "./pages/Feedback";
 
 const AnimatedRoutes = () => {
   const location = useLocation();
 
   return (
     <TransitionGroup>
-      <CSSTransition
-        key={location.key}
-        classNames="fade"
-        timeout={300}
-      >
+      <CSSTransition key={location.key} classNames="fade" timeout={300}>
         <Routes location={location}>
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
@@ -36,20 +34,20 @@ const AnimatedRoutes = () => {
           <Route path="/verify/:id" element={<EmailVerify />} />
           <Route path="/resetpass/:id" element={<PasswordReset />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
-
+          <Route path="/feedback" element={<Feedback />} />
           <Route path="*" element={<NotFound />} />
-
         </Routes>
       </CSSTransition>
     </TransitionGroup>
   );
 };
 
-
 const App = () => {
   return (
     <BrowserRouter>
-      <AnimatedRoutes />
+      <Navbar />
+        <AnimatedRoutes />
+      <Footer />
     </BrowserRouter>
   );
 };
