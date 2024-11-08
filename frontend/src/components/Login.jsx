@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { UserContext } from '../auth/UserProvider';
-import { useNavigate } from 'react-router-dom';
-import Profile from './Profile';
+import { useNavigate, Link } from 'react-router-dom';
 import OpacityLoader from './OpacityLoader';
 import PasswordReset from './PasswordRest';
 
@@ -126,9 +125,9 @@ const Login = () => {
                 </button>
                 <div className="text-sm font-medium text-gray-500">
                   Not registered?{' '}
-                  <a href="/join-us" className="text-blue-700 hover:underline">
+                  <Link to={"/join-us"} className="text-blue-700 hover:underline">
                     Create account
-                  </a>
+                  </Link>
                 </div>
               </form>
             </div>

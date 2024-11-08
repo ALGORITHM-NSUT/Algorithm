@@ -26,6 +26,9 @@ const Projects = () => {
     fetchProjects(); // Fetch latest data in the background
   }, []);
 
+
+
+
   const fetchProjects = async () => {
     try {
       const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/projects`, {
@@ -47,8 +50,12 @@ const Projects = () => {
     }
   };
 
+
   if (userLoading || isLoading) {
     return <Loader />;
+
+
+
   }
 
   return (

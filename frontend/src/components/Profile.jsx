@@ -74,7 +74,7 @@ const Profile = () => {
     setLoading(true); // Start loading during logout
     try {
       const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/logout`, {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },

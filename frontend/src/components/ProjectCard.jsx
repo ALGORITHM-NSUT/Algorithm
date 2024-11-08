@@ -4,17 +4,14 @@ import JoinRequestModal from './JoinRequestModal';
 import DeleteRequestModal from './deleteProjectModal';
 import Slider from 'react-slick';
 import { useNavigate } from 'react-router-dom';
-import { Grid, Paper, Typography, Button, Box, Link, useMediaQuery, useTheme, Avatar } from '@mui/material';
+import { Grid, Paper, Typography, Button, Box, Link, useMediaQuery, useTheme} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddProject from './addProject';
-import { motion } from 'framer-motion';
-import { Fullscreen } from 'lucide-react';
-import { FaBlackTie } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
 import "slick-carousel/slick/slick.css"; // Import slick carousel CSS
 import "slick-carousel/slick/slick-theme.css";
 import UserProfileModal from './UserProfileModal';
-
 
 
 import { IconButton, Tooltip } from '@mui/material';
@@ -360,7 +357,14 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
             {/* Action Buttons for Project Lead */}
 
             {/* Expanded View */}
+            <AnimatePresence>
             {isExpanded && (
+               <motion.div
+               initial={{ height: 0, opacity: 0 }}
+               animate={{ height: "auto", opacity: 1 }}
+               exit={{ height: 0, opacity: 0 }}
+               transition={{ duration: 0.5, ease: "easeInOut" }}
+             >
               <Box sx={{ mt: 0 }}>
 
                 {/* Project Lead Section */}
@@ -375,8 +379,6 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                       e.preventDefault();
                       e.stopPropagation();
                       handleViewProfile(project.lead);
-
-                      console.log(project.lead);
                     }}
                     sx={{ color: '#330080', textDecoration: 'none', '&:hover': { color: 'red' } }}
                   >
@@ -581,8 +583,9 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
                   </Box>
                 )}
               </Box>
-
+              </motion.div>
             )}
+            </AnimatePresence>
 
 
             {isOngoing ? (

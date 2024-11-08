@@ -1,17 +1,14 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import { motion, useAnimation } from "framer-motion";
 import { UserContext } from "../auth/UserProvider";
+import Loader from "./Loader";
 
 export default function HeroSection() {
-  const navigate = useNavigate();
-  const [isVisible, setIsVisible] = useState(false);
   const controls = useAnimation();
-  const { user } = useContext(UserContext);
+  const { user, isLoading } = useContext(UserContext);
 
   useEffect(() => {
-    setIsVisible(true);
     controls.start({
       y: [50, 0],
       opacity: 1,
@@ -33,7 +30,6 @@ export default function HeroSection() {
         Your browser does not support the video tag.
       </video>
 
-
       <div className="relative z-10 flex flex-col items-center mt-10 p-4">
         <div className="flex items-center justify-center mb-4 flex-wrap">
           <img
@@ -50,9 +46,7 @@ export default function HeroSection() {
           <p className="text-xl lg:text-5xl">Code . Set . Go</p>
         </div>
 
-        <p
-          className="text-lg sm:text-xl max-w-3xl text-gray-400 text-center mb-8 px-4 font-sans"
-        >
+        <p className="text-lg sm:text-xl max-w-3xl text-gray-400 text-center mb-8 px-4 font-sans">
           Join us to explore, learn, and innovate together!
         </p>
       </div>
@@ -63,8 +57,11 @@ export default function HeroSection() {
         className="relative z-10 mb-20"
       >
         <Link
-          to={user ? '/Login' : '/join-us'}
-          className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white bg-[#4c56d7] rounded-full overflow-hidden transition-all duration-300 ease-in-out hover:bg-[#3a42a5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4c56d7]"
+          to={user ? '/login' : '/join-us'}
+          className={`group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold rounded-full transition-all duration-300 ease-in-out 
+                      ${isLoading ? 'bg-gray-500 cursor-not-allowed' : 'text-white bg-[#4c56d7] overflow-hidden hover:bg-[#3a42a5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4c56d7]'}`}
+          disabled={isLoading}
+          onClick={e => isLoading && e.preventDefault()}  // Prevent navigation if loading
         >
           <span className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#6a11cb] to-[#2575fc] opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></span>
           <span className="relative z-10 flex items-center">

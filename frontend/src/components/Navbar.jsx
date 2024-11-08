@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
 
@@ -9,7 +9,7 @@ const Navbar = () => {
 
   const navLinks = ['Home', 'About', 'Leaderboard', 'Projects', 'TechNews'];
 
-  React.useEffect(() => {
+  useEffect(() => {
     const currentPath = location.pathname.split('/')[1];
     setSelectedLink(currentPath || 'home');
   }, [location]);

@@ -74,7 +74,7 @@ const YearSelection = React.memo(({ value, onChange }) => (
 
 YearSelection.displayName = 'YearSelection';
 const Register = ({ setEditForm, setEditAcc }) => {
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser, isLoading } = useContext(UserContext);
   const [loading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: user?.name || "",
@@ -196,7 +196,7 @@ const Register = ({ setEditForm, setEditAcc }) => {
     setEditAcc(false);
   }, [setEditForm, setEditAcc]);
 
-   if (loading) {
+   if (loading || isLoading) {
     return (
       <OpacityLoader />
     );
