@@ -54,16 +54,16 @@ export default function HeroSection() {
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={controls}
-        className="relative z-10 mb-20"
+        className="relative z-10 mb-40"
       >
         <Link
           to={user ? '/login' : '/join-us'}
           className={`group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold rounded-full transition-all duration-300 ease-in-out 
-                      ${isLoading ? 'bg-gray-500 cursor-not-allowed' : 'text-white bg-[#4c56d7] overflow-hidden hover:bg-[#3a42a5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4c56d7]'}`}
+             ${isLoading ? 'bg-gray-500 cursor-wait rounded-full overflow-hidden hover:bg-gray-500' : 'rounded-full text-white bg-[#4c56d7] overflow-hidden hover:bg-[#3a42a5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4c56d7]'}`}
           disabled={isLoading}
           onClick={e => isLoading && e.preventDefault()}  // Prevent navigation if loading
         >
-          <span className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#6a11cb] to-[#2575fc] opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></span>
+          <span className={!isLoading && `absolute inset-0 w-full h-full bg-gradient-to-br from-[#6a11cb] to-[#2575fc] opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100`}></span>
           <span className="relative z-10 flex items-center">
             <span className="mr-2">Join Now</span>
             <motion.svg

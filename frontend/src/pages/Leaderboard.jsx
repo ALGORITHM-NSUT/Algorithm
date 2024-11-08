@@ -11,16 +11,17 @@ const Leaderboard = () => { // Receive `user` as a prop or from context
   const { user } = useContext(UserContext);
 
   return (
-    <div className="flex flex-col min-h-screen mx-3">
+    <div className="flex flex-col min-h-screen">
+
       <div className="flex-grow relative flex flex-col items-center justify-center text-center min-h-screen">
         <FloatingBackground />
         <h1 className="text-5xl md:text-[100px] md:leading-[6rem] font-bold font-mono text-center text-white">
           Coming Soon!
         </h1>
-        <p className="mt-5 text-xl md:text-2xl text-gray-300 max-w-2xl">
+        <p className="mt-5 text-xl md:text-2xl text-gray-300 max-w-2xl mx-3">
           Welcome to the official portal of our society, where innovation meets community. This page will be crafted by our upcoming members and will soon showcase the latest updates, achievements, and much more!
         </p>
-        <p className="mt-8 text-lg text-gray-400 italic">
+        <p className="mt-8 text-lg text-gray-400 italic mx-3">
           Stay tuned as our team brings you something amazing!
         </p>
         
