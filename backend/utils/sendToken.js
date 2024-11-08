@@ -10,7 +10,6 @@ export const sendToken = (res, user, message, statusCode = 200, expire) => {
             httpOnly: true, // Ensure cookie is not accessible via JavaScript
             secure: true, // Send cookie over HTTPS only (for production)
             sameSite: "none", // Allow cross-site cookie usage
-            domain: process.env.DOMAIN
         };
     }
     else {

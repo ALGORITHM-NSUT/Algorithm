@@ -176,14 +176,14 @@ export const logout = async (req, res, next) => {
             .clearCookie("token", {
                 httpOnly: true,
                 secure: true,
-                sameSite: "none",
-                domain: process.env.DOMAIN
+                sameSite: "none"
             })
             .json({
                 success: true,
                 message: "Logged out successfully",
             });
     } catch (error) {
+        console.log(error);
         return next(
             res.status(500).json({
                 message: "Internal Server Error",
