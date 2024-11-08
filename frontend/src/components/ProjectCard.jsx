@@ -162,7 +162,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   };
   
   return (
-    <React.Fragment>
+    <div className=' transform transition-all duration-300 ease-in-out'>
       {loading && <OpacityLoader />}
       {isExpanded && (
         <div
@@ -680,7 +680,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
           </Box>
         </Paper>
       </div>
-    </React.Fragment>
+    </div>
   );
 };
 

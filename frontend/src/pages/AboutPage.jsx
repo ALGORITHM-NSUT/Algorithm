@@ -34,23 +34,22 @@ const AboutPage = () => {
         })
         .catch((error) => {
           console.error('Error fetching members:', error);
-          setIsLoading(false);
         });
     }
   }, []);
 
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <React.Fragment>
-      {isLoading ? (
-        <Loader />
-      ) : (
         <div className="flex flex-col w-full">
           <div className="flex-grow mb-24">
             <FloatingBackground />
             <Core members={members} />
           </div>
         </div>
-      )}
     </React.Fragment>
   );
 };
