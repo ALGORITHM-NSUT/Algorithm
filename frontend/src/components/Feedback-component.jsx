@@ -11,7 +11,8 @@ const FeedbackComponent = () => {
   const [submitted, setSubmitted] = useState(false);
   const [isAnonymous, setIsAnonymous] = useState(false);
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (performanceRating === 0 && uiRating === 0 && suggestionsRating === 0 && feedback.trim() === '') {
@@ -19,15 +20,53 @@ const FeedbackComponent = () => {
       return;
     }
 
-    // Submit feedback logic here
-    console.log('Submitted Feedback:', { performanceRating, uiRating, feedback, isAnonymous });
+    try {
+      let response;
+      if (isAnonymous) {
+        response = await fetch(import.meta.env.VITE_BACKEND_URL + '/sendFeedback', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            performanceRating,
+            uiRating,
+            feedback,
+            isAnonymous,
+          }),
+        });
+      }
+      else {
+        response = await fetch(import.meta.env.VITE_BACKEND_URL + '/sendFeedback', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            performanceRating,
+            uiRating,
+            feedback,
+            isAnonymous,
+          }),
+        });
+      }
+      const data = await response.json();
 
-    // Reset form and show a submission message
-    setSubmitted(true);
-    setPerformanceRating(0);
-    setUiRating(0);
-    setSuggestionsRating(0);
-    setFeedback('');
+      if (response.status === 201) {
+        setSubmitted(true);
+        setPerformanceRating(0);
+        setUiRating(0);
+        setSuggestionsRating(0);
+        setFeedback('');
+      } else {
+        alert('Some error ocurred, please try again');
+        console.error('Error submitting feedback:', data);
+      }
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+    }
+    
   };
 
   const renderStars = (category, rating, setRating) => (
