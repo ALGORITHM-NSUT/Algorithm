@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FaStar } from 'react-icons/fa';
 import ToggleSwitch from './ToggleSwitch';
+import OpacityLoader from './OpacityLoader';
 
 const FeedbackComponent = () => {
   const [performanceRating, setPerformanceRating] = useState(0);
@@ -10,6 +11,7 @@ const FeedbackComponent = () => {
   const [feedback, setFeedback] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [isAnonymous, setIsAnonymous] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
 
   const handleSubmit = async (e) => {
@@ -20,6 +22,7 @@ const FeedbackComponent = () => {
       return;
     }
 
+    setIsLoading(true);
     try {
       let response;
       if (isAnonymous) {
@@ -63,6 +66,8 @@ const FeedbackComponent = () => {
         alert('Some error ocurred, please try again');
         console.error('Error submitting feedback:', data);
       }
+      setIsLoading(false);
+
     } catch (error) {
       console.error('Error submitting feedback:', error);
     }
@@ -94,7 +99,11 @@ const FeedbackComponent = () => {
     </div>
   );
 
+
   return (
+    <>
+
+    {isLoading && <OpacityLoader />}
     <div className="flex flex-col items-center justify-center p-4 md:w-[700px] w-[350px] mt-14">
       <h2 className="text-3xl font-semibold mb-6 text-center">We Value Your Feedback</h2>
       {submitted && (
@@ -120,7 +129,7 @@ const FeedbackComponent = () => {
 
 
         <textarea
-          className="w-full p-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+          className={`w-full p-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4 text-gray-800`}
           rows="5"
           placeholder="Share your thoughts or suggestions here..."
           value={feedback}
@@ -147,6 +156,8 @@ const FeedbackComponent = () => {
         </div>
       </form>
     </div>
+    </>
+
   );
 };
 

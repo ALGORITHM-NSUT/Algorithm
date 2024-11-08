@@ -77,24 +77,30 @@ const Navbar = () => {
 
       {/* Mobile Nav Links with Downward Animation */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? 'max-h-60 opacity-100' : 'max-h-0 opacity-0'
+        className={`md:hidden transition-all duration-1000 ease-in-out overflow-hidden ${
+          isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
         }`}
+        aria-expanded={isOpen}
       >
-        <div className="flex flex-col space-y-4 mt-4">
+        <div className="flex flex-col space-y-6 mt-4">
           {navLinks.map((link, index) => {
             const linkPath = link.toLowerCase().replace(/\s+/g, '');
             return (
               <Link
                 key={index}
                 to={`/${linkPath}`}
-                className="block text-center text-white hover:text-gray-300 relative group"
+                className={`block text-center text-white hover:text-gray-300 relative group transition duration-300 ease-in-out`}
                 onClick={() => {
                   setSelectedLink(linkPath);
                   setIsOpen(false); // Close the menu on selection
                 }}
+                aria-label={`Go to ${link}`}
               >
-                {link}
+                <span
+                  className={`block ${selectedLink === linkPath ? 'font-semibold' : ''}`}
+                >
+                  {link}
+                </span>
                 <span
                   className={`absolute left-0 bottom-0 w-full h-0.5 bg-white transform transition-transform duration-300 ${
                     selectedLink === linkPath ? 'scale-x-100' : 'scale-x-0'
@@ -106,8 +112,9 @@ const Navbar = () => {
           {/* Profile Link */}
           <Link
             to="/Login"
-            className="block text-center text-white hover:text-gray-300 relative group"
+            className="block text-center text-white hover:text-gray-300 relative group transition duration-300 ease-in-out"
             onClick={() => setIsOpen(false)}
+            aria-label="Go to Profile"
           >
             Profile
           </Link>
