@@ -19,7 +19,7 @@ const Feedback = () => {
         <div className='flex-grow'>
             <FloatingBackground />
 
-            <FeedbackComponent />
+            <FeedbackComponent user={user}/>
         </div>
 
     </div>

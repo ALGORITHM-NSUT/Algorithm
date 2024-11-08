@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaStar } from 'react-icons/fa';
 import ToggleSwitch from './ToggleSwitch';
 import OpacityLoader from './OpacityLoader';
 
-const FeedbackComponent = () => {
+const FeedbackComponent = ({user}) => {
   const [performanceRating, setPerformanceRating] = useState(0);
   const [uiRating, setUiRating] = useState(0);
   const [suggestionsRating, setSuggestionsRating] = useState(0);
@@ -13,7 +13,11 @@ const FeedbackComponent = () => {
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-
+  useEffect(() => {
+    if (!user) {
+      setIsAnonymous(true);
+    }
+  });
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -146,8 +150,8 @@ const FeedbackComponent = () => {
             </button>
           </div>
 
-          <div className="w-1/4 h-8 flex flex-col items-center justify-center">
-            <ToggleSwitch setIsAnonymous={setIsAnonymous} />
+           <div className="w-1/4 h-8 flex flex-col items-center justify-center">
+            <ToggleSwitch setIsAnonymous={setIsAnonymous} user={user}/>
 
              <p className={`ml-4 mt-2 text-xs ${ isAnonymous? 'text-green-500' : 'text-gray-600'}`}>
                 {isAnonymous ? 'Anonymous':'Go Anonymous'}
