@@ -2,8 +2,8 @@ import React, { useEffect, useContext } from 'react'
 import { UserContext } from "../auth/UserProvider";
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import Login from '../components/Login';
 
-import Login from '../components/Login'
 import Profile from '../components/Profile';
 import Loader from '../components/Loader';
 import FloatingBackground from './FloatingBackground';
