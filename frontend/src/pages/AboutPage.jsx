@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 import Core from "../components/Core";
 import FloatingBackground from './FloatingBackground';
 import Loader from "../components/Loader";
@@ -47,12 +45,10 @@ const AboutPage = () => {
         <Loader />
       ) : (
         <div className="flex flex-col w-full">
-          <Navbar />
           <div className="flex-grow mb-24">
             <FloatingBackground />
             <Core members={members} />
           </div>
-          <Footer />
         </div>
       )}
     </React.Fragment>

@@ -1,6 +1,4 @@
 import React, { useContext, useEffect } from 'react';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import FloatingBackground from './FloatingBackground';
 import { UserContext } from '../auth/UserProvider';
 import { Link } from 'react-router-dom'; // Assuming you're using React Router for navigation
@@ -14,7 +12,6 @@ const Leaderboard = () => { // Receive `user` as a prop or from context
 
   return (
     <div className="flex flex-col min-h-screen mx-3">
-      <Navbar />
       <div className="flex-grow relative flex flex-col items-center justify-center text-center min-h-screen">
         <FloatingBackground />
         <h1 className="text-5xl md:text-[100px] md:leading-[6rem] font-bold font-mono text-center text-white">
@@ -29,14 +26,13 @@ const Leaderboard = () => { // Receive `user` as a prop or from context
         
         {/* Conditionally render Join Now button if no user is logged in */}
         {!user && (
-          <Link to="/join-us" className="mt-10">
+          <Link to="/login" className="mt-10">
             <button className="px-6 py-3 bg-blue-600 text-white text-lg font-semibold rounded-lg hover:bg-blue-700 transition duration-300">
               Join Now
             </button>
           </Link>
         )}
       </div>
-      <Footer />
     </div>
   );
 };

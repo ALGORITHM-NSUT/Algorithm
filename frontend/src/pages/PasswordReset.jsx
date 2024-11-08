@@ -17,7 +17,7 @@ const PasswordReset = () => {
       // Optionally, navigate to the login page or another page
       setTimeout(() => {
         navigate('/login'); // Redirect after a delay
-      }, 2000);
+      }, 1000);
     } catch (error) {
       console.error("Error updating password:", error);
       setMessage("Error updating password. Please try again.");

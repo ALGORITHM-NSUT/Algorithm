@@ -1,0 +1,114 @@
+import React, { useState } from 'react';
+import { FaStar } from 'react-icons/fa';
+import ToggleSwitch from './ToggleSwitch';
+
+const FeedbackComponent = () => {
+  const [performanceRating, setPerformanceRating] = useState(0);
+  const [uiRating, setUiRating] = useState(0);
+  const [suggestionsRating, setSuggestionsRating] = useState(0);
+  const [hover, setHover] = useState({ performance: null, ui: null, suggestions: null });
+  const [feedback, setFeedback] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [isAnonymous, setIsAnonymous] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (performanceRating === 0 && uiRating === 0 && suggestionsRating === 0 && feedback.trim() === '') {
+      alert('Please provide the feedback.');
+      return;
+    }
+
+    // Submit feedback logic here
+    console.log('Submitted Feedback:', { performanceRating, uiRating, feedback, isAnonymous });
+
+    // Reset form and show a submission message
+    setSubmitted(true);
+    setPerformanceRating(0);
+    setUiRating(0);
+    setSuggestionsRating(0);
+    setFeedback('');
+  };
+
+  const renderStars = (category, rating, setRating) => (
+    <div className="flex justify-center mb-2">
+      {[...Array(5)].map((_, index) => {
+        const starValue = index + 1;
+        return (
+          <label key={starValue}>
+            <input
+              type="radio"
+              name={`${category}-rating`}
+              value={starValue}
+              className="hidden"
+              onClick={() => setRating(starValue)}
+            />
+            <FaStar
+              size={35}
+              color={starValue <= (hover[category] || rating) ? '#ffc107' : '#e4e5e9'}
+              onMouseEnter={() => setHover((prev) => ({ ...prev, [category]: starValue }))}
+              onMouseLeave={() => setHover((prev) => ({ ...prev, [category]: null }))}
+            />
+          </label>
+        );
+      })}
+    </div>
+  );
+
+  return (
+    <div className="flex flex-col items-center justify-center p-4 md:w-[700px] w-[350px] mt-14">
+      <h2 className="text-3xl font-semibold mb-6 text-center">We Value Your Feedback</h2>
+      {submitted && (
+        <p className="text-green-600 mb-4 text-center">Thank you for your feedback!</p>
+      )}
+      <form
+        className={`w-full max-w-lg p-8 rounded-lg shadow-md transform transition-all duration-300 ease-in-out ${isAnonymous ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}
+        onSubmit={handleSubmit}
+      >
+       <div className="mb-6 flex flex-col items-start">
+            <h3 className={`text-xl ${isAnonymous ? 'text-white' : 'text-gray-800'} font-medium mb-2`}>
+                Performance
+            </h3>
+        {renderStars('performance', performanceRating, setPerformanceRating)}
+        </div>
+
+        <div className="mb-6 flex flex-col items-start">
+            <h3 className={`text-xl ${isAnonymous ? 'text-white' : 'text-gray-800'} font-medium mb-2`}>
+                User Interface
+            </h3>
+            {renderStars('ui', uiRating, setUiRating)}
+        </div>
+
+
+        <textarea
+          className="w-full p-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+          rows="5"
+          placeholder="Share your thoughts or suggestions here..."
+          value={feedback}
+          onChange={(e) => setFeedback(e.target.value)}
+        ></textarea>
+
+        <div className="flex items-center justify-center">
+          <div className="mr-2 w-3/4">
+            <button
+              type="submit"
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-md text-lg"
+            >
+              Submit Feedback
+            </button>
+          </div>
+
+          <div className="w-1/4 h-8 flex flex-col items-center justify-center">
+            <ToggleSwitch setIsAnonymous={setIsAnonymous} />
+
+             <p className={`ml-4 mt-2 text-xs ${ isAnonymous? 'text-green-500' : 'text-gray-600'}`}>
+                {isAnonymous ? 'Anonymous':'Go Anonymous'}
+            </p>
+          </div>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default FeedbackComponent;
