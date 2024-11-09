@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion, useAnimation } from "framer-motion";
 import { UserContext } from "../auth/UserProvider";
 import Loader from "./Loader";
+import LighthouseScene from "./LightHouseScene";
 
 export default function HeroSection() {
   const controls = useAnimation();
@@ -17,18 +18,10 @@ export default function HeroSection() {
   }, [controls]);
 
   return (
-    <div className="relative flex flex-col items-center justify-between min-h-screen text-white py-10 w-full bg-[#191e2e] overflow-hidden">
-      <video
-        autoPlay
-        loop
-        muted
-        poster="/static/vid_ss.png"
-        preload="none"
-        className="absolute top-0 left-0 w-full h-full object-cover"
-      >
-        <source src="/static/vid.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+    <div className="relative flex flex-col items-center justify-between min-h-screen text-white py-10 w-full overflow-hidden ">
+      
+        <LighthouseScene />
+
 
       <div className="relative z-10 flex flex-col items-center mt-10 p-4">
         <div className="flex items-center justify-center mb-4 flex-wrap">

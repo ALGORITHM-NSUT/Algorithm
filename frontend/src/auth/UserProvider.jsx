@@ -22,7 +22,7 @@ const AboutProvider = ({ children }) => {
       setAboutLoading(false);
     } catch (error) {
       console.error('Error fetching members:', error);
-      setAboutLoading(false);
+      // setAboutLoading(false);
     }
   };
 
@@ -62,7 +62,6 @@ const ProjectProvider = ({ children }) => {
       sessionStorage.setItem('projectsData', JSON.stringify({ onGoing, completed }));
     } catch (error) {
       console.error('Error fetching projects:', error);
-      setProjectLoading(false);
     }
   };
 
