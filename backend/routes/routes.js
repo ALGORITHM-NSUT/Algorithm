@@ -17,7 +17,7 @@ router.get('/', home);
 router.get("/core", getCoreMembers);
 router.route("/projects").get(isAuthenticated, getProjects);
 router.get("/verify/:id", emailVerify);
-router.get("/getFeedbacks",isAuthenticated, getFeedback);
+router.get("/getFeedbacks", getFeedback);
 
 
 // post

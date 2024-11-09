@@ -109,7 +109,6 @@ const FeedbackComponent = ({user}) => {
 
     {isLoading && <OpacityLoader />}
     <div className="flex flex-col items-center justify-center p-4 md:w-[700px] w-[350px] mt-14">
-      <h2 className="text-3xl font-semibold mb-6 text-center">We Value Your Feedback</h2>
       {submitted && (
         <p className="text-green-600 mb-4 text-center">Thank you for your feedback!</p>
       )}

@@ -20,16 +20,12 @@ export const submitFeedback = async (req, res) => {
 
 export const getFeedback = async (req, res) => {
   try {
-    const admin = req.user.admin;
-    if (!admin) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
     const feedbacks = await Feedback.find()
-      .populate('user', 'email phoneNumber');
-    
+      .populate('user', 'name email phoneNumber createdAt'); // Add the 'name' field if it's required
+
     res.status(200).json(feedbacks);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: 'Error retrieving Feedback', error });
+    console.error(error);
+    res.status(500).json({ message: 'Error retrieving feedback', error });
   }
 };

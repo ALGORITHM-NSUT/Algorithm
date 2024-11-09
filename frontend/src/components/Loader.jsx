@@ -17,15 +17,16 @@ const Loader = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen transform transition-all duration-300 ease-in-out bg-gray-900 relative">
+    <div className="flex flex-col items-center justify-center h-screen w-full transform transition-all duration-300 ease-in-out bg-gray-900 relative">
       <img
         src="/static/loading_algo.gif"
         width={'150px'}
         alt="Bouncing Logo"
       />
-      <p className="mx-3 text-xl font-semibold text-white animate-text z-10 ">Did You Know?</p>
+      <p className="mx-3 text-xl font-semibold text-white animate-text z-10">Did You Know?</p>
       <p className="mx-3 mt-2 text-md text-neutral-300 animate-fact text-center">{fact}</p>
     </div>
+
   );
 };
 
