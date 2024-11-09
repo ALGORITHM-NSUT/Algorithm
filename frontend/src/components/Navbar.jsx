@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
+import { UserContext } from '../auth/UserProvider';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // Hamburger menu state
   const [selectedLink, setSelectedLink] = useState(''); // State for active link
+  const {isLoading} = useContext(UserContext)
   const location = useLocation();
 
-  const navLinks = ['Home', 'About', 'Leaderboard', 'Projects', 'TechNews', 'Feedback'];
+  const navLinks = ['Home', 'About', 'Leaderboard', 'Projects', 'TechNews'];
+  if (!isLoading) navLinks.push('Feedback');
+
 
   useEffect(() => {
     const currentPath = location.pathname.split('/')[1];

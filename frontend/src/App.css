@@ -242,3 +242,13 @@ body {
     transform: rotate(360deg);
   }
 }
+
+
+/* Hide scrollbar in all browsers */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;  /* for Internet Explorer 10+ */
+  scrollbar-width: none;  /* for Firefox */
+}
