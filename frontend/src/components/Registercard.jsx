@@ -269,15 +269,15 @@ const Register = ({ setEditForm, setEditAcc }) => {
               }}>
                 <Grid container spacing={2}>
                   <FormField label="Name" name="name" value={formData.name} onChange={handleChange} required />
+                  <FormField label="Phone Number" name="phoneNumber" type="tel" value={formData.phoneNumber} onChange={handleChange} required/>
                   <FormField label="NSUT Email" name="email" value={formData.email} onChange={handleChange} required disabled={!!user} />
+                  <FormField label="Password" name="password" type="password" value={formData.password} onChange={handleChange} required disabled={!!user} />
+                  <FormField label="Roll Number" name="rollNumber" value={formData.rollNumber} onChange={handleChange} required />
+                  <FormField label="LinkedIn URL" name="linkedinUrl" value={formData.linkedinUrl} onChange={handleChange} />
                   <FormField label="Personal Email" name="personalEmail" value={formData.personalEmail} onChange={handleChange} />
-                  <FormField label="Phone Number" name="phoneNumber" type="tel" value={formData.phoneNumber} onChange={handleChange} />
                   <FormField label="GitHub Username" name="githubProfile" value={formData.githubProfile} onChange={handleChange} />
                   <FormField label="LeetCode Profile" name="leetcodeProfile" value={formData.leetcodeProfile} onChange={handleChange} />
                   <FormField label="Codeforces Profile" name="codeforcesProfile" value={formData.codeforcesProfile} onChange={handleChange} />
-                  <FormField label="Password" name="password" type="password" value={formData.password} onChange={handleChange} required disabled={!!user} />
-                  <FormField label="LinkedIn URL" name="linkedinUrl" value={formData.linkedinUrl} onChange={handleChange} />
-                  <FormField label="Roll Number" name="rollNumber" value={formData.rollNumber} onChange={handleChange} required />
                   <YearSelection value={formData.year} onChange={handleChange} />
 
                   {setEditForm ? <Grid container spacing={2}>
