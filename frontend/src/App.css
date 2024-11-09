@@ -154,35 +154,6 @@ body {
   }
 }
 
-@keyframes bounceCompress {
-    0%, 100% {
-        transform: translateY(0) scaleY(1);
-    }
-    50% {
-        transform: translateY(-20px) scaleY(0.8); /* Move up and compress */
-    }
-    70% {
-        transform: translateY(0) scaleY(1.1); /* Decompress slightly */
-    }
-    90% {
-        transform: translateY(-10px) scaleY(0.95); /* Small bounce */
-    }
-}
-
-@keyframes custom-bounce {
-  0%, 100% {
-    transform: translateY(0);
-    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
-  }
-  50% {
-    transform: translateY(-20px);
-    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
-  }
-}
-
-.custom-bounce {
-  animation: custom-bounce 1.2s infinite;
-}
 
 /* app.css */
 
@@ -255,9 +226,9 @@ body {
 
 
 .gradient-background {
-  background: linear-gradient(300deg,#0c0c16,#400e5a,#0d0c3b);
+  background: linear-gradient(300deg,#101024,#470f65,#0d0c3b);
   background-size: 180% 180%;
-  animation: gradient-animation 18s ease infinite;
+  animation: gradient-animation 6s ease infinite;
 }
 
 @keyframes gradient-animation {
