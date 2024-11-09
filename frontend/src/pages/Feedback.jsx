@@ -28,7 +28,7 @@ const Feedback = () => {
 
         <div className="mt-12 flex flex-col justify-center items-center transition-all duration-500">
           {/* Heading changes based on isCheck */}
-          <h2 className="text-3xl font-semibold text-center mb-6 transition-all duration-500">
+          <h2 className="text-3xl font-semibold text-center transition-all duration-500 font-mono">
             {isCheck ? 'We Value Your Feedback' : 'Feedbacks'}
           </h2>
 

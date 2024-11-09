@@ -108,14 +108,18 @@ const FeedbackComponent = ({user}) => {
     <>
 
     {isLoading && <OpacityLoader />}
-    <div className="flex flex-col items-center justify-center p-4 md:w-[700px] w-[350px] mt-14">
+    <div className="flex flex-col items-center justify-center p-4 md:w-[700px] w-[350px]">
       {submitted && (
         <p className="text-green-600 mb-4 text-center">Thank you for your feedback!</p>
       )}
+      
       <form
-        className={`w-full max-w-lg p-8 rounded-lg shadow-md transform transition-all duration-300 ease-in-out ${isAnonymous ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}
+        className={`w-full max-w-lg p-4 rounded-lg shadow-md transform transition-all duration-300 ease-in-out ${isAnonymous ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}
         onSubmit={handleSubmit}
       >
+        {!user && <span className="text-red-500 text-xs text-center block mb-3">
+              (Login to add non-anonymous Feedback)
+            </span>}
        <div className="mb-6 flex flex-col items-start">
             <h3 className={`text-xl ${isAnonymous ? 'text-white' : 'text-gray-800'} font-medium mb-2`}>
                 Performance
@@ -155,8 +159,11 @@ const FeedbackComponent = ({user}) => {
              <p className={`ml-4 mt-2 text-xs ${ isAnonymous? 'text-green-500' : 'text-gray-600'}`}>
                 {isAnonymous ? 'Anonymous':'Go Anonymous'}
             </p>
+            
           </div>
+          
         </div>
+        
       </form>
     </div>
     </>
