@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Core from "../components/Core";
 import FloatingBackground from './FloatingBackground';
 import Loader from "../components/Loader";
 import About from "../components/About";
 import ScrollPrompt from "../components/ScrollPrompt"; // Import ScrollPrompt
+import { AboutContext } from "../auth/UserProvider";
 
 const AboutPage = () => {
-  const [members, setMembers] = useState({ withSubPosition: [], withoutSubPosition: [] });
-  const [isLoading, setIsLoading] = useState(true);
+  const {members, setMembers, aboutLoading, fetchMembers} = useContext(AboutContext);
   const [showScrollPrompt, setShowScrollPrompt] = useState(true);
 
   useEffect(() => {
@@ -15,29 +15,11 @@ const AboutPage = () => {
   }, []);
 
   useEffect(() => {
-    const checkDataValidity = () => {
-      const storedMembers = sessionStorage.getItem('members');
-      return storedMembers ? JSON.parse(storedMembers) : null;
-    };
-
-    const storedMembers = checkDataValidity();
-
+    const storedMembers = sessionStorage.getItem('members');
     if (storedMembers) {
-      setMembers(storedMembers);
-      setIsLoading(false);
+      setMembers(JSON.parse(storedMembers));
     } else {
-      fetch(`${import.meta.env.VITE_BACKEND_URL}/core`)
-        .then((response) => response.json())
-        .then((data) => {
-          const withSubPosition = data.members.filter(member => member.subPosition);
-          const withoutSubPosition = data.members.filter(member => !member.subPosition);
-          sessionStorage.setItem('members', JSON.stringify({ withSubPosition, withoutSubPosition }));
-          setMembers({ withSubPosition, withoutSubPosition });
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.error('Error fetching members:', error);
-        });
+      fetchMembers();
     }
   }, []);
 
@@ -57,7 +39,7 @@ const AboutPage = () => {
     };
   }, []);
 
-  if (isLoading) {
+  if (aboutLoading) {
     return <Loader />;
   }
 

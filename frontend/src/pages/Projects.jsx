@@ -1,14 +1,13 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { UserContext } from '../auth/UserProvider';
+import React, { useEffect, useContext } from 'react';
+import { UserContext, ProjectContext } from '../auth/UserProvider';
 import ProjectCard from '../components/ProjectCard';
 import AddProject from '../components/addProject';
 import FloatingBackground from './FloatingBackground';
 import Loader from '../components/Loader';
 
 const Projects = () => {
-  const [projects, setProjects] = useState({ onGoing: [], completed: [] });
-  const { user, isLoading: userLoading } = useContext(UserContext);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, userLoading } = useContext(UserContext);
+  const { projects, projectLoading, setProjects, setProjectLoading, fetchProjects } = useContext(ProjectContext);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -18,34 +17,13 @@ const Projects = () => {
     const cachedProjects = sessionStorage.getItem('projectsData');
     if (cachedProjects) {
       setProjects(JSON.parse(cachedProjects));
-      setIsLoading(false); // Show data instantly if cached
+      setProjectLoading(false); // Show data instantly if cached
     }
 
     fetchProjects(); // Fetch latest data in the background
   }, []);
 
-  const fetchProjects = async () => {
-    try {
-      const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/projects`, {
-        method: "GET",
-        credentials: "include"
-      });
-      const data = await response.json();
-      const onGoing = data.filter(project => !project.status);
-      const completed = data.filter(project => project.status);
-
-      const newProjects = { onGoing, completed };
-      setProjects(newProjects);
-      setIsLoading(false);
-
-      // Cache the projects data in sessionStorage
-      sessionStorage.setItem('projectsData', JSON.stringify(newProjects));
-    } catch (error) {
-      console.error('Error fetching projects:', error);
-    }
-  };
-
-  if (userLoading || isLoading) {
+  if (userLoading || projectLoading) {
     return <Loader />;
   }
 
@@ -53,7 +31,7 @@ const Projects = () => {
     <div className="flex flex-col min-h-screen relative">
       <FloatingBackground />
       <div
-        className={`flex flex-col items-center flex-grow text-white py-10 w-full relative z-10  ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+        className={`flex flex-col items-center flex-grow text-white py-10 w-full relative z-10  ${userLoading || projectLoading ? 'opacity-0' : 'opacity-100'}`}
       >
         {projects.onGoing.length > 0 ? (
           <div className="w-full mb-24">
@@ -68,7 +46,7 @@ const Projects = () => {
                 />
               ))}
               {user && user.admin && (
-                <div className='relative w-full max-w-[600px] h-full min-h-[640px] max-h-[640px]'>
+                <div className='relative w-full max-w-[600px] h-full min-h-[640px]'>
                   <AddProject refreshProjects={fetchProjects} edit={false} showadd={true} />
                 </div>
               )}
