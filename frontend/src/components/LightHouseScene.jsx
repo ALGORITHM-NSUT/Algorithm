@@ -6,9 +6,10 @@ const LighthouseScene = () => {
     let width, height, largeHeader, canvas, ctx, points, target, animateHeader = true;
 
     const initHeader = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      target = { x: width / 2, y: height / 2 };
+      width = 1920
+      height = 932
+
+      target = { x: width / 2, y: height / 1.6 };
 
       largeHeader = document.getElementById("large-header");
       largeHeader.style.height = height + "px";
@@ -57,7 +58,7 @@ const LighthouseScene = () => {
       }
 
       for (let i in points) {
-        const c = new Circle(points[i], 4 + Math.random() * 4, "rgba(255,255,255,1)");
+        const c = new Circle(points[i], 4 + Math.random() * 4, "rgba(0,0,0,1)");
         points[i].circle = c;
       }
     };
@@ -167,9 +168,12 @@ const LighthouseScene = () => {
       return Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2);
     };
 
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (!isMobile) {
+        addListeners();
+    }
     initHeader();
     initAnimation();
-    addListeners();
 
     return () => {
       window.removeEventListener("mousemove", mouseMove);
@@ -178,12 +182,11 @@ const LighthouseScene = () => {
     };
   }, []);
 
+   
+
   return (
-    <div  className="  -z-9 absolute h-full " id="large-header">
+    <div  className=" -z-9 absolute min-h-screen " id="large-header">
       <canvas id="demo-canvas"></canvas>
-      <div className="main-title">
-        Lighthouse Scene
-      </div>
     </div>
   );
 };

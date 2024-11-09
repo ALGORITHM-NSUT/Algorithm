@@ -146,7 +146,7 @@ const Register = ({ setEditForm, setEditAcc }) => {
       alert("Please enter a valid linkedinUrl");
       return false;
     }
-    
+    formData.email = formData.email.toLowerCase()
     setIsLoading(true)
     try {
       const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/register`, {

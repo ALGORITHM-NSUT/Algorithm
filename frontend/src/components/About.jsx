@@ -37,7 +37,7 @@ const About = () => {
         </div>
 
         {/* Key Points - Cards Section */}
-       <div className="flex md:grid md:grid-cols-3 overflow-scroll gap-8 pb-4 mx-4 scrollbar-none">
+       <div className="flex md:grid md:grid-cols-3 overflow-scroll gap-8 p-7 mx-4 scrollbar-none">
         <div className="flex-shrink-0">
           <Card title={ABOUT_TEXT.vision.title} description={ABOUT_TEXT.vision.description} />
         </div>

@@ -33,7 +33,7 @@ const Feedback = () => {
           </h2>
 
           {user?.admin && (
-            <div className="flex items-center ml-6 transition-all duration-500">
+            <div className="flex items-center justify-center ml-6 transition-all duration-500 mt-4">
               {/* Dynamic Label */}
               <label className="text-lg mr-4">
                 {isCheck ? 'View Feedbacks' : 'Write Feedback'}

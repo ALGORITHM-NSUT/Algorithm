@@ -117,9 +117,7 @@ const FeedbackComponent = ({user}) => {
         className={`w-full max-w-lg p-4 rounded-lg shadow-md transform transition-all duration-300 ease-in-out ${isAnonymous ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}
         onSubmit={handleSubmit}
       >
-        {!user && <span className="text-red-500 text-xs text-center block mb-3">
-              (Login to add non-anonymous Feedback)
-            </span>}
+      
        <div className="mb-6 flex flex-col items-start">
             <h3 className={`text-xl ${isAnonymous ? 'text-white' : 'text-gray-800'} font-medium mb-2`}>
                 Performance

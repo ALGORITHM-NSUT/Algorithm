@@ -3,12 +3,15 @@ import React, { useState } from 'react';
 const ToggleSwitch = ({setIsAnonymous ,user}) => {
   const [isOn, setIsOn] = useState(false);
 
-  const toggleSwitch = () => {
-    if (user) {
-      setIsOn((prev) => !prev);
-      setIsAnonymous((prev) => !prev);
-    }
-  };
+ const toggleSwitch = () => {
+  if (!user) {
+    alert("Please Log in to give feedback as a Member");
+  } else {
+    setIsOn((prev) => !prev);
+    setIsAnonymous((prev) => !prev);
+  }
+};
+
 
   return (
     <div className="flex items-center justify-center h-screen">

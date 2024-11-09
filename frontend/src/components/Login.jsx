@@ -5,7 +5,7 @@ import OpacityLoader from './OpacityLoader';
 import PasswordReset from './PasswordRest';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  let [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false); // New loading state
@@ -17,6 +17,8 @@ const Login = () => {
     e.preventDefault();
     const remember = document.getElementById('remember').checked;
     setLoading(true); // Show loader when request starts
+    email = email.toLowerCase()
+    
     try {
       const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/login`, {
         method: "POST",
@@ -105,6 +107,7 @@ const Login = () => {
                     <input
                       id="remember"
                       type="checkbox"
+                      checked
                       className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300"
                     />
                   </div>

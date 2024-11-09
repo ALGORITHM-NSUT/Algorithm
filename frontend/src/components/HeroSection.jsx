@@ -18,7 +18,7 @@ export default function HeroSection() {
   }, [controls]);
 
   return (
-    <div className="relative flex flex-col items-center justify-between min-h-screen text-white py-10 w-full overflow-hidden ">
+    <div className="relative flex flex-col items-center justify-between min-h-screen text-white w-full overflow-hidden ">
       
         <LighthouseScene />
 
