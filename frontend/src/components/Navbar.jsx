@@ -6,11 +6,9 @@ import { UserContext } from '../auth/UserProvider';
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // Hamburger menu state
   const [selectedLink, setSelectedLink] = useState(''); // State for active link
-  const {isLoading} = useContext(UserContext)
   const location = useLocation();
 
-  const navLinks = ['Home', 'About', 'Leaderboard', 'Projects', 'TechNews'];
-  if (!isLoading) navLinks.push('Feedback');
+  const navLinks = ['Home', 'About', 'Leaderboard', 'Projects', 'TechNews', 'Feedback'];
 
 
   useEffect(() => {
