@@ -47,7 +47,7 @@ const Projects = () => {
                 />
               ))}
               {user && user.admin && (
-                <div className='relative w-full max-w-[600px] h-full min-h-[640px]'>
+                <div className='relative w-full max-w-[600px] h-[635px]'>
                   <AddProject refreshProjects={fetchProjects} edit={false} showadd={true} />
                 </div>
               )}

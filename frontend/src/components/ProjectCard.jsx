@@ -6,7 +6,7 @@ import AddProject from './addProject';
 import { motion, AnimatePresence } from 'framer-motion';
 import "slick-carousel/slick/slick.css"; // Import slick carousel CSS
 import "slick-carousel/slick/slick-theme.css";
-import { Typography, Paper } from '@mui/material';
+import { Typography, Paper, Box, Grid } from '@mui/material';
 import OpacityLoader from './OpacityLoader';
 import ProjectImageCarousel from './ProjectImageCarousel';
 import ProjectDetails from './ProjectDetails';
@@ -18,6 +18,18 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   const { user } = useContext(UserContext);
   const [editProject, setEditProject] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showUserProfileModal, setShowUserProfileModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  const handleOpenUserProfile = (userDetails) => {
+    setSelectedUser(userDetails);
+    setShowUserProfileModal(true);
+  };
+
+  const handleCloseUserProfile = () => {
+    setShowUserProfileModal(false);
+    setSelectedUser(null);
+  };
 
   useEffect(() => {
     if (editProject) {
@@ -129,13 +141,13 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   };
 
   return (
-    <div className="relative transform transition-all duration-300 ease-in-out">
+    <div className="transform transition-all duration-300 ease-in-out">
   {loading && <OpacityLoader />}
   {isExpanded && (
     <div
-      className="fixed inset-0 bg-black bg-opacity-70 z-20 transition-opacity duration-300"
+      className="fixed inset-0 bg-opacity-50 z-20"
       onClick={toggleExpand}
-    />
+    ></div>
   )}
   <div
     onClick={toggleExpand}
@@ -143,14 +155,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
       isExpanded ? 'scale-110 z-30' : 'z-10'
     }`}
   >
-    <div className="relative rounded-lg overflow-hidden">
-      <AddProject
-        refreshProjects={refreshProjects}
-        showadd={false}
-        edit={editProject}
-        setEditState={setEditProject}
-        project={project}
-      />
+
       <Paper
         sx={{
           background: 'linear-gradient(to right, #ffffff)',
@@ -169,6 +174,15 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
         }}
         onClick={toggleExpand}
       >
+        <div>
+            <AddProject
+              refreshProjects={refreshProjects}
+              showadd={false}
+              edit={editProject}
+              setEditState={setEditProject}
+              project={project}
+            />
+          </div>
         <div
           style={{
             background: 'white', // Changed from 'white' to '#330080'
@@ -208,27 +222,16 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               {project.title}
             </span>
           </Typography>
-          {project.liveLink != '' && (
-            <a
-              href={project.liveLink}
-              rel="noreferrer"
-              target="_blank"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
-              <span
-                className="absolute top-0 right-0 mr-[5px] mt-[5px] pr-[5px] pl-[7px] text-[20px] text-white bg-[#b91c1c] hover:bg-[#991b1b] rounded-lg"
-              >
-                Live<sup className="animate-pulse ml-[1px]">•</sup>
-              </span>
-            </a>
-          )}
+          {project.liveLink != '' && <a href={project.liveLink} rel="noreferrer" target="_blank" onClick={(e) => {
+              e.stopPropagation();
+            }}>
+              <span className={"absolute top-0 right-0 mr-[5px] mt-[5px] pr-[5px] pl-[7px] text-[20px] text-white bg-[#b91c1c] hover:bg-[#991b1b] rounded-lg"}>Live<sup className='animate-pulse ml-[1px]'>•</sup></span>
+            </a>}
         </div>
 
         <ProjectImageCarousel project={project} />
 
-        <div className="bg-[#18142F] p-4 rounded-b-lg">
+        <Box sx={{ backgroundColor: '#18142F', p: 2 }}>
           <Typography
             variant="body1"
             sx={{
@@ -245,9 +248,10 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               ? `${project.description.slice(0, 150)}...`
               : project.description}
           </Typography>
-
-          {isExpanded && (
-            <ProjectDetails
+          
+          <AnimatePresence>
+            {isExpanded && (
+              <ProjectDetails
               project={project}
               user={user}
               handleViewProfile={() => {}}
@@ -256,12 +260,78 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               editProject={editProject}
               setEditProject={setEditProject}
               setIsExpanded={setIsExpanded}
-            />
-          )}
-        </div>
-      </Paper>
-    </div>
-  </div>
+            />)}
+          </AnimatePresence>
+
+          {isOngoing ? (
+            <>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  {user ? (
+                    project.applicable && project.lead._id !== user._id ? (
+                      user.githubProfile ? (<button
+                        className="mt-2 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 w-full"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleJoinRequest();
+                        }}
+                      >Request to Join </button>) :
+                        (<button
+                          className="mt-2 py-2 px-4 bg-[#330080] text-white rounded-lg cursor-not-allowed w-full"
+                          disabled
+                        >
+                          Add Github to apply
+                        </button>)
+
+                    ) : (
+                      <button
+                        className="mt-2 py-2 px-4 bg-[#330080] text-white rounded-lg cursor-not-allowed w-full"
+                        disabled
+                      >
+                        Already Applied
+                      </button>
+                    )
+                  ) : (
+                    <button
+                      className="mt-2 py-2 px-4 bg-[#40199a] hover:bg-green-800 text-white rounded-lg w-full"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate('/login');
+                      }}
+                    >
+                      Login to apply
+                    </button>
+                  )}
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <a href={project.githubUrl} rel="noreferrer" target="_blank">
+                    <button
+                      className="mt-2 py-2 px-4 bg-[#40199a] hover:bg-[#330080] text-white rounded-lg w-full"
+
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      View on GitHub
+                    </button>
+                  </a>
+                </Grid>
+              </Grid>
+            </>
+            ) :
+            <a href={project.githubUrl} rel="noreferrer" target="_blank">
+              <button
+                className="mt-2 py-2 px-4 bg-[#40199a] hover:bg-[#330080] text-white rounded-lg w-full"
+
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                View on GitHub
+              </button>
+            </a>
+        }
+        
 
   <AnimatePresence>
     {showappModal && (
@@ -281,6 +351,9 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
       />
     )}
   </AnimatePresence>
+  </Box>
+  </Paper>
+  </div>
 </div>
 
   );

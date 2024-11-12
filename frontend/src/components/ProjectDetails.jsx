@@ -5,7 +5,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import UserProfileModal from './UserProfileModal'; // Ensure this component is correctly imported
 import ContributorsList from './ContributorsList';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const ProjectDetails = ({ project, user, handleViewProfile, handleApplication, handleDeleteRequest, editProject, setEditProject }) => {
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
@@ -22,7 +21,6 @@ const ProjectDetails = ({ project, user, handleViewProfile, handleApplication, h
   };
 
   return (
-    <AnimatePresence>
       <motion.div
         initial={{ height: 0, opacity: 0 }}
         animate={{ height: 'auto', opacity: 1 }}
@@ -31,40 +29,24 @@ const ProjectDetails = ({ project, user, handleViewProfile, handleApplication, h
       >
         <Box>
           {/* Project Lead Section */}
-          <Typography variant="h6" className="text-white font-bold mb-1">
+          
+          <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}> {/* #330080 */}
             Project Lead:
           </Typography>
-
-         <div className="bg-white p-4 rounded-lg shadow-sm w-full h-[80px] mb-6">          
-          
-          <Typography variant="body1" className="font-semibold text-[#330080] mb-2">
-            {project.lead.name}
-          </Typography>
-          
-          {/* View Profile Button */}
-          <Tooltip title="View Profile" arrow>
-            <Button
+          <Box sx={{ backgroundColor: 'white', p: 2, borderRadius: 2, mt: 2, mb: 3 }}>
+            <Typography variant="body1" color="#330080" sx={{ fontWeight: 'bold' }}>{project.lead.name}</Typography>
+            <Link
+              href="#"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                handleOpenUserProfile(project.lead);
+                handleViewProfile(project.lead);
               }}
-              sx={{
-                textTransform: 'none',
-                fontSize: '0.875rem',
-                color: '#330080',
-                fontWeight: 500,
-                '&:hover': {
-                  color: '#d97706', // Change color on hover
-                },
-                display: 'flex',
-              }}
+              sx={{ color: '#330080', textDecoration: 'none', '&:hover': { color: 'red' } }}
             >
-              <AccountCircleIcon sx={{ fontSize: 16, mr: 1 }} />
               View Profile
-            </Button>
-          </Tooltip>
-        </div>
+            </Link>
+          </Box>
 
 
           {/* Contributors List */}
@@ -163,7 +145,6 @@ const ProjectDetails = ({ project, user, handleViewProfile, handleApplication, h
           )}
         </Box>
       </motion.div>
-    </AnimatePresence>
   );
 };
 
