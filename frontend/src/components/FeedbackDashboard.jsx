@@ -58,17 +58,14 @@ const FeedbackDashboard = ({userLoading}) => {
                   ) }
                 </div>
               </div>
-              <p className="mt-4 text-lg text-gray-200 leading-relaxed">{feedback.feedback}</p>
-              {feedback.performanceRating && (
+              <p className="mt-4 text-lg text-gray-200 leading-relaxed scroll-container overflow-x-hidden h-[150px]">{feedback.feedback}</p>
+              
                 <div className="mt-4">
                   <span className="font-medium">Performance Rating:</span> {feedback.performanceRating}/5
                 </div>
-              )}
-              {feedback.uiRating && (
                 <div className="mt-2">
                   <span className="font-medium">UI Rating:</span> {feedback.uiRating}/5
                 </div>
-              )}
             </div>
           ))}
         </div>

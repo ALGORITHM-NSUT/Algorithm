@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Linkedin, Instagram, Phone, Mail } from "lucide-react";
 import { GitHub } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 export default function Footer() {
   const [hoveredLink, setHoveredLink] = useState(null);
@@ -58,16 +59,17 @@ export default function Footer() {
         <div className="flex flex-col">
           <h2 className="text-2xl font-bold mb-2">Quick Links</h2>
           {quickLinks.map((link, index) => (
-            <motion.a 
-              key={index}
-              href={link.path}
+           <Link
+              to={link.path}
               onMouseEnter={() => setHoveredLink(link.name)}
               onMouseLeave={() => setHoveredLink(null)}
-              className={`mb-1 transition duration-300 ${hoveredLink === link.name ? 'text-blue-400' : 'text-gray-400 hover:text-blue-400'}`}
-              whileHover={{ scale: 1.05 }}
+              className={`mb-1 transition-transform duration-300 ${
+                hoveredLink === link.name ? 'text-blue-400 scale-105' : 'text-gray-400 hover:text-blue-400 hover:scale-105'
+              }`}
             >
               {link.name}
-            </motion.a>
+            </Link>
+
           ))}
         </div>
       </motion.div>

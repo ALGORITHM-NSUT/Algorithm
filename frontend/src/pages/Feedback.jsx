@@ -11,7 +11,7 @@ const Feedback = () => {
   }, []);
 
   const { user, isLoading } = useContext(UserContext);
-  const [isCheck, setIsCheck] = useState(true);
+  const [isCheck, setIsCheck] = useState(false);
 
   if (isLoading) {
     return <Loader />;
@@ -27,30 +27,32 @@ const Feedback = () => {
         <FloatingBackground />
 
         <div className="mt-12 flex flex-col justify-center items-center transition-all duration-500">
-          {/* Heading changes based on isCheck */}
-          <h2 className="text-3xl font-semibold text-center transition-all duration-500 font-mono">
-            {isCheck ? 'We Value Your Feedback' : 'Feedbacks'}
-          </h2>
+         <div className="flex items-center"  >
+            <label className="text-lg mr-4">
+              {isCheck ? 'View Feedbacks' : 'Write Feedback'}
+            </label>
 
-          {user?.admin && (
-            <div className="flex items-center justify-center ml-6 transition-all duration-500 mt-4">
-              {/* Dynamic Label */}
-              <label className="text-lg mr-4">
-                {isCheck ? 'View Feedbacks' : 'Write Feedback'}
-              </label>
+            {user?.admin &&
+            (<div className="relative" onChange={handleClick}>
               <input
                 type="checkbox"
-                checked={!isCheck}
-                onChange={handleClick}
-                className="h-5 w-5 transition-all duration-300"
+                checked={isCheck}
+                className="toggle-checkbox hidden"
+                id="toggleSwitch"
               />
-            </div>
-          )}
+              <label
+                htmlFor="toggleSwitch"
+                className="toggle-label block w-12 h-6 rounded-full bg-gray-300 cursor-pointer transition-all duration-300"
+              ></label>
+              <span className={`toggle-circle ${isCheck ? 'translate-x-6' : 'translate-x-0'}` }  onClick={handleClick}></span>
+            </div>)}
+          </div>
+
         </div>
 
         {/* Show feedback component or dashboard based on isCheck state */}
         <div className="flex justify-center mt-8">
-          {isCheck ? (
+          {!isCheck ? (
             <FeedbackComponent user={user || null} />
           ) : (
             user?.admin && <FeedbackDashboard userLoading={isLoading} />
