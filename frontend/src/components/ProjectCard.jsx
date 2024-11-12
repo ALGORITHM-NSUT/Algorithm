@@ -244,34 +244,46 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               minHeight: '76px',
             }}
           >
-            {!isExpanded && project.description.length > 150
-              ? `${project.description.slice(0, 150)}...`
-              : project.description}
+            <div
+              className={`relative overflow-hidden transition-all duration-500 ${
+                isExpanded ? "max-h-screen opacity-100" : "max-h-[100px] opacity-90"
+              }`}
+            >
+
+              <div className='flex '>
+                <span>{project.description}</span>
+
+                {!isExpanded && (
+                  <span className='absolute bottom-0 right-0'>
+                    ...
+                  </span>
+                )}
+                
+              </div>
+              
+            </div>
+              
           </Typography>
           
-         <AnimatePresence>
-            {isExpanded && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.8, ease: "easeInOut" }}
-                style={{ overflow: "hidden" }}
-                layout
-              >
-                <ProjectDetails
-                  project={project}
-                  user={user}
-                  handleViewProfile={() => {}}
-                  handleApplication={handleApplication}
-                  handleDeleteRequest={handleDeleteRequest}
-                  editProject={editProject}
-                  setEditProject={setEditProject}
-                  setIsExpanded={setIsExpanded}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
+
+          {/* opening animation */}
+        <div
+          className={`overflow-hidden transition-[max-height,opacity] duration-1000 ease-in-out ${isExpanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
+        >
+          <ProjectDetails
+            project={project}
+            user={user}
+            handleViewProfile={() => {}}
+            handleApplication={handleApplication}
+            handleDeleteRequest={handleDeleteRequest}
+            editProject={editProject}
+            setEditProject={setEditProject}
+            setIsExpanded={setIsExpanded}
+          />
+        </div>
+
+
+          
           {isOngoing ? (
             <>
               <Grid container spacing={2}>

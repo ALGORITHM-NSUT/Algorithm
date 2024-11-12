@@ -304,3 +304,8 @@ body {
 .toggle-checkbox:checked + .toggle-label {
   background-color: #4ade80; /* Tailwind's green-400 */
 }
+
+
+truncate-lines > :first-child {
+  margin-top: 0;
+}

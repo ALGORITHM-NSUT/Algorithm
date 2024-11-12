@@ -10,6 +10,7 @@ const carouselSettings = {
   slidesToShow: 1,
   slidesToScroll: 1,
   arrows: true,
+  lazyLoad: 'ondemand'
 };
 
 const ProjectImageCarousel = ({ project }) => {
