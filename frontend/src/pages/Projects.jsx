@@ -19,8 +19,9 @@ const Projects = () => {
       setProjects(JSON.parse(cachedProjects));
       setProjectLoading(false); // Show data instantly if cached
     }
-
-    fetchProjects(); // Fetch latest data in the background
+    if (!projectLoading) {
+      fetchProjects(); // Fetch latest data in the background
+    }
   }, []);
 
   if (userLoading || projectLoading) {

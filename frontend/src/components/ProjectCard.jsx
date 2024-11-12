@@ -6,7 +6,7 @@ import AddProject from './addProject';
 import { motion, AnimatePresence } from 'framer-motion';
 import "slick-carousel/slick/slick.css"; // Import slick carousel CSS
 import "slick-carousel/slick/slick-theme.css";
-
+import { Typography, Paper } from '@mui/material';
 import OpacityLoader from './OpacityLoader';
 import ProjectImageCarousel from './ProjectImageCarousel';
 import ProjectDetails from './ProjectDetails';
@@ -129,90 +129,160 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   };
 
   return (
-    <div className="transform transition-transform duration-300 ease-in-out">
-      {loading && <OpacityLoader />}
-      <motion.div
+    <div className="relative transform transition-all duration-300 ease-in-out">
+  {loading && <OpacityLoader />}
+  {isExpanded && (
+    <div
+      className="fixed inset-0 bg-black bg-opacity-70 z-20 transition-opacity duration-300"
+      onClick={toggleExpand}
+    />
+  )}
+  <div
+    onClick={toggleExpand}
+    className={`relative p-1 w-full rounded-lg transition-all duration-300 ease-in-out cursor-pointer ${
+      isExpanded ? 'scale-110 z-30' : 'z-10'
+    }`}
+  >
+    <div className="relative rounded-lg overflow-hidden">
+      <AddProject
+        refreshProjects={refreshProjects}
+        showadd={false}
+        edit={editProject}
+        setEditState={setEditProject}
+        project={project}
+      />
+      <Paper
+        sx={{
+          background: 'linear-gradient(to right, #ffffff)',
+          backgroundColor: '#15142F',
+          borderRadius: 3,
+          boxShadow: 6,
+          transition: 'all 0.3s ease-in-out',
+          overflow: 'hidden',
+          cursor: 'pointer',
+          zIndex: -2,
+          color: 'black',
+          '&:hover': { boxShadow: 12 },
+          width: '100%',
+          maxWidth: '600px',
+          mx: 'auto',
+        }}
         onClick={toggleExpand}
-        initial={{ scale: 1 }}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        className={`relative p-6 w-full cursor-pointer rounded-lg shadow-lg transition-all duration-300 ease-in-out transform ${
-          isExpanded ? "scale-100" : "scale-95"
-        }`}
       >
-        <div className="relative rounded-lg overflow-hidden">
-          <AddProject
-            refreshProjects={refreshProjects}
-            showadd={false}
-            edit={editProject}
-            setEditState={setEditProject}
-            project={project}
-          />
-
-          <div className="bg-[#330080] h-[120px] flex items-center relative rounded-t-lg">
-            <div className="w-full ml-4">
-              <span className="text-4xl truncate max-w-[75%] font-bold text-white block">
-                {project.title}
-              </span>
-            </div>
-
-            {project.liveLink && (
-              <a
-                href={project.liveLink}
-                rel="noreferrer"
-                target="_blank"
-                onClick={(e) => e.stopPropagation()}
-                className="absolute top-2 right-2 px-3 py-1 text-lg text-white bg-[#b91c1c] hover:bg-[#991b1b] rounded-lg transition duration-200 ease-in-out"
+        <div
+          style={{
+            background: 'white', // Changed from 'white' to '#330080'
+            height: '120px',
+            display: 'flex',
+            alignItems: 'center',
+            position: 'relative',
+            clipPath: 'path("M0,90 C200,150 400,0 600,90 L600,0 L0,0 Z")',
+            marginBottom: '0px',
+          }}
+        >
+          <Typography
+            variant={isExpanded ? 'h5' : 'h4'}
+            component="h3"
+            sx={{
+              background: '#18142F', // Changed from 'white' to '#330080'
+              WebkitBackgroundClip: 'text',
+              color: 'white',
+              transition: 'all 0.3s',
+              fontWeight: 'bold',
+              mb: 2,
+              fontSize: { xs: '1.8rem', sm: '2rem', md: '2.3rem' },
+              position: 'relative',
+              zIndex: 1,
+              textAlign: 'center',
+              fontFamily: 'sans-serif',
+            }}
+          >
+            <span
+              style={{
+                position: 'relative',
+                zIndex: 2,
+                color: '#330080',
+                padding: '60px 10px 30px',
+              }}
+            >
+              {project.title}
+            </span>
+          </Typography>
+          {project.liveLink != '' && (
+            <a
+              href={project.liveLink}
+              rel="noreferrer"
+              target="_blank"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <span
+                className="absolute top-0 right-0 mr-[5px] mt-[5px] pr-[5px] pl-[7px] text-[20px] text-white bg-[#b91c1c] hover:bg-[#991b1b] rounded-lg"
               >
-                Live<sup className="animate-pulse ml-1">•</sup>
-              </a>
-            )}
-          </div>
-
-          <ProjectImageCarousel project={project} />
-
-          <div className="bg-[#18142F] p-4 rounded-b-lg">
-            <div className="text-white text-lg mb-2 min-h-[76px]">
-              {!isExpanded && project.description.length > 150
-                ? `${project.description.slice(0, 150)}...`
-                : project.description}
-            </div>
-
-            {isExpanded && (
-              <ProjectDetails
-                project={project}
-                user={user}
-                handleViewProfile={() => {}}
-                handleApplication={handleApplication}
-                handleDeleteRequest={handleDeleteRequest}
-                editProject={editProject}
-                setEditProject={setEditProject}
-                setIsExpanded={setIsExpanded}
-              />
-            )}
-          </div>
+                Live<sup className="animate-pulse ml-[1px]">•</sup>
+              </span>
+            </a>
+          )}
         </div>
-      </motion.div>
 
-      <AnimatePresence>
-        {showappModal && (
-          <JoinRequestModal
-            project={project}
-            handleSendRequest={handleSendRequest}
-            handleCloseModal={handleCloseModal}
-          />
-        )}
-      </AnimatePresence>
+        <ProjectImageCarousel project={project} />
 
-      <AnimatePresence>
-        {deleteModal && (
-          <DeleteRequestModal
-            handleDeletesend={handleDeletesend}
-            handleCloseModal={handleCloseModal}
-          />
-        )}
-      </AnimatePresence>
+        <div className="bg-[#18142F] p-4 rounded-b-lg">
+          <Typography
+            variant="body1"
+            sx={{
+              position: 'relative',
+              display: 'flex',
+              color: 'white',
+              animation: 'fadeIn 0.5s ease-in-out',
+              fontSize: '17px',
+              mb: 2,
+              minHeight: '76px',
+            }}
+          >
+            {!isExpanded && project.description.length > 150
+              ? `${project.description.slice(0, 150)}...`
+              : project.description}
+          </Typography>
+
+          {isExpanded && (
+            <ProjectDetails
+              project={project}
+              user={user}
+              handleViewProfile={() => {}}
+              handleApplication={handleApplication}
+              handleDeleteRequest={handleDeleteRequest}
+              editProject={editProject}
+              setEditProject={setEditProject}
+              setIsExpanded={setIsExpanded}
+            />
+          )}
+        </div>
+      </Paper>
     </div>
+  </div>
+
+  <AnimatePresence>
+    {showappModal && (
+      <JoinRequestModal
+        project={project}
+        handleSendRequest={handleSendRequest}
+        handleCloseModal={handleCloseModal}
+      />
+    )}
+  </AnimatePresence>
+
+  <AnimatePresence>
+    {deleteModal && (
+      <DeleteRequestModal
+        handleDeletesend={handleDeletesend}
+        handleCloseModal={handleCloseModal}
+      />
+    )}
+  </AnimatePresence>
+</div>
+
   );
 };
 
