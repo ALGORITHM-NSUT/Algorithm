@@ -271,7 +271,7 @@ const Register = ({ setEditForm, setEditAcc }) => {
                   <FormField label="Name" name="name" value={formData.name} onChange={handleChange} required />
                   <FormField label="Phone Number" name="phoneNumber" type="tel" value={formData.phoneNumber} onChange={handleChange} required/>
                   <FormField label="NSUT Email" name="email" value={formData.email} onChange={handleChange} required disabled={!!user} />
-                  <FormField label="Password" name="password" type="password" value={formData.password} onChange={handleChange} required disabled={!!user} />
+                  <FormField label="Password" name="password" type="password" value= {user? "******":formData.password} onChange={handleChange} required disabled={!!user} />
                   <FormField label="Roll Number" name="rollNumber" value={formData.rollNumber} onChange={handleChange} required />
                   <FormField label="LinkedIn URL" name="linkedinUrl" value={formData.linkedinUrl} onChange={handleChange} />
                   <FormField label="Personal Email" name="personalEmail" value={formData.personalEmail} onChange={handleChange} />
