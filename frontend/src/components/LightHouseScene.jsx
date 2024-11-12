@@ -4,10 +4,19 @@ import { TweenLite, Circ } from "gsap";
 const LighthouseScene = () => {
   useEffect(() => {
     let width, height, largeHeader, canvas, ctx, points, target, animateHeader = true;
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
 
     const initHeader = () => {
-      width = 1920
-      height = 932
+      width = window.innerWidth
+      height = window.innerHeight
+
+      console.log(height)
+
+      if(isMobile){
+        width = 1920
+        height = 932
+      }
 
       target = { x: width / 2, y: height / 1.6 };
 
@@ -168,7 +177,6 @@ const LighthouseScene = () => {
       return Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2);
     };
 
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     if (!isMobile) {
         addListeners();
     }
