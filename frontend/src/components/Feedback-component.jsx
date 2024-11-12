@@ -10,7 +10,7 @@ const FeedbackComponent = ({user}) => {
   const [hover, setHover] = useState({ performance: null, ui: null, suggestions: null });
   const [feedback, setFeedback] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [isAnonymous, setIsAnonymous] = useState(false);
+  const [isAnonymous, setIsAnonymous] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -93,7 +93,7 @@ const FeedbackComponent = ({user}) => {
             />
             <FaStar
               size={35}
-              color={starValue <= (hover[category] || rating) ? '#ffc107' : '#e4e5e9'}
+              color={starValue <= (hover[category] || rating) ? '#ffc107' : '#d2d5da'}
               onMouseEnter={() => setHover((prev) => ({ ...prev, [category]: starValue }))}
               onMouseLeave={() => setHover((prev) => ({ ...prev, [category]: null }))}
             />
@@ -108,13 +108,13 @@ const FeedbackComponent = ({user}) => {
     <>
 
     {isLoading && <OpacityLoader />}
-    <div className="flex flex-col items-center justify-center p-4 md:w-[700px] w-[350px]">
+    <div className="flex flex-col items-center justify-center p-4 md:w-[700px] w-[350px] pb-4">
       {submitted && (
         <p className="text-green-600 mb-4 text-center">Thank you for your feedback!</p>
       )}
       
       <form
-        className={`w-full max-w-lg p-4 rounded-lg shadow-md transform transition-all duration-300 ease-in-out ${isAnonymous ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}
+        className={`w-full max-w-lg p-4 rounded-lg shadow-md transform transition-all duration-300 ease-in-out ${isAnonymous ? 'bg-gray-800 text-white' : 'bg-gray-100  text-black'}`}
         onSubmit={handleSubmit}
       >
       
@@ -154,7 +154,7 @@ const FeedbackComponent = ({user}) => {
            <div className="w-1/4 h-8 flex flex-col items-center justify-center">
             <ToggleSwitch setIsAnonymous={setIsAnonymous} user={user}/>
 
-             <p className={`ml-4 mt-2 text-xs ${ isAnonymous? 'text-green-500' : 'text-gray-600'}`}>
+             <p className={`ml-4 mt-2 text-[10px] h-4 ${ isAnonymous? 'text-green-500' : 'text-gray-600'}`}>
                 {isAnonymous ? 'Anonymous':'Go Anonymous'}
             </p>
             

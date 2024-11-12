@@ -242,3 +242,66 @@ body {
     background-position: 0% 50%;
   }
 }
+
+.scroll-container {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.scroll-container::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background-color: #f3f4f6; /* Equivalent to Tailwind's gray-100 */
+  border-radius: 9999px; /* Fully rounded corners */
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background-color: #d1d5db; /* Equivalent to Tailwind's gray-300 */
+  border-radius: 9999px;
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .scroll-container::-webkit-scrollbar-track {
+    background-color: #374151; /* Equivalent to Tailwind's neutral-700 */
+  }
+  .scroll-container::-webkit-scrollbar-thumb {
+    background-color: #6b7280; /* Equivalent to Tailwind's neutral-500 */
+  }
+}
+
+/* Hide the default checkbox */
+.toggle-checkbox {
+  display: none;
+}
+
+/* Track (background of the toggle switch) */
+.toggle-label {
+  position: relative;
+  width: 40px; /* Adjust width for a better toggle size */
+  height: 20px; /* Height of the toggle track */
+  background-color: #d1d5db; /* Default gray color */
+  border-radius: 9999px; /* Fully rounded track */
+  transition: background-color 0.3s ease;
+}
+
+/* Circle (thumb of the toggle switch) */
+.toggle-circle {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 9999px;
+  transform: translateY(-50%);
+  transition: transform 0.3s ease;
+}
+
+/* Checked state for the background color */
+.toggle-checkbox:checked + .toggle-label {
+  background-color: #4ade80; /* Tailwind's green-400 */
+}
+
