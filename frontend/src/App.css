@@ -7,28 +7,6 @@ body {
   color: white; /* Text color */
 }
 
-/* For Webkit browsers */
-html::-webkit-scrollbar {
-  width: 4px; /* Thin width */
-}
-
-html::-webkit-scrollbar-track {
-  background: transparent; /* Transparent track */
-}
-
-html::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent thumb */
-  border-radius: 20px;
-}
-
-/* For Firefox */
-html {
-  scrollbar-width: thin;
-  scroll-behavior: smooth;
-  scrollbar-color: rgb(219, 212, 212) transparent;
-}
-
-
 /* Ensure the main app container has the same background */
 #root {
   min-height: 100vh; /* Ensure it covers the entire viewport */
@@ -326,4 +304,3 @@ html {
 .toggle-checkbox:checked + .toggle-label {
   background-color: #4ade80; /* Tailwind's green-400 */
 }
-
