@@ -40,7 +40,7 @@ const ProjectDetails = ({ project, user, handleViewProfile, handleApplication, h
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                handleViewProfile(project.lead);
+                handleOpenUserProfile(project.lead);
               }}
               sx={{ color: '#330080', textDecoration: 'none', '&:hover': { color: 'red' } }}
             >
