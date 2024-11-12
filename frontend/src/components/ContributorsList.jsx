@@ -38,17 +38,18 @@ const ContributorsList = ({ project, handleViewProfile }) => {
             className="bg-white p-2 rounded-lg shadow-md w-full"
           >
             <p className="font-semibold text-[#330080]">{contributor.name}</p>
-            <Link
+            <a
               href="#"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 handleViewProfile(contributor);
               }}
-              sx={{ fontSize: '0.9rem', color: '#330080', textDecoration: 'none', '&:hover': { color: 'red' } }}
+              className="text-sm text-[#330080] no-underline hover:text-red-500"
             >
-              View Profile
-            </Link>
+              View Profile  
+            </a>
+
           </div>
           ))}
         </div>

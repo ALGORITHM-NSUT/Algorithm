@@ -10,6 +10,7 @@ import { Typography, Paper, Box, Grid } from '@mui/material';
 import OpacityLoader from './OpacityLoader';
 import ProjectImageCarousel from './ProjectImageCarousel';
 import ProjectDetails from './ProjectDetails';
+import { useNavigate } from "react-router-dom";
 
 const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   const [showappModal, setShowappModal] = useState(false);
@@ -20,6 +21,10 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   const [loading, setLoading] = useState(false);
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+
+  const navigate = useNavigate();
+
+  
 
   const handleOpenUserProfile = (userDetails) => {
     setSelectedUser(userDetails);
@@ -143,16 +148,11 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   return (
     <div className="transform transition-all duration-300 ease-in-out">
   {loading && <OpacityLoader />}
-  {isExpanded && (
-    <div
-      className="fixed inset-0 bg-opacity-50 z-20"
-      onClick={toggleExpand}
-    ></div>
-  )}
+  
   <div
     onClick={toggleExpand}
     className={`relative p-1 w-full rounded-lg transition-all duration-300 ease-in-out cursor-pointer ${
-      isExpanded ? 'scale-110 z-30' : 'z-10'
+      isExpanded ? ' md:scale-110  z-30' : 'z-10'
     }`}
   >
 
@@ -249,20 +249,29 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               : project.description}
           </Typography>
           
-          <AnimatePresence>
+         <AnimatePresence>
             {isExpanded && (
-              <ProjectDetails
-              project={project}
-              user={user}
-              handleViewProfile={() => {}}
-              handleApplication={handleApplication}
-              handleDeleteRequest={handleDeleteRequest}
-              editProject={editProject}
-              setEditProject={setEditProject}
-              setIsExpanded={setIsExpanded}
-            />)}
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+                style={{ overflow: "hidden" }}
+                layout
+              >
+                <ProjectDetails
+                  project={project}
+                  user={user}
+                  handleViewProfile={() => {}}
+                  handleApplication={handleApplication}
+                  handleDeleteRequest={handleDeleteRequest}
+                  editProject={editProject}
+                  setEditProject={setEditProject}
+                  setIsExpanded={setIsExpanded}
+                />
+              </motion.div>
+            )}
           </AnimatePresence>
-
           {isOngoing ? (
             <>
               <Grid container spacing={2}>
