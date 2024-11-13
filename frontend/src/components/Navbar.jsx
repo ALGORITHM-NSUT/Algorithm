@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
 import { UserContext } from '../auth/UserProvider';
@@ -12,8 +12,8 @@ const Navbar = () => {
 
 
   useEffect(() => {
-    const currentPath = location.pathname.split('/')[1];
-    setSelectedLink(currentPath || 'home');
+      const currentPath = location.pathname.split('/')[1];
+      setSelectedLink(currentPath || 'home');
   }, [location]);
 
   return (
