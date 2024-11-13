@@ -109,4 +109,4 @@ const ProjectImageCarousel = ({ project }) => {
   );
 };
 
-export default ProjectImageCarousel;
+export default React.memo(ProjectImageCarousel);

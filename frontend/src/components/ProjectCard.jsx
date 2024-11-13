@@ -1,17 +1,15 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, Suspense } from 'react';
 import { UserContext } from '../auth/UserProvider';
-import JoinRequestModal from './JoinRequestModal';
-import DeleteRequestModal from './deleteProjectModal';
-// const JoinRequestModal = React.lazy(() => import('./JoinRequestModal'));
-// const DeleteRequestModal = React.lazy(() => import('./deleteProjectModal'));
-import ProjectImageCarousel from './ProjectImageCarousel';
-import AddProject from './addProject';
-import { motion, AnimatePresence } from 'framer-motion';
+const JoinRequestModal = React.lazy(() => import('./JoinRequestModal'));
+const DeleteRequestModal = React.lazy(() => import('./deleteProjectModal'));
+const ProjectImageCarousel = React.lazy(() => import('./ProjectImageCarousel'));
+const ProjectDetails = React.lazy(() => import('./ProjectDetails'));
+const AddProject = React.lazy(() => import('./addProject'));
+import { AnimatePresence } from 'framer-motion';
 import "slick-carousel/slick/slick.css"; // Import slick carousel CSS
 import "slick-carousel/slick/slick-theme.css";
 import { Typography, Paper, Box, Grid } from '@mui/material';
 import OpacityLoader from './OpacityLoader';
-import ProjectDetails from './ProjectDetails';
 import { useNavigate } from "react-router-dom";
 
 const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
@@ -22,7 +20,6 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   const [editProject, setEditProject] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -156,6 +153,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
         onClick={toggleExpand}
       >
         <div>
+          <Suspense fallback={<OpacityLoader />}>
             <AddProject
               refreshProjects={refreshProjects}
               showadd={false}
@@ -163,7 +161,8 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               setEditState={setEditProject}
               project={project}
             />
-          </div>
+          </Suspense>
+        </div>
         <div
           style={{
             background: 'white', // Changed from 'white' to '#330080'
@@ -209,8 +208,10 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               <span className={"absolute top-0 right-0 mr-[5px] mt-[5px] pr-[5px] pl-[7px] text-[20px] text-white bg-[#b91c1c] hover:bg-[#991b1b] rounded-lg"}>Live<sup className='animate-pulse ml-[1px]'>•</sup></span>
             </a>}
         </div>
-
-        <ProjectImageCarousel project={project} />
+        {/* <Suspense fallback={<OpacityLoader />}>  */}
+          <ProjectImageCarousel project={project} />
+        {/* </Suspense> */}
+        
 
         <Box sx={{ backgroundColor: '#18142F', p: 2 }}>
           <Typography
@@ -251,16 +252,18 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
         <div
           className={`overflow-hidden transition-[max-height,opacity] duration-1000 ease-in-out ${isExpanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
         >
-          <ProjectDetails
-            project={project}
-            user={user}
-            handleViewProfile={() => {}}
-            handleApplication={handleApplication}
-            handleDeleteRequest={handleDeleteRequest}
-            editProject={editProject}
-            setEditProject={setEditProject}
-            setIsExpanded={setIsExpanded}
-          />
+           <Suspense fallback={<OpacityLoader />}>
+            <ProjectDetails
+              project={project}
+              user={user}
+              handleViewProfile={() => {}}
+              handleApplication={handleApplication}
+              handleDeleteRequest={handleDeleteRequest}
+              editProject={editProject}
+              setEditProject={setEditProject}
+              setIsExpanded={setIsExpanded}
+            />
+          </Suspense>
         </div>
 
 
@@ -334,19 +337,19 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
             </a>
         }
         
-
-  <AnimatePresence>
-      {showappModal && (
-        <JoinRequestModal
-          isOpen={showappModal}
-          project={project}
-          onClose={handleCloseModal}
-          onSend={handleSendRequest}
-        />
-      )}
-  </AnimatePresence>
-
-      <AnimatePresence>
+        <Suspense fallback={<OpacityLoader />}>
+          <AnimatePresence>
+            {showappModal && (
+              <JoinRequestModal
+                isOpen={showappModal}
+                project={project}
+                onClose={handleCloseModal}
+                onSend={handleSendRequest}
+              />
+            )}
+          </AnimatePresence>
+          <AnimatePresence>
+      
         {deleteModal && (
           <DeleteRequestModal
             isOpen={deleteModal}
@@ -356,6 +359,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
           />
         )}
       </AnimatePresence>
+    </Suspense>
   </Box>
   </Paper>
   </div>
