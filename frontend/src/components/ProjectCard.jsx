@@ -2,13 +2,15 @@ import React, { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../auth/UserProvider';
 import JoinRequestModal from './JoinRequestModal';
 import DeleteRequestModal from './deleteProjectModal';
+// const JoinRequestModal = React.lazy(() => import('./JoinRequestModal'));
+// const DeleteRequestModal = React.lazy(() => import('./deleteProjectModal'));
+import ProjectImageCarousel from './ProjectImageCarousel';
 import AddProject from './addProject';
 import { motion, AnimatePresence } from 'framer-motion';
 import "slick-carousel/slick/slick.css"; // Import slick carousel CSS
 import "slick-carousel/slick/slick-theme.css";
 import { Typography, Paper, Box, Grid } from '@mui/material';
 import OpacityLoader from './OpacityLoader';
-import ProjectImageCarousel from './ProjectImageCarousel';
 import ProjectDetails from './ProjectDetails';
 import { useNavigate } from "react-router-dom";
 
@@ -23,31 +25,11 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   const [selectedUser, setSelectedUser] = useState(null);
 
   const navigate = useNavigate();
-
-  
-
-  const handleOpenUserProfile = (userDetails) => {
-    setSelectedUser(userDetails);
-    setShowUserProfileModal(true);
-  };
-
-  const handleCloseUserProfile = () => {
-    setShowUserProfileModal(false);
-    setSelectedUser(null);
-  };
-
   useEffect(() => {
     if (editProject) {
       setEditProject(false);
     }
   }, [isExpanded]);
-
-  const showLoader = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  };
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -66,25 +48,18 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   };
 
   const handleJoinRequest = () => {
-    showLoader();
     setShowappModal(true);
   };
 
   const handleSendRequest = () => {
-    showLoader();
     if (postData()) {
       refreshProjects();
     }
     setShowappModal(false);
   };
 
-  const handleViewProfile = (userDetails) => {
-    setSelectedUser(userDetails);
-    setShowUserProfileModal(true);
-  };
-
   const postData = async () => {
-    showLoader();
+    setLoading(true);
     try {
       const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/application`, {
         method: 'POST',
@@ -101,11 +76,13 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
       return true;
     } catch (error) {
       console.error('Error posting data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleApplication = async (id, state) => {
-    showLoader();
+    setLoading(true);
     try {
       const applicants = await fetch(import.meta.env.VITE_BACKEND_URL + `/handleApplication`, {
         method: 'POST',
@@ -121,11 +98,13 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
       }
     } catch (error) {
       console.error('Error updating application state:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDeletesend = async () => {
-    showLoader();
+    setLoading(true);
     try {
       const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/deleteProject`, {
         method: 'POST',
@@ -142,6 +121,8 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
       }
     } catch (error) {
       console.error('Error deleting project:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -355,23 +336,26 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
         
 
   <AnimatePresence>
-    {showappModal && (
-      <JoinRequestModal
-        project={project}
-        handleSendRequest={handleSendRequest}
-        handleCloseModal={handleCloseModal}
-      />
-    )}
+      {showappModal && (
+        <JoinRequestModal
+          isOpen={showappModal}
+          project={project}
+          onClose={handleCloseModal}
+          onSend={handleSendRequest}
+        />
+      )}
   </AnimatePresence>
 
-  <AnimatePresence>
-    {deleteModal && (
-      <DeleteRequestModal
-        handleDeletesend={handleDeletesend}
-        handleCloseModal={handleCloseModal}
-      />
-    )}
-  </AnimatePresence>
+      <AnimatePresence>
+        {deleteModal && (
+          <DeleteRequestModal
+            isOpen={deleteModal}
+            project={project}
+            onClose={handleCloseModal}
+            onDelete={handleDeletesend}
+          />
+        )}
+      </AnimatePresence>
   </Box>
   </Paper>
   </div>
@@ -380,4 +364,4 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   );
 };
 
-export default ProjectCard;
+export default React.memo(ProjectCard);

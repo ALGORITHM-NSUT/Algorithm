@@ -54,10 +54,13 @@ export const handleApplication = async (req, res) => {
           });
         } catch (error) {
           if (error.status === 404) {
+            const { data: userData } = await octokit.rest.users.getByUsername({
+              username: userGit,
+            });
             try {
               const response = await octokit.rest.orgs.createInvitation({
                 org,
-                invitee_id: userGit
+                invitee_id: userData.id
               });
             } catch (inviteError) {
               console.log(inviteError);
