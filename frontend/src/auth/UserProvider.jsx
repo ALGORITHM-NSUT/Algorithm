@@ -90,7 +90,7 @@ const UserProvider = ({ children }) => {
         if (response.status === 401) {
           alert('Your session has expired. Please log in again.');
           setUser(null);
-        } else if (response.ok) {
+        } else if (response.status === 200) {
           const data = await response.json();
           setUser(data.member);
         } else {
