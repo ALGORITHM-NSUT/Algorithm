@@ -2,8 +2,8 @@ import React, { useState, useEffect, useContext, Suspense } from 'react';
 import { UserContext } from '../auth/UserProvider';
 const JoinRequestModal = React.lazy(() => import('./JoinRequestModal'));
 const DeleteRequestModal = React.lazy(() => import('./deleteProjectModal'));
-const ProjectImageCarousel = React.lazy(() => import('./ProjectImageCarousel'));
-const ProjectDetails = React.lazy(() => import('./ProjectDetails'));
+import ProjectImageCarousel from './ProjectImageCarousel';
+const ProjectDetails = React.lazy(() => import ('./ProjectDetails'));
 const AddProject = React.lazy(() => import('./addProject'));
 import { AnimatePresence } from 'framer-motion';
 import "slick-carousel/slick/slick.css"; // Import slick carousel CSS
@@ -29,7 +29,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   }, [isExpanded]);
 
   const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
+      setIsExpanded(!isExpanded);
   };
 
   const handleCloseModal = (e) => {
@@ -41,18 +41,18 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   };
 
   const handleDeleteRequest = () => {
-    setDeleteModal(true);
+      setDeleteModal(true);
   };
 
   const handleJoinRequest = () => {
-    setShowappModal(true);
+      setShowappModal(true);
   };
 
   const handleSendRequest = () => {
-    if (postData()) {
-      refreshProjects();
-    }
-    setShowappModal(false);
+      if (postData()) {
+        refreshProjects();
+      }
+      setShowappModal(false);
   };
 
   const postData = async () => {
@@ -208,9 +208,8 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               <span className={"absolute top-0 right-0 mr-[5px] mt-[5px] pr-[5px] pl-[7px] text-[20px] text-white bg-[#b91c1c] hover:bg-[#991b1b] rounded-lg"}>Live<sup className='animate-pulse ml-[1px]'>•</sup></span>
             </a>}
         </div>
-        {/* <Suspense fallback={<OpacityLoader />}>  */}
-          <ProjectImageCarousel project={project} />
-        {/* </Suspense> */}
+        <ProjectImageCarousel project={project} />
+        
         
 
         <Box sx={{ backgroundColor: '#18142F', p: 2 }}>
@@ -249,10 +248,10 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
           
 
           {/* opening animation */}
+          <Suspense fallback={<OpacityLoader />}> 
         <div
           className={`overflow-hidden transition-[max-height,opacity] duration-1000 ease-in-out ${isExpanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
         >
-           <Suspense fallback={<OpacityLoader />}>
             <ProjectDetails
               project={project}
               user={user}
@@ -263,8 +262,8 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               setEditProject={setEditProject}
               setIsExpanded={setIsExpanded}
             />
-          </Suspense>
         </div>
+        </Suspense>
 
 
           
