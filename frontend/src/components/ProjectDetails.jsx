@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Box, Typography, Button, Link, IconButton, Tooltip } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -142,4 +141,4 @@ const ProjectDetails = ({ project, user, handleViewProfile, handleApplication, h
   );
 };
 
-export default ProjectDetails;
+export default React.memo(ProjectDetails);

@@ -58,4 +58,4 @@ const ContributorsList = ({ project, handleViewProfile }) => {
   );
 };
 
-export default ContributorsList;
+export default React.memo(ContributorsList);

@@ -65,4 +65,4 @@ const Core = ({ members }) => {
   );
 };
 
-export default Core;
+export default React.memo(Core);
