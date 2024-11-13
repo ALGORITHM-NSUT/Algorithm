@@ -3,7 +3,7 @@ import { UserContext } from '../auth/UserProvider';
 const JoinRequestModal = React.lazy(() => import('./JoinRequestModal'));
 const DeleteRequestModal = React.lazy(() => import('./deleteProjectModal'));
 import ProjectImageCarousel from './ProjectImageCarousel';
-const ProjectDetails = React.lazy(() => import ('./ProjectDetails'));
+import ProjectDetails from './ProjectDetails';
 const AddProject = React.lazy(() => import('./addProject'));
 import { AnimatePresence } from 'framer-motion';
 import "slick-carousel/slick/slick.css"; // Import slick carousel CSS
@@ -20,7 +20,6 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   const [editProject, setEditProject] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
-
   const navigate = useNavigate();
   useEffect(() => {
     if (editProject) {
@@ -154,13 +153,13 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
       >
         <div>
           <Suspense fallback={<OpacityLoader />}>
-            <AddProject
+            {editProject && <AddProject
               refreshProjects={refreshProjects}
               showadd={false}
               edit={editProject}
               setEditState={setEditProject}
               project={project}
-            />
+            />}
           </Suspense>
         </div>
         <div
@@ -248,10 +247,10 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
           
 
           {/* opening animation */}
-          <Suspense fallback={<OpacityLoader />}> 
+          
         <div
-          className={`overflow-hidden transition-[max-height,opacity] duration-1000 ease-in-out ${isExpanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
-        >
+           className={`overflow-hidden transition-[max-height,opacity] duration-1000 ease-in-out ${isExpanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
+        >  
             <ProjectDetails
               project={project}
               user={user}
@@ -263,7 +262,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               setIsExpanded={setIsExpanded}
             />
         </div>
-        </Suspense>
+       
 
 
           
