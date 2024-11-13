@@ -197,7 +197,7 @@ export const getMyProfile = async (req, res, next) => {
     try {
         const user = req.user._id;
         if (user === '') {
-            return res.status(404).json({ message: 'Session Expired, Login again!' });
+            return res.status(204).json({ message: 'Session Expired, Login again!' });
         }
         const member = await FormData.findOne({ _id: user });
         if (!member) {

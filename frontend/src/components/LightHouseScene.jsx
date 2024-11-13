@@ -11,8 +11,6 @@ const LighthouseScene = () => {
       width = window.innerWidth
       height = window.innerHeight
 
-      console.log(height)
-
       if(isMobile){
         width = 1920
         height = 932
