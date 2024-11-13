@@ -66,18 +66,18 @@ const ProjectDetails = ({ project, user, handleViewProfile, handleApplication, h
                 {project.applicants.map((applicant, index) => (
                   <Box key={index} className="bg-white p-1 mb-1 rounded-lg flex justify-between items-center">
                     <Box className="flex flex-col items-start">
-                      <Typography className="text-[#330080]">{applicant.name}</Typography>
-                      <Link
+                    <p className="font-semibold text-[#330080]">{applicant.name}</p>
+                      <a
                         href="#"
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          handleOpenUserProfile(applicant); // Open user profile modal
+                          handleViewProfile(applicant);
                         }}
-                        className="text-[#330080] text-sm font-normal hover:text-red-500"
+                        className="text-sm text-[#330080] no-underline hover:text-red-500"
                       >
-                        View Profile
-                      </Link>
+                        View Profile  
+                      </a>
                     </Box>
 
                     <Box className="flex">
