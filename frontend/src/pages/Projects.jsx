@@ -1,9 +1,9 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, Suspense } from 'react';
 import { UserContext, ProjectContext } from '../auth/UserProvider';
 import ProjectCard from '../components/ProjectCard';
-import AddProject from '../components/addProject';
-import FloatingBackground from './FloatingBackground';
+const AddProject = React.lazy(() => import('../components/addProject'));
 import Loader from '../components/Loader';
+import OpacityLoader from '../components/OpacityLoader';
 
 const Projects = () => {
   const { user, userLoading } = useContext(UserContext);
@@ -30,7 +30,6 @@ const Projects = () => {
 
   return (
     <div className="flex flex-col min-h-screen relative">
-      <FloatingBackground />
       <div
         className={`flex flex-col items-center flex-grow text-white py-10 w-full relative z-10  ${userLoading || projectLoading ? 'opacity-0' : 'opacity-100'}`}
       >
@@ -54,11 +53,15 @@ const Projects = () => {
             </div>
           </div>
         ) : (
+          
           user && user.admin && (
-            <div className='relative w-full max-w-[600px] h-full min-h-[640px] max-h-[640px]'>
-              <AddProject refreshProjects={fetchProjects} edit={false} showadd={true} />
-            </div>
+            <Suspense fallback={<OpacityLoader />}>
+              <div className='relative w-full max-w-[600px] h-full min-h-[640px] max-h-[640px]'>
+                <AddProject refreshProjects={fetchProjects} edit={false} showadd={true} />
+              </div>
+            </Suspense>
           )
+          
         )}
         {projects.completed.length > 0 && (
           <div className="w-full">
