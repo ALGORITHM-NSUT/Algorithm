@@ -18,7 +18,7 @@ const AboutPage = () => {
     const storedMembers = sessionStorage.getItem('members');
     if (storedMembers) {
       setMembers(JSON.parse(storedMembers));
-    } else {
+    } else if (!aboutLoading) {
       fetchMembers();
     }
   }, []);

@@ -3,7 +3,7 @@ import { UserContext } from '../auth/UserProvider';
 const JoinRequestModal = React.lazy(() => import('./JoinRequestModal'));
 const DeleteRequestModal = React.lazy(() => import('./deleteProjectModal'));
 import ProjectImageCarousel from './ProjectImageCarousel';
-import ProjectDetails from './ProjectDetails';
+const ProjectDetails = React.lazy(() => import('./ProjectDetails'));
 const AddProject = React.lazy(() => import('./addProject'));
 import { AnimatePresence } from 'framer-motion';
 import "slick-carousel/slick/slick.css"; // Import slick carousel CSS
@@ -11,6 +11,9 @@ import "slick-carousel/slick/slick-theme.css";
 import { Typography, Paper, Box, Grid } from '@mui/material';
 import OpacityLoader from './OpacityLoader';
 import { useNavigate } from "react-router-dom";
+import Skeleton_loader from "./Skeleton_loader";
+
+
 
 const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   const [showappModal, setShowappModal] = useState(false);
@@ -20,6 +23,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   const [editProject, setEditProject] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
+
   const navigate = useNavigate();
   useEffect(() => {
     if (editProject) {
@@ -28,7 +32,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   }, [isExpanded]);
 
   const toggleExpand = () => {
-      setIsExpanded(!isExpanded);
+    setIsExpanded(!isExpanded);
   };
 
   const handleCloseModal = (e) => {
@@ -123,7 +127,8 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   };
 
   return (
-    <div className="transform transition-all duration-300 ease-in-out">
+    <div>
+      
   {loading && <OpacityLoader />}
   
   <div
@@ -250,8 +255,8 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
           
         <div
            className={`overflow-hidden transition-[max-height,opacity] duration-1000 ease-in-out ${isExpanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
-        >  
-            <ProjectDetails
+        >  <Suspense fallback={<Skeleton_loader />}>
+             <ProjectDetails
               project={project}
               user={user}
               handleViewProfile={() => {}}
@@ -261,8 +266,9 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
               setEditProject={setEditProject}
               setIsExpanded={setIsExpanded}
             />
+            </Suspense>
         </div>
-       
+        
 
 
           

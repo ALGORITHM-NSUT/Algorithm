@@ -7,7 +7,7 @@ const ProjectContext = createContext();
 const AboutContext = createContext();
 
 const AboutProvider = ({ children }) => {
-  const [members, setMembers] = useState({ withSubPosition: [], withoutSubPosition: [] });
+  const [members, setMembers] = useState({ management: [], techhead: [], operation: []});
   const [aboutLoading, setAboutLoading] = useState(true);
   const fetchMembers = async () => {
     try {
@@ -15,17 +15,19 @@ const AboutProvider = ({ children }) => {
         method: "GET",
       });
       const data = await response.json();
-      const withSubPosition = data.members.filter(member => member.subPosition);
-      const withoutSubPosition = data.members.filter(member => !member.subPosition);
-      sessionStorage.setItem('members', JSON.stringify({ withSubPosition, withoutSubPosition }));
-      setMembers({ withSubPosition, withoutSubPosition });
+      const management = data.members.filter(member => member.subPosition === "management");
+      const techhead = data.members.filter(member => member.subPosition === "techhead");
+      const operation = data.members.filter(member => member.subPosition === "operation");
+      sessionStorage.setItem('members', JSON.stringify({ management, techhead, operation }));
+      setMembers({ management, techhead, operation });
       setAboutLoading(false);
+      console.log(data);
     } catch (error) {
       console.error('Error fetching members:', error);
       // setAboutLoading(false);
     }
   };
-
+  
   useEffect(() => {
     const storedMembers = sessionStorage.getItem('members');
     if (storedMembers) {
@@ -36,7 +38,7 @@ const AboutProvider = ({ children }) => {
       fetchMembers();
     }
   }, []);
-
+  
   return (
     <AboutContext.Provider value={{ members, setMembers, aboutLoading, fetchMembers}}>
       {children}
