@@ -51,28 +51,48 @@ export default function HeroSection() {
         <Link
           to={user ? '/login' : '/join-us'}
           className={`group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold rounded-full transition-all duration-300 ease-in-out 
-             ${isLoading ? 'bg-gray-500 cursor-wait rounded-full overflow-hidden hover:bg-gray-500' : 'rounded-full text-white bg-[#4c56d7] overflow-hidden hover:bg-[#3a42a5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4c56d7]'}`}
+            ${isLoading ? 'bg-gray-500 cursor-wait rounded-full overflow-hidden hover:bg-gray-500' : 'rounded-full text-white bg-[#4c56d7] overflow-hidden hover:bg-[#3a42a5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4c56d7]'}`}
           disabled={isLoading}
-          onClick={e => isLoading && e.preventDefault()}  // Prevent navigation if loading
+          onClick={(e) => isLoading && e.preventDefault()} // Prevent navigation if loading
         >
-          <span className={!isLoading && `absolute inset-0 w-full h-full bg-gradient-to-br from-[#6a11cb] to-[#2575fc] opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100`}></span>
+          <span
+            className={
+              !isLoading &&
+              `absolute inset-0 w-full h-full bg-gradient-to-br from-[#6a11cb] to-[#2575fc] opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100`
+            }
+          ></span>
           <span className="relative z-10 flex items-center">
             <span className="mr-2">Join Now</span>
-            <motion.svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              initial={{ x: -10, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </motion.svg>
+            {isLoading ? (
+              <motion.div
+                className="animate-spin h-6 w-6 border-4 border-white border-t-transparent rounded-full"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              />
+            ) : (
+              <motion.svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                initial={{ x: -10, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </motion.svg>
+            )}
           </span>
         </Link>
       </motion.div>
+
     </div>
   );
 }
