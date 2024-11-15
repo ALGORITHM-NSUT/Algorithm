@@ -20,7 +20,7 @@ const ProjectDetails = ({ project, user, handleViewProfile, handleApplication, h
   };
 
   return (
-      
+        
         <Box>
           {/* Project Lead Section */}
           

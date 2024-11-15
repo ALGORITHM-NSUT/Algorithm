@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, Suspense } from 'react';
 import { UserContext } from '../auth/UserProvider';
 import { useNavigate } from 'react-router-dom';
-import Register from './Registercard';
+const Register = React.lazy(() => import('./Registercard'));
 
 import {
   Card,
@@ -101,11 +101,11 @@ const Profile = () => {
       {loading && (
           <OpacityLoader />
       )}
-
+      <Suspense fallback={<OpacityLoader />}>
       {editform && user && <div>
         <Register user={user} setEditForm={setEditForm} setEditAcc={setEditAcc} />
         </div>}
-
+      </Suspense>
 
       {!editform && user && (
         <Container maxWidth="sm" sx={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -159,7 +159,8 @@ const Profile = () => {
                 justifyContent: 'space-between',
               }}
             >
-              {!editAcc && (
+              {!editAcc ? (
+                <>
                 <Button
                   variant="contained"
                   color="error"
@@ -169,8 +170,7 @@ const Profile = () => {
                 >
                   Logout
                 </Button>
-              )}
-              {!editAcc && (
+              
                 <Button
                   variant="contained"
                   color="primary"
@@ -180,9 +180,9 @@ const Profile = () => {
                 >
                   Edit Account
                 </Button>
-              )}
-              {editAcc &&
-                <React.Fragment>
+                </>
+              ) :
+                <>
                   <Button
                     variant="contained"
                     color="primary"
@@ -201,7 +201,7 @@ const Profile = () => {
                   >
                     Cancel
                   </Button>
-                </React.Fragment>
+                </>
               }
             </Box>
           </Card>
