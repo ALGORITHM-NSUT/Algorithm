@@ -2,7 +2,6 @@ import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, useAnimation } from "framer-motion";
 import { UserContext } from "../auth/UserProvider";
-import Loader from "./Loader";
 import LighthouseScene from "./LightHouseScene";
 
 export default function HeroSection() {

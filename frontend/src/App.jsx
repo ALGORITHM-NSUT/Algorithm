@@ -16,6 +16,7 @@ import Leaderboard from "./pages/Leaderboard";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Feedback from "./pages/Feedback";
+import FloatingBackground from "./pages/FloatingBackground";
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -45,6 +46,7 @@ const AnimatedRoutes = () => {
 const App = () => {
   return (
     <BrowserRouter>
+      <FloatingBackground />
       <Navbar />
         <AnimatedRoutes />
       <Footer />

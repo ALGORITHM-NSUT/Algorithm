@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import FloatingBackground from './FloatingBackground';
 import FeedbackComponent from '../components/Feedback-component';
 import { UserContext } from "../auth/UserProvider";
 import Loader from '../components/Loader';
@@ -24,7 +23,6 @@ const Feedback = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex-grow">
-        <FloatingBackground />
 
         <div className="mt-12 flex flex-col justify-center items-center transition-all duration-500">
          <div className="flex items-center"  >

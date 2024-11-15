@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
 import Core from "../components/Core";
-import FloatingBackground from './FloatingBackground';
 import Loader from "../components/Loader";
 import About from "../components/About";
 import ScrollPrompt from "../components/ScrollPrompt"; // Import ScrollPrompt
@@ -46,7 +45,6 @@ const AboutPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex-grow">
-        <FloatingBackground />
         <About />
         {showScrollPrompt && <ScrollPrompt />} {/* Only show ScrollPrompt when state is true */}
         <Core members={members} />

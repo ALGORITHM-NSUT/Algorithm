@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import HeroSection from '../components/HeroSection';
 
-import OpacityLoader from '../components/OpacityLoader';
-import LighthouseScene from '../components/LightHouseScene';
-import FloatingBackground from './FloatingBackground';
-
 const Home = () => {
 
   useEffect(() => {
