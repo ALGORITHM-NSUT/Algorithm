@@ -5,7 +5,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import UserProfileModal from './UserProfileModal'; // Ensure this component is correctly imported
 import ContributorsList from './ContributorsList';
 
-const ProjectDetails = ({ project, user, handleViewProfile, handleApplication, handleDeleteRequest, editProject, setEditProject }) => {
+const ProjectDetails = ({ project, user, handleApplication, handleDeleteRequest, editProject, setEditProject }) => {
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
@@ -71,7 +71,7 @@ const ProjectDetails = ({ project, user, handleViewProfile, handleApplication, h
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          handleViewProfile(applicant);
+                          handleOpenUserProfile(applicant);
                         }}
                         className="text-sm text-[#330080] no-underline hover:text-red-500"
                       >

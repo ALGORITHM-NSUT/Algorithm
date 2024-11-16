@@ -436,4 +436,4 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
   );
 };
 
-export default AddProject;
+export default React.memo(AddProject);

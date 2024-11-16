@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, Suspense } from 'react';
+import React, { useState, useEffect, useContext, Suspense, useRef } from 'react';
 import { UserContext } from '../auth/UserProvider';
 const JoinRequestModal = React.lazy(() => import('./JoinRequestModal'));
 const DeleteRequestModal = React.lazy(() => import('./deleteProjectModal'));
@@ -23,6 +23,15 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   const [editProject, setEditProject] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showUserProfileModal, setShowUserProfileModal] = useState(false);
+  const lastExecutedRef = useRef(0);
+
+  const toggleExpand = () => {
+    const now = Date.now();
+    if (now - lastExecutedRef.current > 250) {
+      setIsExpanded((prev) => !prev);
+      lastExecutedRef.current = now;
+    }
+  };
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -30,10 +39,6 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
       setEditProject(false);
     }
   }, [isExpanded]);
-
-  const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
-  };
 
   const handleCloseModal = (e) => {
     e.stopPropagation();
@@ -253,13 +258,15 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
 
           {/* opening animation */}
           
-        <div
-           className={`overflow-hidden transition-[max-height,opacity] duration-1000 ease-in-out ${isExpanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
-        >  <Suspense fallback={<Skeleton_loader />}>
+          <div
+            className={`overflow-hidden transition-[max-height,opacity] duration-500 ease-in-out ${
+              isExpanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+            }`}
+          >
+            <Suspense fallback={<Skeleton_loader />}>
              <ProjectDetails
               project={project}
               user={user}
-              handleViewProfile={() => {}}
               handleApplication={handleApplication}
               handleDeleteRequest={handleDeleteRequest}
               editProject={editProject}
