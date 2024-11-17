@@ -4,7 +4,7 @@ const JoinRequestModal = React.lazy(() => import('./JoinRequestModal'));
 const DeleteRequestModal = React.lazy(() => import('./deleteProjectModal'));
 import ProjectImageCarousel from './ProjectImageCarousel';
 const ProjectDetails = React.lazy(() => import('./ProjectDetails'));
-const AddProject = React.lazy(() => import('./addProject'));
+const AddProject = React.lazy(() => import('./addProject.jsx'));
 import { AnimatePresence } from 'framer-motion';
 import "slick-carousel/slick/slick.css"; // Import slick carousel CSS
 import "slick-carousel/slick/slick-theme.css";
