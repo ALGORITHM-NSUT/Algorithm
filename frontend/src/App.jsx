@@ -46,9 +46,9 @@ const AnimatedRoutes = () => {
 const App = () => {
   return (
     <BrowserRouter>
-      <FloatingBackground />
       <Navbar />
-        <AnimatedRoutes />
+      <FloatingBackground className="flex-grow relative flex flex-col items-center justify-center text-center min-h-screen"/>
+      <AnimatedRoutes />
       <Footer />
     </BrowserRouter>
   );

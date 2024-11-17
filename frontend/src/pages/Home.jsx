@@ -9,7 +9,7 @@ const Home = () => {
 
   return (
     <>
-      <div className=" gradient-background min-h-screen">
+      <div className="gradient-background min-h-screen">
         <div className="flex-grow">
           {/* <FloatingBackground /> */}
           <HeroSection />
