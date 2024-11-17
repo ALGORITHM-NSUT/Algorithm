@@ -60,6 +60,7 @@ export default function Footer() {
           <h2 className="text-2xl font-bold mb-2">Quick Links</h2>
           {quickLinks.map((link, index) => (
            <Link
+              key={index}
               to={link.path}
               onMouseEnter={() => setHoveredLink(link.name)}
               onMouseLeave={() => setHoveredLink(null)}
