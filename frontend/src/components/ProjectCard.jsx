@@ -4,7 +4,7 @@ const JoinRequestModal = React.lazy(() => import('./JoinRequestModal'));
 const DeleteRequestModal = React.lazy(() => import('./deleteProjectModal'));
 import ProjectImageCarousel from './ProjectImageCarousel';
 const ProjectDetails = React.lazy(() => import('./ProjectDetails'));
-const AddProject = React.lazy(() => import('./addProject'));
+const AddProject = React.lazy(() => import('./addProject.jsx'));
 import { AnimatePresence } from 'framer-motion';
 import "slick-carousel/slick/slick.css"; // Import slick carousel CSS
 import "slick-carousel/slick/slick-theme.css";
@@ -138,7 +138,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   
   <div
     onClick={toggleExpand}
-    className={`relative p-1 w-full rounded-lg transition-all scale-95 duration-300 ease-in-out cursor-pointer transform-gpu ${
+    className={`relative p-1 w-full rounded-lg transition-all scale-95 duration-300 ease-in-out cursor-pointer ${
       isExpanded ? ' md:scale-105  z-30' : 'z-10'
     }`}
   >
@@ -259,8 +259,8 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
           {/* opening animation */}
           
           <div
-            className={`will-change-transform will-change-opacity overflow-hidden transition-[max-height,opacity] duration-500 ease-in-out ${
-              isExpanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0 transform-gpu"
+            className={`will-change-opacity overflow-hidden transition-[max-height,opacity] duration-500 ease-in-out ${
+              isExpanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
             }`}
           >
             <Suspense fallback={<Skeleton_loader />}>
