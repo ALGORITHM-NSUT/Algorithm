@@ -1,10 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const FloatingBackground = ({ children }) => {
+  const [circleCount, setCircleCount] = useState(30);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setCircleCount(15);
+      } else {
+        setCircleCount(30);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className="area text-white justify-center font-bold relative content-center flex justify-content">
       <ul className="circles flex flex-wrap justify-center items-center">
-        {Array.from({ length: 30 }).map((_, index) => (
+        {Array.from({ length: circleCount }).map((_, index) => (
           <li key={index} className="circle">
             <span className="circle-text"></span>
           </li>
@@ -46,7 +61,11 @@ const FloatingBackground = ({ children }) => {
           animation: animate 25s linear infinite;
           bottom: -150px;
         }
-
+        @media (max-width: 768px) {
+          .circles li {
+            background: rgba(128, 123, 184, 0.2); /* Change to your desired color */
+          }
+        }
         .circle {
           display: flex;
           justify-content: center;
@@ -105,8 +124,6 @@ const FloatingBackground = ({ children }) => {
             border-radius: 50%;
           }
         }
-
-
       `}</style>
     </div>
   );

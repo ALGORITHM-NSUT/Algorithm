@@ -31,12 +31,13 @@ const Feedback = () => {
             </label>
 
             {user?.admin &&
-            (<div className="relative" onChange={handleClick}>
+            (<div className="relative" >
               <input
                 type="checkbox"
                 checked={isCheck}
                 className="toggle-checkbox hidden"
                 id="toggleSwitch"
+                onChange={handleClick}
               />
               <label
                 htmlFor="toggleSwitch"

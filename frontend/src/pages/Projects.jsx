@@ -47,7 +47,7 @@ const Projects = () => {
               ))}
               {user && user.admin && (
                 <Suspense fallback={<OpacityLoader />}>
-                <div className='relative w-full max-w-[600px] h-full min-h-[640px] max-h-[640px]'>
+                <div className='relative w-full max-w-[600px] h-[628px] mt-[15px]'>
                   <AddProject refreshProjects={fetchProjects} edit={false} showadd={true} />
                 </div>
               </Suspense>
@@ -58,7 +58,7 @@ const Projects = () => {
           
           user && user.admin && (
             <Suspense fallback={<OpacityLoader />}>
-              <div className='relative w-full max-w-[600px] h-[640px]'>
+              <div className='relative w-full max-w-[600px] h-[628px] mt-[15px]'>
                 <AddProject refreshProjects={fetchProjects} edit={false} showadd={true} />
               </div>
             </Suspense>
