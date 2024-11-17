@@ -138,8 +138,8 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
   
   <div
     onClick={toggleExpand}
-    className={`relative p-1 w-full rounded-lg transition-all duration-300 ease-in-out cursor-pointer transform-gpu ${
-      isExpanded ? ' md:scale-110  z-30' : 'z-10'
+    className={`relative p-1 w-full rounded-lg transition-all scale-95 duration-300 ease-in-out cursor-pointer transform-gpu ${
+      isExpanded ? ' md:scale-105  z-30' : 'z-10'
     }`}
   >
 
