@@ -1,17 +1,14 @@
-import React, { useState, useContext } from 'react';
-import { UserContext } from '../auth/UserProvider';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import OpacityLoader from './OpacityLoader';
 import PasswordReset from './PasswordRest';
 
-const Login = () => {
+const Login = ({setUser}) => {
   let [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [loading, setLoading] = useState(false); // New loading state
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [showReset, setShowReset] = useState(false);
-  const { user, setUser } = useContext(UserContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();

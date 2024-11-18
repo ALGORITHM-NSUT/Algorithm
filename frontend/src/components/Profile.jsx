@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext, Suspense } from 'react';
-import { UserContext } from '../auth/UserProvider';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 const Register = React.lazy(() => import('./Registercard'));
 
@@ -18,8 +17,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import OpacityLoader from './OpacityLoader'; // Make sure to import your OpacityLoader component
 
-const Profile = () => {
-  const { user, setUser } = useContext(UserContext);
+const Profile = ({user, setUser,  isLoading}) => {
   const [editAcc, setEditAcc] = useState(false);
   const [password, setPassword] = useState('');
   const [editform, setEditForm] = useState(false);
@@ -103,7 +101,7 @@ const Profile = () => {
       )}
       <Suspense fallback={<OpacityLoader />}>
       {editform && user && <div>
-        <Register user={user} setEditForm={setEditForm} setEditAcc={setEditAcc} />
+        <Register user={user} setUser={setUser} isLoading={isLoading} setEditForm={setEditForm} setEditAcc={setEditAcc} />
         </div>}
       </Suspense>
 

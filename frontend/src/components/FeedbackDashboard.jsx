@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Loader from './Loader';
-import OpacityLoader from './OpacityLoader';
 
 const FeedbackDashboard = ({userLoading}) => {
   const [feedbacks, setFeedbacks] = useState([]);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Dialog, DialogContent, DialogActions, Typography, Button, IconButton, Box } from '@mui/material';
 import { Close as CloseIcon, Send as SendIcon, Cancel as CancelIcon } from '@mui/icons-material';
 

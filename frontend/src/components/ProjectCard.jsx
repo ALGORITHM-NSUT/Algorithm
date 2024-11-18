@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext, Suspense, useRef } from 'react';
-import { UserContext } from '../auth/UserProvider';
+import React, { useState, useEffect, Suspense, useRef } from 'react';
 const JoinRequestModal = React.lazy(() => import('./JoinRequestModal'));
 const DeleteRequestModal = React.lazy(() => import('./deleteProjectModal'));
 import ProjectImageCarousel from './ProjectImageCarousel';
@@ -15,14 +14,12 @@ import Skeleton_loader from "./Skeleton_loader";
 
 
 
-const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
+const ProjectCard = ({ project, isOngoing, refreshProjects, user }) => {
   const [showappModal, setShowappModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const { user } = useContext(UserContext);
   const [editProject, setEditProject] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [showUserProfileModal, setShowUserProfileModal] = useState(false);
   const lastExecutedRef = useRef(0);
 
   const toggleExpand = () => {
@@ -45,7 +42,6 @@ const ProjectCard = ({ project, isOngoing, refreshProjects }) => {
     setShowappModal(false);
     setDeleteModal(false);
     setEditModal(false);
-    setShowUserProfileModal(false);
   };
 
   const handleDeleteRequest = () => {

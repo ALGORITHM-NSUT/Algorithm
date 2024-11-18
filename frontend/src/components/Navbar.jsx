@@ -78,8 +78,8 @@ const Navbar = () => {
 
       {/* Mobile Nav Links with Downward Animation */}
       <div
-        className={`will-change-transform will-change-opacity md:hidden transition-all duration-1000 ease-in-out overflow-hidden ${
-          isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
+        className={`will-change-transform md:hidden transition-h duration-500 ease-in-out overflow-hidden ${
+          isOpen ? 'max-h-screen' : 'max-h-0'
         }`}
         aria-expanded={isOpen}
       >
