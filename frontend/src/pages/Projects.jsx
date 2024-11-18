@@ -43,6 +43,7 @@ const Projects = () => {
                   project={project}
                   isOngoing={true}
                   refreshProjects={fetchProjects}
+                  user={user}
                 />
               ))}
               {user && user.admin && (

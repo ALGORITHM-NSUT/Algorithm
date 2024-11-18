@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
-import { UserContext } from "../auth/UserProvider";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   TextField,
@@ -77,8 +76,7 @@ const YearSelection = React.memo(({ value, onChange }) => (
 
 
 YearSelection.displayName = 'YearSelection';
-const Register = ({ setEditForm, setEditAcc }) => {
-  const { user, setUser, isLoading } = useContext(UserContext);
+const Register = ({ setEditForm, setEditAcc, user=null, setUser, isLoading }) => {
   const [loading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: user?.name || "",

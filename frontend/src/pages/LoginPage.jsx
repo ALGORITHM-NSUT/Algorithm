@@ -9,7 +9,7 @@ const LoginPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []); 
-  const { user, isLoading } = useContext(UserContext);
+  const { user, isLoading, setUser } = useContext(UserContext);
   
   if (isLoading) {
     return <Loader />
@@ -20,7 +20,7 @@ const LoginPage = () => {
   return (
     <div className="flex flex-col min-h-screen ">      
       <div className="flex-grow">
-        {!user ? <Login />: <Profile />}
+        {!user ? <Login setUser={setUser}/>: <Profile user={user} setUser={setUser} isLoading={isLoading}/>}
       </div>
 
     </div>

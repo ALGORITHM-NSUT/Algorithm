@@ -1,12 +1,10 @@
-import React, { useContext, useEffect } from "react";
+import React, {useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, useAnimation } from "framer-motion";
-import { UserContext } from "../auth/UserProvider";
 import LighthouseScene from "./LightHouseScene";
 
-export default function HeroSection() {
+const HeroSection = ({user, isLoading}) => {
   const controls = useAnimation();
-  const { user, isLoading } = useContext(UserContext);
 
   useEffect(() => {
     controls.start({
@@ -96,3 +94,5 @@ export default function HeroSection() {
     </div>
   );
 }
+
+export default HeroSection;
