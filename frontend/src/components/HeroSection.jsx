@@ -55,8 +55,9 @@ const HeroSection = ({user, isLoading}) => {
         >
           <span
             className={
-              !isLoading &&
+              !isLoading ?
               `absolute inset-0 w-full h-full bg-gradient-to-br from-[#6a11cb] to-[#2575fc] opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100`
+              :''
             }
           ></span>
           <span className="relative z-10 flex items-center">

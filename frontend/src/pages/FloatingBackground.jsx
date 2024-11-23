@@ -52,6 +52,7 @@ const FloatingBackground = ({ children }) => {
         }
 
         .circles li {
+          will-change: transform, opacity;
           position: absolute;
           display: block;
           list-style: none;
@@ -129,4 +130,4 @@ const FloatingBackground = ({ children }) => {
   );
 };
 
-export default FloatingBackground;
+export default React.memo(FloatingBackground);

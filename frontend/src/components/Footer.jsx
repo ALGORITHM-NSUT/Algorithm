@@ -4,7 +4,7 @@ import { Linkedin, Instagram, Phone, Mail } from "lucide-react";
 import { GitHub } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
-export default function Footer() {
+const Footer = () => {
   const [hoveredLink, setHoveredLink] = useState(null);
 
   // Data for quick links and contact info
@@ -106,3 +106,5 @@ export default function Footer() {
     </footer>
   );
 }
+
+export default React.memo(Footer);

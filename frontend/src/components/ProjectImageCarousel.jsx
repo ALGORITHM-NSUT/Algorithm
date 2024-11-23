@@ -6,11 +6,13 @@ import Slider from 'react-slick';
 const carouselSettings = {
   dots: true,
   infinite: true,
-  speed: 500,
+  speed: 350,
   slidesToShow: 1,
   slidesToScroll: 1,
   arrows: true,
-  lazyLoad: 'ondemand'
+  lazyLoad: 'ondemand',
+  autoplay: true,
+  autoplaySpeed: 3000
 };
 
 const ProjectImageCarousel = ({ project }) => {
