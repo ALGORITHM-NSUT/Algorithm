@@ -15,7 +15,9 @@ const uploadFilesToCloudinary = async (files, folder = "projects") => {
               console.error("Cloudinary upload error:", error);
               reject(error);
             } else {
-              resolve(result.secure_url);
+              const arr = result.secure_url.split('upload');
+              const bucket  = arr[0] + 'upload/f_auto,q_auto:good' + arr[1];
+              resolve(bucket);
             }
           }
         ).end(file.buffer);

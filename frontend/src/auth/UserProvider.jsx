@@ -21,7 +21,6 @@ const AboutProvider = ({ children }) => {
       sessionStorage.setItem('members', JSON.stringify({ management, techhead, operation }));
       setMembers({ management, techhead, operation });
       setAboutLoading(false);
-      console.log(data);
     } catch (error) {
       console.error('Error fetching members:', error);
       // setAboutLoading(false);
