@@ -209,4 +209,4 @@ const Profile = ({user, setUser,  isLoading}) => {
   );
 };
 
-export default Profile;
+export default React.memo(Profile);

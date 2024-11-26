@@ -83,4 +83,4 @@ const UserProfileModal = ({ isOpen, onClose, userDetails }) => {
   );
 };
 
-export default UserProfileModal;
+export default React.memo(UserProfileModal);
