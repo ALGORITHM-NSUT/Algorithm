@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 const Articles = ({news}) => {
   // Render articles
   const renderArticles = () => (
@@ -41,4 +41,4 @@ const Articles = ({news}) => {
   );
 };
 
-export default Articles;
+export default React.memo(Articles);

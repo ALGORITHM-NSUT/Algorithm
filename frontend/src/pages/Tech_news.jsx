@@ -50,4 +50,4 @@ const Tech_news = () => {
   );
 };
 
-export default Tech_news;
+export default React.memo(Tech_news);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -56,4 +56,4 @@ const PasswordReset = () => {
   );
 };
 
-export default PasswordReset;
+export default React.memo(PasswordReset);

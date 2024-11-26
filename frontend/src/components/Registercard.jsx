@@ -321,4 +321,4 @@ const Register = ({ setEditForm, setEditAcc, user=null, setUser, isLoading }) =>
   );
 };
 
-export default Register;
+export default React.memo(Register);

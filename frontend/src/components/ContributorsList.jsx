@@ -1,6 +1,5 @@
 import React from 'react';
-import { Grid, Button, Tooltip, Typography } from '@mui/material';
-import { Link } from '@mui/material';
+import { Grid,Typography } from '@mui/material';
 
 const ContributorsList = ({ project, handleViewProfile }) => {
   if (project.contributors.length === 0) return null;  // Return nothing if no contributors

@@ -71,4 +71,4 @@ const PasswordReset = ({ onBack }) => {
   );
 };
 
-export default PasswordReset;
+export default React.memo(PasswordReset);
