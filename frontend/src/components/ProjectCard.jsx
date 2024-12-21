@@ -126,7 +126,6 @@ const ProjectCard = ({ project, isOngoing, refreshProjects, user }) => {
       setLoading(false);
     }
   };
-
   return (
     <div>
       
@@ -150,7 +149,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects, user }) => {
           cursor: 'pointer',
           zIndex: -2,
           color: 'black',
-          '&:hover': { boxShadow: 12 },
+          '&:hover': { scale: 1.05, boxShadow: 12 },
           width: '100%',
           maxWidth: '600px',
           mx: 'auto',
@@ -238,8 +237,8 @@ const ProjectCard = ({ project, isOngoing, refreshProjects, user }) => {
 
               <div className='flex '>
                 <span>{project.description}</span>
-
-                {!isExpanded && (
+                
+                {!isExpanded && project.description.length > 100 && (
                   <span className='absolute bottom-0 right-0'>
                     ...
                   </span>
