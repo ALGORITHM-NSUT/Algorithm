@@ -291,7 +291,12 @@ const ProjectCard = ({ project, isOngoing, refreshProjects, user }) => {
                           className="mt-2 py-2 px-4 bg-[#330080] text-white rounded-lg cursor-not-allowed w-full"
                           disabled
                         >
-                          Add Github to apply
+                        <Link
+                          to="/login" 
+                          className="mt-2 py-2 px-4 bg-[#330080] text-white rounded-lg w-full flex items-center justify-center"
+                        >
+                      Add Github to apply
+                    </Link>
                         </button>)
 
                     ) : (
