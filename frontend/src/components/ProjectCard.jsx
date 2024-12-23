@@ -134,7 +134,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects, user }) => {
   <div
     onClick={toggleExpand}
     className={`relative p-1 w-full rounded-lg transition-all scale-95 duration-300 ease-in-out cursor-pointer ${
-      isExpanded ? ' md:scale-105  z-30' : 'z-10'
+      isExpanded ? ' z-30' : 'z-10'
     }`}
   >
 
@@ -149,7 +149,14 @@ const ProjectCard = ({ project, isOngoing, refreshProjects, user }) => {
           cursor: 'pointer',
           zIndex: -2,
           color: 'black',
-          '&:hover': { scale: 1.05, boxShadow: 12 },
+          '&:hover': {
+            scale: 1.05,
+            boxShadow: 12,
+            '@media (max-width: 768px)': {
+              scale: 1,
+              boxShadow: 6,
+            },
+          },
           width: '100%',
           maxWidth: '600px',
           mx: 'auto',
