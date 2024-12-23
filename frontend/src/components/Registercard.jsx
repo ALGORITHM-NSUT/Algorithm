@@ -17,7 +17,7 @@ import {
 import { motion } from "framer-motion";
 import Lottie from "react-lottie";
 import cartoonProfile from "../assets/cartoon-profile.json";
-import OpacityLoader from "./OpacityLoader";
+import OpacityLoader from "./Loaders/OpacityLoader";
 
 const theme = createTheme({
   palette: {

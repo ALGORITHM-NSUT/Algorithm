@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import OpacityLoader from './OpacityLoader';
+import OpacityLoader from './Loaders/OpacityLoader';
 import PasswordReset from './PasswordRest';
 
 const Login = ({setUser}) => {

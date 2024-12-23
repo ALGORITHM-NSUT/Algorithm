@@ -1,9 +1,9 @@
 import React, { useEffect, useContext, Suspense } from 'react';
 import { UserContext, ProjectContext } from '../auth/UserProvider';
-import ProjectCard from '../components/ProjectCard';
-const AddProject = React.lazy(() => import('../components/addProject.jsx'));
-import Loader from '../components/Loader';
-import OpacityLoader from '../components/OpacityLoader';
+import ProjectCard from '../components/Project/ProjectCard.jsx';
+const AddProject = React.lazy(() => import('../components/Project/addProject.jsx'));
+import Loader from '../components/Loaders/Loader.jsx';
+import OpacityLoader from '../components/Loaders/OpacityLoader.jsx';
 
 const Projects = () => {
   const { user, userLoading } = useContext(UserContext);

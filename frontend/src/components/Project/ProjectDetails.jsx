@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Typography, Button, Link, IconButton, Tooltip } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import UserProfileModal from './UserProfileModal'; // Ensure this component is correctly imported
+import UserProfileModal from '../UserProfileModal'; // Ensure this component is correctly imported
 import ContributorsList from './ContributorsList';
 
 const ProjectDetails = ({ project, user, handleApplication, handleDeleteRequest, editProject, setEditProject }) => {

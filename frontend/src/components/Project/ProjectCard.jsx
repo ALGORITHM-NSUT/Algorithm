@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Suspense, useRef } from 'react';
-const JoinRequestModal = React.lazy(() => import('./JoinRequestModal'));
-const DeleteRequestModal = React.lazy(() => import('./deleteProjectModal'));
+const JoinRequestModal = React.lazy(() => import('./JoinRequestModal.jsx'));
+const DeleteRequestModal = React.lazy(() => import('./deleteProjectModal.jsx'));
 import ProjectImageCarousel from './ProjectImageCarousel';
 const ProjectDetails = React.lazy(() => import('./ProjectDetails'));
 const AddProject = React.lazy(() => import('./addProject.jsx'));
@@ -8,9 +8,9 @@ import { AnimatePresence } from 'framer-motion';
 import "slick-carousel/slick/slick.css"; // Import slick carousel CSS
 import "slick-carousel/slick/slick-theme.css";
 import { Typography, Paper, Box, Grid } from '@mui/material';
-import OpacityLoader from './OpacityLoader';
+import OpacityLoader from '../Loaders/OpacityLoader.jsx';
 import { useNavigate } from "react-router-dom";
-import Skeleton_loader from "./Skeleton_loader";
+import Skeleton_loader from "../Loaders/Skeleton_loader.jsx";
 
 
 

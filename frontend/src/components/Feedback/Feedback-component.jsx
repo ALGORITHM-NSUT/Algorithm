@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaStar } from 'react-icons/fa';
-import ToggleSwitch from './ToggleSwitch';
-import OpacityLoader from './OpacityLoader';
+import ToggleSwitch from '../ToggleSwitch';
+import OpacityLoader from '../Loaders/OpacityLoader';
 
 const FeedbackComponent = ({user}) => {
   const [performanceRating, setPerformanceRating] = useState(0);

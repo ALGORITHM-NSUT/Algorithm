@@ -15,7 +15,7 @@ import {
 import LogoutIcon from '@mui/icons-material/Logout';
 import EditIcon from '@mui/icons-material/Edit';
 
-import OpacityLoader from './OpacityLoader'; // Make sure to import your OpacityLoader component
+import OpacityLoader from './Loaders/OpacityLoader'; // Make sure to import your OpacityLoader component
 
 const Profile = ({user, setUser,  isLoading}) => {
   const [editAcc, setEditAcc] = useState(false);
