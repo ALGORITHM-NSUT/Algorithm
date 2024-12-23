@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
-import Core from "../components/Core";
-import Loader from "../components/Loader";
-import About from "../components/About";
-import ScrollPrompt from "../components/ScrollPrompt"; // Import ScrollPrompt
+import Core from "../components/Aboutsection/Core";
+import Loader from "../components/Loaders/Loader";
+import About from "../components/Aboutsection/About";
+import ScrollPrompt from "../components/Aboutsection/ScrollPrompt"; // Import ScrollPrompt
 import { AboutContext } from "../auth/UserProvider";
 
 const AboutPage = () => {

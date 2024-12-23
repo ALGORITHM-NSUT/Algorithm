@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import words from '../constants/Random_facts';
+import words from '../../constants/Random_facts';
 
 const Loader = () => {
   const [fact, setFact] = useState("");

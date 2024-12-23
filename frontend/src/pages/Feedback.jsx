@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import FeedbackComponent from '../components/Feedback-component';
+import FeedbackComponent from '../components/Feedback/Feedback-component';
 import { UserContext } from "../auth/UserProvider";
-import Loader from '../components/Loader';
-import FeedbackDashboard from '../components/FeedbackDashboard';
+import Loader from '../components/Loaders/Loader';
+import FeedbackDashboard from '../components/Feedback/FeedbackDashboard';
 
 const Feedback = () => {
   useEffect(() => {
