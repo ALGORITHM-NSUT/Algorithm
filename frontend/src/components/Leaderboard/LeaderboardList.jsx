@@ -5,17 +5,22 @@ import PopupModal from './PopupModal';
 
 export const LeaderboardList = ({ toggleModal }) => {
 	const { leaderboard, fetchLeaderboard } = useContext(LeaderboardContext);
+	const [selectedMember, setSelectedMember] = useState(null); // For modal content
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility
 
 	useEffect(() => {
 		fetchLeaderboard();
 	}, []);
 
-	// const [modal, setModal] = useState(false);
-	
-	// const toggleModal = () => {
-	// 	console.log('modal click')
-	// 	setModal(!modal);
-	// }
+	const handleToggleModal = () => {
+    // setSelectedMember(member);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedMember(null);
+    setIsModalOpen(false);
+  };
 
 	return (
 		<>
@@ -25,7 +30,7 @@ export const LeaderboardList = ({ toggleModal }) => {
 					{leaderboard.map((member, index) => (
 						<LeaderboardListMember
 						key={index}
-						toggleModal={toggleModal}
+						toggleModal={handleToggleModal}
 						rank={index + 1}
 						name={member.name}
 						handle={member.handle}
@@ -33,11 +38,23 @@ export const LeaderboardList = ({ toggleModal }) => {
 						/>
 					))}
 				</ul>
-				{/* { (
-					<PopupModal toggleModal={toggleModal} />
-				)} */}
 			</div>
-			{/* <PopupModal toggleModal={toggleModal} /> */}
+			
+			{isModalOpen && (
+        <PopupModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          // title={`Details for ${selectedMember?.name}`}
+          content={
+            <div className='w-48 h-48 bg-red-600'>
+              {/* <p><strong>Handle:</strong> {selectedMember?.handle}</p>
+              <p><strong>Rank:</strong> #{leaderboard.indexOf(selectedMember) + 1}</p>
+              <p><strong>Score:</strong> {selectedMember?.score}</p> */}
+							I AM MODAL
+            </div>
+          }
+        />
+      )}
 		</>
 	);
 };

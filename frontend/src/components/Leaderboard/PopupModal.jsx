@@ -1,23 +1,46 @@
 import React from 'react'
+import { Modal, Box, Typography, Button, IconButton, Fade } from '@mui/material';
+import { GitHub, LinkedIn, Close } from '@mui/icons-material';
 
-const PopupModal = ({ toggleModal }) => {
+const PopupModal = ({ isOpen, onClose, content }) => {
   return (
-    <div className='w-full h-full fixed'>
-      <div 
-      onClick={toggleModal}
-      className='w-full h-full top-0 right-0 left-0 bottom-0 backdrop-blur-sm bg-slate-800/50 flex justify-center'
-      >
-        <div className='mt-10 absolute p-4 max-w-60 max-h-60 bg-slate-400'>
-          <h1>hello</h1>
-          <button
-          onClick={toggleModal}
-          >
-            close
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
+    <Modal open={isOpen} onClose={onClose} closeAfterTransition onClick={(e) => e.stopPropagation()}>
+      <Fade in={isOpen}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: { xs: '90%', sm: 450 }, // Wider for modern look
+            maxWidth: '95%',
+            bgcolor: 'background.paper',
+            borderRadius: 4,
+            boxShadow: 24,
+            overflow: 'hidden',
+            p: 4,
+            animation: '0.3s ease-out fadeSlideIn',
+          }}
+        >
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            {/* <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold', textAlign: 'center', color: 'black' }}>
+              {title || 'Modal Title'}
+            </Typography> */}
+            <IconButton onClick={onClose} sx={{ color: 'text.secondary' }}>
+              <Close />
+            </IconButton>
+          </Box>
+          <Box sx={{ mb: 2, color: 'black' }}>
+            {content || <Typography variant="body2" sx={{ textAlign: 'center', color: 'black' }}>No content available.</Typography>}
+          </Box>
+          <Button onClick={onClose} fullWidth variant="contained" sx={{ mt: 3, bgcolor: '#330075', color: 'white' }}>
+            Close
+          </Button>
+        </Box>
+      </Fade>
+    </Modal>
+  );
+};
 
 export default PopupModal;
+
