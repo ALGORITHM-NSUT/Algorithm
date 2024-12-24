@@ -12,7 +12,7 @@ const Leaderboard = () => { // Receive `user` as a prop or from context
 
   return (
 
-    <div className="flex-grow relative flex flex-col items-center justify-center text-center min-h-screen">
+    <div className="flex-grow relative flex flex-col items-center justify-center text-center min-h-screen p-10">
       <LeaderboardList />
       {/* Conditionally render Join Now button if no user is logged in */}
       {!user && (
