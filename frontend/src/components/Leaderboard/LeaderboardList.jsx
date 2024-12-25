@@ -45,12 +45,9 @@ export const LeaderboardList = () => {
         <PopupModal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
-          // title={`Details for ${member?.name}`}
+          title={selectedMember?.name}
           content={
 						<>
-							<Typography variant="h6" component="h2" sx={{ fontWeight: 'bold', textAlign: 'center', color: 'black' }}>
-								{selectedMember.name}
-							</Typography>
 							<div className='items-center'>
 								<p><strong>Leetcode:</strong> {selectedMember?.leetcode}</p>
 								<p><strong>Codeforces:</strong> {selectedMember.codeForces}</p>

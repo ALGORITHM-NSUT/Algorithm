@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal, Box, Typography, Button, IconButton, Fade } from '@mui/material';
 import { GitHub, LinkedIn, Close } from '@mui/icons-material';
 
-const PopupModal = ({ isOpen, onClose, content }) => {
+const PopupModal = ({ isOpen, onClose, content, title }) => {
   return (
     <Modal open={isOpen} onClose={onClose} closeAfterTransition onClick={(e) => e.stopPropagation()}>
       <Fade in={isOpen}>
@@ -23,9 +23,9 @@ const PopupModal = ({ isOpen, onClose, content }) => {
           }}
         >
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-            {/* <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold', textAlign: 'center', color: 'black' }}>
+            <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold', textAlign: 'center', color: 'black' }}>
               {title || 'Modal Title'}
-            </Typography> */}
+            </Typography>
             <IconButton onClick={onClose} sx={{ color: 'text.secondary' }}>
               <Close />
             </IconButton>
