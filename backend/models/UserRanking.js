@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const userRankingSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "FormData", required: true },
+    name: {type: String, required: true},
     leetcodeHandle: { type: String, default: null },
     leetcodeRank: { type: Number, default: null },
     codeforcesHandle: { type: String, default: null },

@@ -309,6 +309,7 @@ export const fetchAndSaveInDB = async (req, res) => {
         const processedUser = {
           //convert 'N/A' or undefined ranks to null
           userId: userData.userId || null,
+          name: userData.name || null,
           leetcodeHandle: userData.leetcodeHandle || null,
           leetcodeRank:
             userData.leetcodeRank === "N/A" ||
@@ -332,7 +333,7 @@ export const fetchAndSaveInDB = async (req, res) => {
       }
     }
 
-    // console.log("Processed Rankings:", processedRankings);
+    console.log("Processed Rankings:", processedRankings);
 
     if (processedRankings.length > 0) {
       for (const processedUser of processedRankings) {
