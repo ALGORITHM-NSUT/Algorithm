@@ -46,16 +46,16 @@ export const LeaderboardList = () => {
 				<PopupModal
 					isOpen={isModalOpen}
 					onClose={handleCloseModal}
-					title={selectedMember?.name}
+					title={selectedMember?.codeforcesHandle}
 					content={
 						<>
 							<div className='items-center'>
-								<p><Code sx={{ color: 'text.primary', mr: 1 }}></Code><strong>Leetcode:</strong> {selectedMember?.leetcode}</p>
+								<p><Code sx={{ color: 'text.primary', mr: 1 }}></Code><strong>Leetcode:</strong> {Math.floor(selectedMember?.leetcodeRank)}</p>
 								<hr />
-								<p><DataObject sx={{ color: 'text.primary', mr: 1 }}></DataObject><strong>Codeforces:</strong> {selectedMember.codeForces}</p>
+								<p><DataObject sx={{ color: 'text.primary', mr: 1 }}></DataObject><strong>Codeforces:</strong> {Math.floor(selectedMember.codeforcesRank)}</p>
 								<hr />
-								<p><DataArray sx={{ color: 'text.primary', mr: 1 }}></DataArray><strong>CodeChef:</strong> {selectedMember?.codeChef}</p>
-								<hr />
+								{/* <p><DataArray sx={{ color: 'text.primary', mr: 1 }}></DataArray><strong>CodeChef:</strong> {selectedMember?.codeChef}</p>
+								<hr /> */}
 							</div>
 						</>
 					}

@@ -10,7 +10,11 @@ const LeaderboardProvider = ({ children }) => {
 				method: 'GET',
 			});
 			const data = await response.json();
-			console.log(data);
+
+			const membersData = data.data;
+			membersData.sort((a, b) => b.score - a.score);
+
+			setLeaderboard(data.data);
 		} catch (error) {
 			console.error('Error fetching user:', error);
 		}
