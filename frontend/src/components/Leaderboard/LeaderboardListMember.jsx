@@ -28,7 +28,7 @@ const LeaderboardListMember = ({ toggleModal, member, rank }) => {
 		<li 
 		onClick={() => toggleModal(member)} 
 		style={style} 
-		className={`py-4 px-4 dark:bg-gray-700 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 my-1 overflow-hidden`}>
+		className={`py-4 px-4 dark:bg-gray-700 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 my-1.5`}>
 			<div className='flex items-center justify-between w-full'>
 				<span className="text-lg font-bold text-gray-700 dark:text-gray-300 w-10">#{rank}</span>
 				<div className='ml-8'>

@@ -26,7 +26,7 @@ export const LeaderboardList = () => {
 
 	return (
 		<>
-			<div className='w-full mx-auto p-6'>
+			<div className='w-11/12 mx-auto p-6'>
 				<h1 className='text-4xl font-bold text-center mb-4 text-gray-800 dark:text-gray-200'>Leaderboard</h1>
 				<ul>
 					{leaderboard.map((member, index) => (
