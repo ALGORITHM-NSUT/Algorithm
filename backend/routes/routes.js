@@ -40,9 +40,13 @@ router.route("/projects").get(isAuthenticated, getProjects);
 router.get("/verify/:id", emailVerify);
 router.get("/getFeedbacks", getFeedback);
 
-router.get("/leaderBoard/allusers", showAllUsers);
-router.get("/leaderBoard/delete", deleteAllRankings);
-router.get("/leaderBoard/show", showAllRankings);
+// router.get('/leaderBoard/allusers', showAllUsers);
+router.get('/leaderBoard/delete', deleteAllRankings );
+// TO GEt ranking
+router.get('/leaderBoard/show', showAllRankings);
+// to update ranking
+router.get('/leaderBoard/showranking', fetchLeaderboardData);
+router.post('/leaderBoard/save', fetchAndSaveInDB);
 
 // post
 router.post("/form", submitFormData);

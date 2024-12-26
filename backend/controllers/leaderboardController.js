@@ -2,8 +2,81 @@ import axios from "axios";
 import FormData from "../models/formDataModel.js";
 import UserRanking from "../models/UserRanking.js";
 
+const getusername=async(user)=>{
+  try {
+     const target=await FormData.findOne({_id:user.userId});
+     
+
+     return target.name
+  } catch (error) {
+    console.log(error);
+    return null
+    
+  }
+}
+const normalizeranks = async(arr, weight1 = 0.5, weight2 = 0.5) => {
+ 
+  const leetcoderanks = arr.map((user) => user.leetcodeRank).filter((rank) => rank !== null);
+  const codeforcesranks = arr.map((user) => user.codeforcesRank).filter((rank) => rank !== null);
+
+  
+  const minLeetcode = Math.min(...leetcoderanks);
+  const maxLeetcode = Math.max(...leetcoderanks);
+  const minCodeforces = Math.min(...codeforcesranks);
+  const maxCodeforces = Math.max(...codeforcesranks);
+
+  // to avoid division by zero
+  const normalize = (value, min, max) => (max - min !== 0) ? (value - min) / (max - min) : 0;
+
+ let normalisedarr= await Promise.all(arr.map(async(user) => {
+    let normalizedLeetcode = user.leetcodeRank !== null 
+      ? normalize(user.leetcodeRank, minLeetcode, maxLeetcode) 
+      : 0.6; // worst rank(Assumption)
+    let normalizedCodeforces = user.codeforcesRank !== null 
+      ? normalize(user.codeforcesRank, minCodeforces, maxCodeforces) 
+      : 1; 
+
+    let combinedRank = normalizedCodeforces * weight1 + normalizedLeetcode * weight2;
+    const username = await getusername(user); 
+    // updating score in db
+    let t=await UserRanking.updateOne({_id:user._id},{
+      score:combinedRank
+    })
+   
+    return {
+      ...user,
+      ranks: combinedRank,
+      username:username,
+    };
+  })); 
+  return normalisedarr.sort((a,b)=>a.ranks-b.ranks);
+};
+
+
 //TODO:  CONSTRUCT LEADERBOARD - here the formula to calculate score will come
-export const fetchLeaderboardData = async (req, res) => {};
+
+export const fetchLeaderboardData = async (req, res) => {
+  
+  try {
+    // new date fetch(without score)
+    // await fetchAndSaveInDB();
+    // below lines to calculate score
+    const rankings = await UserRanking.find({}).lean();
+ 
+    let data=await normalizeranks(rankings,0.6,0.4);
+    return res.status(200).json({
+      message:"the normalised ranks",
+      data:data
+    })
+  } catch (error) {
+    res.status(400).json({
+      error:"couldn't normalised"
+    })
+    console.log("couldn't fetch useranks",error)
+  }
+
+  
+};
 
 //TODO: FETCH AND RETURN RANKINGS
 async function fetchAndSaveRankings(req, res) {
