@@ -6,7 +6,12 @@ const userRankingSchema = new mongoose.Schema({
     leetcodeRank: { type: Number, default: null },
     codeforcesHandle: { type: String, default: null },
     codeforcesRank: { type: Number, default: null },
-    timestamp: { type: Date, default: Date.now }
+    timestamp: { type: Date, default: Date.now },
+    score:{
+        type:Number,
+        required:true,
+        default:0,
+    }
 });
 
 const UserRanking = mongoose.model('UserRanking', userRankingSchema, 'User_Rankings');

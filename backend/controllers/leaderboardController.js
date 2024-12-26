@@ -38,13 +38,17 @@ const normalizeranks = async(arr, weight1 = 0.5, weight2 = 0.5) => {
 
     let combinedRank = normalizedCodeforces * weight1 + normalizedLeetcode * weight2;
     const username = await getusername(user); 
+    // updating score in db
+    let t=await UserRanking.updateOne({_id:user._id},{
+      score:combinedRank
+    })
+   
     return {
       ...user,
       ranks: combinedRank,
       username:username,
     };
-  })); // Sort by combined rank(Decreasing order)
-
+  })); 
   return normalisedarr.sort((a,b)=>a.ranks-b.ranks);
 };
 
@@ -52,10 +56,15 @@ const normalizeranks = async(arr, weight1 = 0.5, weight2 = 0.5) => {
 //TODO:  CONSTRUCT LEADERBOARD - here the formula to calculate score will come
 
 
+
 export const fetchLeaderboardData = async (req, res) => {
   
   try {
+    // new date fetch(without score)
+    // await fetchAndSaveInDB();
+    // below lines to calculate score
     const rankings = await UserRanking.find({}).lean();
+ 
     let data=await normalizeranks(rankings,0.6,0.4);
     return res.status(200).json({
       message:"the normalised ranks",
