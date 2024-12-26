@@ -3,25 +3,26 @@ import { LeaderboardContext } from '../../auth/LeaderboardProvider';
 import LeaderboardListMember from './LeaderboardListMember';
 import PopupModal from './PopupModal';
 import { Typography } from '@mui/material';
+import { Code, DataObject, DataArray } from '@mui/icons-material';
 
 export const LeaderboardList = () => {
 	const { leaderboard, fetchLeaderboard } = useContext(LeaderboardContext);
 	const [selectedMember, setSelectedMember] = useState(null); // For modal content
-  const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility
+	const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility
 
 	useEffect(() => {
 		fetchLeaderboard();
 	}, []);
 
 	const handleToggleModal = (member) => {
-    setSelectedMember(member);
-    setIsModalOpen(true);
-  };
+		setSelectedMember(member);
+		setIsModalOpen(true);
+	};
 
 	const handleCloseModal = () => {
-    setSelectedMember(null);
-    setIsModalOpen(false);
-  };
+		setSelectedMember(null);
+		setIsModalOpen(false);
+	};
 
 	return (
 		<>
@@ -34,29 +35,32 @@ export const LeaderboardList = () => {
 							toggleModal={handleToggleModal}
 							member={member}
 							rank={index + 1}
-							// name={member.name}
-							// handle={member.handle}
-							// score={member.score}
+						// name={member.name}
+						// handle={member.handle}
+						// score={member.score}
 						/>
 					))}
 				</ul>
 			</div>
 			{isModalOpen && (
-        <PopupModal
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          title={selectedMember?.name}
-          content={
+				<PopupModal
+					isOpen={isModalOpen}
+					onClose={handleCloseModal}
+					title={selectedMember?.name}
+					content={
 						<>
 							<div className='items-center'>
-								<p><strong>Leetcode:</strong> {selectedMember?.leetcode}</p>
-								<p><strong>Codeforces:</strong> {selectedMember.codeForces}</p>
-								<p><strong>CodeChef:</strong> {selectedMember?.codeChef}</p>
+								<p><Code sx={{ color: 'text.primary', mr: 1 }}></Code><strong>Leetcode:</strong> {selectedMember?.leetcode}</p>
+								<hr />
+								<p><DataObject sx={{ color: 'text.primary', mr: 1 }}></DataObject><strong>Codeforces:</strong> {selectedMember.codeForces}</p>
+								<hr />
+								<p><DataArray sx={{ color: 'text.primary', mr: 1 }}></DataArray><strong>CodeChef:</strong> {selectedMember?.codeChef}</p>
+								<hr />
 							</div>
 						</>
-          }
-        />
-      )}
+					}
+				/>
+			)}
 		</>
 	);
 };
