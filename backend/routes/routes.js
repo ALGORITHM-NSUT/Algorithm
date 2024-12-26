@@ -1,5 +1,5 @@
 // routes/formRoutes.js
-import express from 'express';
+import express, {application} from 'express';
 import { submitFormData } from '../controllers/formController.js';
 import { home } from '../controllers/home.js';
 import { getProjects, updateProject, addProject, deleteProject } from '../controllers/ProjectController.js';
@@ -10,6 +10,8 @@ import {submitFeedback, getFeedback} from '../controllers/feedbackController.js'
 import upload from '../config/multerconfig.js';
 import { emailVerify } from '../controllers/emailVerify.js';
 import { resetpass } from '../controllers/passreset.js';
+import {fetchLeaderboardData, fetchAndSaveRankings, showAllUsers, fetchAndSaveInDB, deleteAllRankings, showAllRankings} from '../controllers/leaderboardController.js';
+
 const router = express.Router();
 
 // get
@@ -18,6 +20,15 @@ router.get("/core", getCoreMembers);
 router.route("/projects").get(isAuthenticated, getProjects);
 router.get("/verify/:id", emailVerify);
 router.get("/getFeedbacks", getFeedback);
+
+// router.get('/leaderBoard/allusers', showAllUsers);
+router.get('/leaderBoard/delete', deleteAllRankings );
+// TO GEt ranking
+router.get('/leaderBoard/show', showAllRankings);
+// to update ranking
+router.get('/leaderBoard/showranking', fetchLeaderboardData);
+router.post('/leaderBoard/save', fetchAndSaveInDB);
+
 
 
 // post
