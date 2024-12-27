@@ -23,7 +23,7 @@ const Leaderboard = () => {
 
   return (
     <div className="flex-grow relative flex flex-col items-center justify-center text-center min-h-screen p-10">
-      <LeaderboardList currentPageData={currentPageData} />
+      <LeaderboardList currentPageData={currentPageData} currentPage={currentPage} />
       <Pagination
         totalMembers={leaderboard.length}
         membersPerPage={membersPerPage}
