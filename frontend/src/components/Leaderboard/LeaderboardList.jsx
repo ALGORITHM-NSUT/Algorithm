@@ -5,7 +5,7 @@ import PopupModal from './PopupModal';
 import { Typography } from '@mui/material';
 import { Code, DataObject, DataArray } from '@mui/icons-material';
 
-export const LeaderboardList = () => {
+export const LeaderboardList = ({ currentPageData }) => {
 	const { leaderboard, fetchLeaderboard } = useContext(LeaderboardContext);
 	const [selectedMember, setSelectedMember] = useState(null); // For modal content
 	const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility
@@ -27,9 +27,9 @@ export const LeaderboardList = () => {
 	return (
 		<>
 			<div className='w-11/12 mx-auto p-6'>
-				<h1 className='text-4xl font-bold text-center mb-4 text-gray-800 dark:text-gray-200'>Leaderboard</h1>
+				<h1 className='text-4xl font-bold text-center mb-8 text-gray-800 dark:text-gray-200'>Leaderboard</h1>
 				<ul>
-					{leaderboard.map((member, index) => (
+					{currentPageData.map((member, index) => (
 						<LeaderboardListMember
 							key={index}
 							toggleModal={handleToggleModal}
@@ -46,7 +46,7 @@ export const LeaderboardList = () => {
 				<PopupModal
 					isOpen={isModalOpen}
 					onClose={handleCloseModal}
-					title={selectedMember?.codeforcesHandle}
+					title={selectedMember?.name}
 					content={
 						<>
 							<div className='items-center'>

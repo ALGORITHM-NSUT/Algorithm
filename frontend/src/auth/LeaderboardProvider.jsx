@@ -12,6 +12,7 @@ const LeaderboardProvider = ({ children }) => {
 			const data = await response.json();
 
 			const membersData = data.data;
+			console.log(membersData)
 			membersData.sort((a, b) => b.score - a.score);
 
 			setLeaderboard(data.data);

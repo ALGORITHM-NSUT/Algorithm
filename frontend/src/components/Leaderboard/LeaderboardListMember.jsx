@@ -4,17 +4,17 @@ const LeaderboardListMember = ({ toggleModal, member, rank }) => {
 	const rankStyles = [
 		{
 			border:"2px solid transparent", 
-			borderImage: "linear-gradient(rgb(234 179 8), rgb(161 98 7 / 0.1))",
+			borderImage: "linear-gradient(rgb(234 179 8), rgb(161 98 7 / 0))",
       borderImageSlice: 1,
 		}, // 1st
     {
 			border:"2px solid transparent", 
-			borderImage: "linear-gradient(rgb(255 255 255), rgb(255 255 255 / 0.1))",
+			borderImage: "linear-gradient(rgb(255 255 255), rgb(255 255 255 / 0))",
 			borderImageSlice: 1,
 		}, // 2nd
     {
 			border:"2px solid transparent", 
-			borderImage: "linear-gradient(rgb(217 119 6), rgb(146 64 14 / 0.1))",
+			borderImage: "linear-gradient(rgb(217 119 6), rgb(146 64 14 / 0))",
 			borderImageSlice: 1,
 		} // 3rd
 	];
@@ -28,11 +28,13 @@ const LeaderboardListMember = ({ toggleModal, member, rank }) => {
 		<li 
 		onClick={() => toggleModal(member)} 
 		style={style} 
-		className={`py-4 px-4 dark:bg-gray-700 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 my-1.5`}>
+		className={`${isTopRank ? "" : "rounded-md"} py-4 px-4 dark:bg-gray-700/60 shadow-sm 
+							hover:bg-gray-50 dark:hover:bg-gray-600 my-1.5 transition-colors duration-400 backdrop-blur-md`}
+		>
 			<div className='flex items-center justify-between w-full'>
 				<span className="text-lg font-bold text-gray-700 dark:text-gray-300 w-10">#{rank}</span>
-				<div className='ml-8'>
-					<p className="text-sm font-medium text-gray-900 dark:text-gray-100">{member.codeforcesHandle}</p>
+				<div className='ml-8 text-left'>
+					<p className="text-sm font-medium text-gray-900 dark:text-gray-100">{member.name}</p>
 					<p className="text-sm text-gray-500 dark:text-gray-400">{member.codeforcesHandle}</p>
 				</div>
 				<div className='flex-grow'>
