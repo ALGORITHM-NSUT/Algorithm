@@ -7,23 +7,39 @@ import { LeaderboardContext } from '../auth/LeaderboardProvider';
 
 const Leaderboard = () => {
   // Receive `user` as a prop or from context
-  const { leaderboard, fetchLeaderboard } = useContext(LeaderboardContext);
+  const { leaderboard, fetchLeaderboard, setLeaderboard } =
+    useContext(LeaderboardContext);
   // PAGINATION
   const [currentPage, setCurrentPage] = useState(1); // for pagination
   const [membersPerPage, setMembersPerPage] = useState(10); // members per page
   const lastMemberIndex = currentPage * membersPerPage;
   const firstMemberIndex = lastMemberIndex - membersPerPage;
-  const currentPageData = leaderboard.slice(firstMemberIndex, lastMemberIndex);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  useEffect(() => {
+    const cachedLeaderboard = sessionStorage.getItem('leaderboardData');
+    if (cachedLeaderboard) {
+      setLeaderboard(JSON.parse(cachedLeaderboard));
+      // setProjectLoading(false); // Show data instantly if cached
+    } else {
+      fetchLeaderboard();
+    }
+  }, []);
+
+  const currentPageData = leaderboard.slice(firstMemberIndex, lastMemberIndex);
+
   const { user } = useContext(UserContext);
 
   return (
     <div className="flex-grow relative flex flex-col items-center justify-center text-center min-h-screen p-10">
-      <LeaderboardList currentPageData={currentPageData} currentPage={currentPage} membersPerPage={membersPerPage} />
+      <LeaderboardList
+        currentPageData={currentPageData}
+        currentPage={currentPage}
+        membersPerPage={membersPerPage}
+      />
       <Pagination
         totalMembers={leaderboard.length}
         membersPerPage={membersPerPage}
