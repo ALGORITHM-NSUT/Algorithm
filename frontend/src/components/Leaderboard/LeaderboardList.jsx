@@ -5,7 +5,7 @@ import PopupModal from './PopupModal';
 import { Typography } from '@mui/material';
 import { Code, DataObject, DataArray } from '@mui/icons-material';
 
-export const LeaderboardList = ({ currentPageData, currentPage }) => {
+export const LeaderboardList = ({ currentPageData, currentPage, membersPerPage }) => {
   const { leaderboard, fetchLeaderboard } = useContext(LeaderboardContext);
   const [selectedMember, setSelectedMember] = useState(null); // For modal content
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility
@@ -36,7 +36,7 @@ export const LeaderboardList = ({ currentPageData, currentPage }) => {
               key={index}
               toggleModal={handleToggleModal}
               member={member}
-              rank={index + 1}
+              rank={(index + 1) + (currentPage - 1) * membersPerPage}
               isFirstPage={currentPage === 1}
             // name={member.name}
             // handle={member.handle}
