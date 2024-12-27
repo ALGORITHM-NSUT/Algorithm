@@ -9,7 +9,7 @@ const Leaderboard = () => {
   // Receive `user` as a prop or from context
   const { leaderboard, fetchLeaderboard } = useContext(LeaderboardContext);
   // PAGINATION
-  const [currentPage, setCurrentPage] = useState(2); // for pagination
+  const [currentPage, setCurrentPage] = useState(1); // for pagination
   const [membersPerPage, setMembersPerPage] = useState(10); // members per page
   const lastMemberIndex = currentPage * membersPerPage;
   const firstMemberIndex = lastMemberIndex - membersPerPage;
