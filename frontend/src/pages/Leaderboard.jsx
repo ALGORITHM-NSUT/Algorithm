@@ -5,14 +5,15 @@ import { Link } from 'react-router-dom'; // Assuming you're using React Router f
 import Pagination from '../components/Leaderboard/Pagination';
 import { LeaderboardContext } from '../auth/LeaderboardProvider';
 
-const Leaderboard = () => { // Receive `user` as a prop or from context
+const Leaderboard = () => {
+  // Receive `user` as a prop or from context
   const { leaderboard, fetchLeaderboard } = useContext(LeaderboardContext);
   // PAGINATION
   const [currentPage, setCurrentPage] = useState(2); // for pagination
   const [membersPerPage, setMembersPerPage] = useState(10); // members per page
   const lastMemberIndex = currentPage * membersPerPage;
   const firstMemberIndex = lastMemberIndex - membersPerPage;
-  const currentPageData = leaderboard.slice(firstMemberIndex, lastMemberIndex)
+  const currentPageData = leaderboard.slice(firstMemberIndex, lastMemberIndex);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -21,16 +22,13 @@ const Leaderboard = () => { // Receive `user` as a prop or from context
   const { user } = useContext(UserContext);
 
   return (
-
     <div className="flex-grow relative flex flex-col items-center justify-center text-center min-h-screen p-10">
-      <LeaderboardList 
-      currentPageData={currentPageData}
-      />
-      <Pagination 
-      totalMembers={leaderboard.length} 
-      membersPerPage={membersPerPage} 
-      currentPage={currentPage}
-      setCurrentPage={setCurrentPage} 
+      <LeaderboardList currentPageData={currentPageData} />
+      <Pagination
+        totalMembers={leaderboard.length}
+        membersPerPage={membersPerPage}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
       />
       {/* Conditionally render Join Now button if no user is logged in */}
       {!user && (
