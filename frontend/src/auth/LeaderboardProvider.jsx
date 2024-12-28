@@ -4,6 +4,8 @@ const LeaderboardContext = createContext();
 
 const LeaderboardProvider = ({ children }) => {
   const [leaderboard, setLeaderboard] = useState([]);
+  const [leaderboardLoading, setLeaderboardLoading] = useState(true);
+
   const fetchLeaderboard = useCallback(async () => {
     try {
       const response = await fetch(
@@ -21,12 +23,24 @@ const LeaderboardProvider = ({ children }) => {
       setLeaderboard(sortedData);
     } catch (error) {
       console.error('Error fetching user:', error);
+    } finally {
+      setLeaderboardLoading(false);
     }
   });
 
+  useEffect(() => {
+    fetchLeaderboard();
+  }, []);
+
   return (
     <LeaderboardContext.Provider
-      value={{ leaderboard, setLeaderboard, fetchLeaderboard }}
+      value={{
+        leaderboard,
+        setLeaderboard,
+        fetchLeaderboard,
+        leaderboardLoading,
+        setLeaderboardLoading,
+      }}
     >
       {children}
     </LeaderboardContext.Provider>

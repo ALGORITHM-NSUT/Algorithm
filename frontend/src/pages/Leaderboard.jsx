@@ -4,11 +4,18 @@ import { LeaderboardList } from '../components/Leaderboard/LeaderboardList';
 import { Link } from 'react-router-dom'; // Assuming you're using React Router for navigation
 import Pagination from '../components/Leaderboard/Pagination';
 import { LeaderboardContext } from '../auth/LeaderboardProvider';
+import Loader from '../components/Loaders/Loader';
 
 const Leaderboard = () => {
   // Receive `user` as a prop or from context
-  const { leaderboard, fetchLeaderboard, setLeaderboard } =
-    useContext(LeaderboardContext);
+  const {
+    leaderboard,
+    fetchLeaderboard,
+    setLeaderboard,
+    leaderboardLoading,
+    setLeaderboardLoading,
+  } = useContext(LeaderboardContext);
+
   // PAGINATION
   const [currentPage, setCurrentPage] = useState(1); // for pagination
   const [membersPerPage, setMembersPerPage] = useState(10); // members per page
@@ -23,11 +30,16 @@ const Leaderboard = () => {
     const cachedLeaderboard = sessionStorage.getItem('leaderboardData');
     if (cachedLeaderboard) {
       setLeaderboard(JSON.parse(cachedLeaderboard));
-      // setProjectLoading(false); // Show data instantly if cached
-    } else {
+      setLeaderboardLoading(false); // Show data instantly if cached
+    }
+    if (!leaderboardLoading) {
       fetchLeaderboard();
     }
   }, []);
+
+  if (leaderboardLoading) {
+    return <Loader />;
+  }
 
   const currentPageData = leaderboard.slice(firstMemberIndex, lastMemberIndex);
 
