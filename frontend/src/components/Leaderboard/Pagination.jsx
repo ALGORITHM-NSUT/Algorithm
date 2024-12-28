@@ -19,6 +19,7 @@ const Pagination = ({
             key={index}
             onClick={() => {
               setCurrentPage(page);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             className={`${
               page === currentPage

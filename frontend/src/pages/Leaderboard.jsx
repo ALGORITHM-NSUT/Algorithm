@@ -46,7 +46,7 @@ const Leaderboard = () => {
   const { user } = useContext(UserContext);
 
   return (
-    <div className="flex-grow relative flex flex-col items-center justify-center text-center min-h-screen p-10">
+    <div className="flex-grow relative flex flex-col items-center justify-center text-center min-h-screen py-10">
       <LeaderboardList
         currentPageData={currentPageData}
         currentPage={currentPage}

@@ -26,8 +26,8 @@ export const LeaderboardList = ({
 
   return (
     <>
-      <div className="w-11/12 mx-auto p-6">
-        <h1 className="text-4xl font-bold text-center mb-8 text-gray-800 dark:text-gray-200">
+      <div className="w-11/12 mx-auto px-6">
+        <h1 className="md:text-[100px] md:leading-[6rem] leading-tight text-4xl font-bold text-center mb-8 text-gray-800 dark:text-gray-200 font-mono">
           Leaderboard
         </h1>
         <ul>
