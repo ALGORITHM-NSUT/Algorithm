@@ -29,6 +29,7 @@ import {
   deleteAllRankings,
   showAllRankings,
   grantAdminAccess,
+  fetchNewRanks,
 } from "../controllers/leaderboardController.js";
 
 const router = express.Router();
@@ -46,7 +47,6 @@ router.get('/leaderBoard/delete', deleteAllRankings );
 router.get('/leaderBoard/show', showAllRankings);
 // to update ranking
 router.get('/leaderBoard/showranking', fetchLeaderboardData);
-router.post('/leaderBoard/save', fetchAndSaveInDB);
 
 // post
 router.post("/form", submitFormData);
@@ -61,7 +61,7 @@ router
   .route("/updateProject")
   .post(isAuthenticated, upload.array("updateImages"), updateProject);
 router.route("/resetpass/:id").post(resetpass);
-router.post("/leaderBoard/save", fetchAndSaveInDB);
+router.post("/leaderBoard/save", fetchNewRanks);
 router.post('/grant', grantAdminAccess);
 
 export default router;
