@@ -13,7 +13,7 @@ const getusername = async (user) => {
     return null;
   }
 };
-const normalizeranks = async (arr, weight1 = 0.5, weight2 = 0.5) => {
+export const normalizeranks = async (arr, weight1 = 0.5, weight2 = 0.5) => {
   console.log("inside normalise ranks");
   const leetcoderanks = arr
     .map((user) => user.leetcodeRank)
@@ -300,7 +300,7 @@ async function fetchAndSaveRankings(req, res) {
 }
 
 // four functions used in fetchAndSaveRankings() - extractHandle, isValidHandle, extractLCRank, extractCFRank
-function extractHandle(profile) {
+export const extractHandle = function(profile) {
   if (!profile) return null;
   profile = profile.trim();
 
@@ -344,7 +344,7 @@ async function fetchWithRetry(url, retries = 3, delayMs = 2000) {
   throw new Error("Max retries reached");
 }
 
-async function extractLeetCodeRank(handle) {
+export const extractLeetCodeRank = async(handle)=> {
   const url = `https://alfa-leetcode-api.onrender.com/${handle}/contest`;
 
   try {
@@ -365,7 +365,7 @@ async function extractLeetCodeRank(handle) {
   }
 }
 
-async function extractCodeforcesRank(handle) {
+export const extractCodeforcesRank = async(handle) =>{
   if (!handle) {
     console.log("Invalid Codeforces handle: ", handle);
     return { rank: "N/A", error: "Invalid handle" };
@@ -547,6 +547,7 @@ export const grantAdminAccess = async (req, res) => {
 //TODO: TO VIEW THE CONTENTS OF THE DATABASE
 export const showAllRankings = async (req, res) => {
   try {
+    // console.log("yes");
     const rankings = await UserRanking.find({});
     return res.status(200).json({
       message: "Rankings retrieved successfully.",
@@ -560,3 +561,4 @@ export const showAllRankings = async (req, res) => {
     });
   }
 };
+
