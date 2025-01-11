@@ -37,6 +37,7 @@
     "react-transition-group": "^4.4.5",
     "react-window": "^1.8.10",
     "slick-carousel": "^1.8.1",
+    "socket.io-client": "^4.8.1",
     "sort-by": "^1.2.0",
     "tailwind-scrollbar": "^3.1.0",
     "three": "^0.169.0"

@@ -15,6 +15,8 @@ const getusername = async (user) => {
 };
 export const normalizeranks = async (arr, weight1 = 0.5, weight2 = 0.5) => {
   console.log("inside normalise ranks");
+  console.log('Rankings:', arr, Array.isArray(arr)); 
+ 
   const leetcoderanks = arr
     .map((user) => user.leetcodeRank)
     .filter((rank) => rank !== null);
@@ -28,8 +30,7 @@ export const normalizeranks = async (arr, weight1 = 0.5, weight2 = 0.5) => {
   const maxCodeforces = Math.max(...codeforcesranks);
   // console.log("normalised-1", minCodeforces, maxLeetcode);
   console.log({ leetcoderanks, codeforcesranks });
-console.log({ minLeetcode, maxLeetcode, minCodeforces, maxCodeforces });
-
+  console.log({ minLeetcode, maxLeetcode, minCodeforces, maxCodeforces });
 
   // to avoid division by zero
   const normalize = (value, min, max) =>
@@ -72,16 +73,19 @@ console.log({ minLeetcode, maxLeetcode, minCodeforces, maxCodeforces });
 export const fetchLeaderboardData = async (req, res) => {
   try {
     console.log("before fetch");
-    
+
     const updatedRankings = await fetchNewRanks();
     console.log("fetched new ranks!!!");
-    
-    // below lines to calculate score
+
     const rankings = await UserRanking.find({}).lean();
-    console.log(rankings);
+    // console.log(rankings);
 
     let data = await normalizeranks(rankings, 0.6, 0.4);
     console.log("normalised ranks: ", data);
+
+    const io = req.app.get('socketio');
+    io.emit('refresh-standings', {message: 'Refresh standings'});
+
     return res.status(200).json({
       message: "the normalised ranks",
       data: data,
@@ -90,7 +94,7 @@ export const fetchLeaderboardData = async (req, res) => {
     res.status(400).json({
       error: "couldn't normalised",
     });
-    console.log("couldn't fetch useranks", error);
+    // console.log("couldn't fetch useranks", error);
   }
 };
 
@@ -110,33 +114,51 @@ export const fetchNewRanks = async (req, res) => {
       return [];
     }
 
-    console.log("inside fetch-1")
+    console.log("inside fetch-1");
     const batchSize = 10;
     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    const limit = pLimit(5); 
+    const limit = pLimit(5);
     const updatedRankings = [];
 
     async function fetchAndUpdateUser(user) {
-      const { leetcodeHandle, codeforcesHandle, userId, name, leetcodeRank, codeforcesRank } = user;
+      const {
+        leetcodeHandle,
+        codeforcesHandle,
+        userId,
+        name,
+        leetcodeRank,
+        codeforcesRank,
+      } = user;
 
-      let newLeetcodeRank = leetcodeRank; 
-      let newCodeforcesRank = codeforcesRank; 
+      let newLeetcodeRank = leetcodeRank;
+      let newCodeforcesRank = codeforcesRank;
 
-      if (leetcodeHandle && isValidHandle(leetcodeHandle) && leetcodeRank !== null) {
+      if (
+        leetcodeHandle &&
+        isValidHandle(leetcodeHandle) &&
+        leetcodeRank !== null
+      ) {
         await limit(async () => {
           try {
-            await delay(500); 
+            await delay(500);
             const { rank } = await extractLeetCodeRank(leetcodeHandle);
             if (!isNaN(Number(rank))) {
               newLeetcodeRank = Number(rank);
             }
           } catch (error) {
-            console.error(`Error fetching LeetCode rank for ${leetcodeHandle}:`, error.message);
+            console.error(
+              `Error fetching LeetCode rank for ${leetcodeHandle}:`,
+              error.message
+            );
           }
         });
       }
 
-      if (codeforcesHandle && isValidHandle(codeforcesHandle) && codeforcesRank !== null) {
+      if (
+        codeforcesHandle &&
+        isValidHandle(codeforcesHandle) &&
+        codeforcesRank !== null
+      ) {
         try {
           await delay(500);
           const { rank } = await extractCodeforcesRank(codeforcesHandle);
@@ -144,12 +166,17 @@ export const fetchNewRanks = async (req, res) => {
             newCodeforcesRank = rank;
           }
         } catch (error) {
-          console.error(`Error fetching Codeforces rank for ${codeforcesHandle}:`, error.message);
+          console.error(
+            `Error fetching Codeforces rank for ${codeforcesHandle}:`,
+            error.message
+          );
         }
       }
 
-      const shouldUpdateLeetcode = newLeetcodeRank !== null && newLeetcodeRank !== leetcodeRank;
-      const shouldUpdateCodeforces = newCodeforcesRank !== null && newCodeforcesRank !== codeforcesRank;
+      const shouldUpdateLeetcode =
+        newLeetcodeRank !== null && newLeetcodeRank !== leetcodeRank;
+      const shouldUpdateCodeforces =
+        newCodeforcesRank !== null && newCodeforcesRank !== codeforcesRank;
 
       if (shouldUpdateLeetcode || shouldUpdateCodeforces) {
         const updatedUser = {
@@ -158,7 +185,9 @@ export const fetchNewRanks = async (req, res) => {
           leetcodeHandle,
           leetcodeRank: shouldUpdateLeetcode ? newLeetcodeRank : leetcodeRank,
           codeforcesHandle,
-          codeforcesRank: shouldUpdateCodeforces ? newCodeforcesRank : codeforcesRank,
+          codeforcesRank: shouldUpdateCodeforces
+            ? newCodeforcesRank
+            : codeforcesRank,
           timestamp: new Date(),
         };
 
@@ -170,7 +199,9 @@ export const fetchNewRanks = async (req, res) => {
             { $set: updatedUser },
             { upsert: true }
           );
-          console.log(`Rankings updated successfully for ${name || "Unknown"}.`);
+          console.log(
+            `Rankings updated successfully for ${name || "Unknown"}.`
+          );
         } catch (error) {
           console.error(
             `Error updating user ranking for ${name || "Unknown"}:`,
@@ -300,7 +331,7 @@ async function fetchAndSaveRankings(req, res) {
 }
 
 // four functions used in fetchAndSaveRankings() - extractHandle, isValidHandle, extractLCRank, extractCFRank
-export const extractHandle = function(profile) {
+export const extractHandle = function (profile) {
   if (!profile) return null;
   profile = profile.trim();
 
@@ -317,7 +348,7 @@ export const extractHandle = function(profile) {
     console.error(`Error parsing URL: ${profile}`, err.message);
     return null;
   }
-}
+};
 
 function isValidHandle(handle) {
   return handle && handle.trim().toLowerCase() !== "na";
@@ -344,7 +375,7 @@ async function fetchWithRetry(url, retries = 3, delayMs = 2000) {
   throw new Error("Max retries reached");
 }
 
-export const extractLeetCodeRank = async(handle)=> {
+export const extractLeetCodeRank = async (handle) => {
   const url = `https://alfa-leetcode-api.onrender.com/${handle}/contest`;
 
   try {
@@ -363,9 +394,9 @@ export const extractLeetCodeRank = async(handle)=> {
     console.error(`Error fetching LeetCode rank for ${handle}:`, error.message);
     return { rank: null, error: error.message };
   }
-}
+};
 
-export const extractCodeforcesRank = async(handle) =>{
+export const extractCodeforcesRank = async (handle) => {
   if (!handle) {
     console.log("Invalid Codeforces handle: ", handle);
     return { rank: "N/A", error: "Invalid handle" };
@@ -391,7 +422,7 @@ export const extractCodeforcesRank = async(handle) =>{
     );
     return { rank: "N/A", error: error.message };
   }
-}
+};
 export { fetchAndSaveRankings };
 //------------------------------------------------------------------------------
 
@@ -561,4 +592,3 @@ export const showAllRankings = async (req, res) => {
     });
   }
 };
-
