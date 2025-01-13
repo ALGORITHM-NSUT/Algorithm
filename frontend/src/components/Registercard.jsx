@@ -19,6 +19,7 @@ import Lottie from "react-lottie";
 import cartoonProfile from "../assets/cartoon-profile.json";
 import OpacityLoader from "./Loaders/OpacityLoader";
 
+
 const theme = createTheme({
   palette: {
     primary: { main: "#3b3b98" },
@@ -33,32 +34,43 @@ const theme = createTheme({
 });
 
 // FormField Component
-const FormField = React.memo(({ label, name, type, value, onChange, required = false, disabled = false }) => (
-  <Grid item xs={12} sm={6}>
-    <TextField
-      required={required}
-      fullWidth
-      label={label}
-      name={name}
-      type={type}
-      value={value}
-      onChange={onChange}
-      variant="outlined"
-      disabled={disabled}
-      InputLabelProps={{
-        style: { color: '#252526' }
-      }}
-    />
-  </Grid>
-));
+const FormField = React.memo(
+  ({
+    label,
+    name,
+    type,
+    value,
+    onChange,
+    required = false,
+    disabled = false,
+  }) => (
+    <Grid item xs={12} sm={6}>
+      <TextField
+        required={required}
+        fullWidth
+        label={label}
+        name={name}
+        type={type}
+        value={value}
+        onChange={onChange}
+        variant="outlined"
+        disabled={disabled}
+        InputLabelProps={{
+          style: { color: "#252526" },
+        }}
+      />
+    </Grid>
+  )
+);
 
-
-FormField.displayName = 'FormField';
+FormField.displayName = "FormField";
 // YearSelection Component
 const YearSelection = React.memo(({ value, onChange }) => (
   <Grid item xs={12}>
     <FormControl component="fieldset" required>
-      <FormLabel component="legend" sx={{ color: 'black' }}>Year</FormLabel>
+      <FormLabel component="legend" sx={{ color: "black" }}>
+        Year
+      </FormLabel>
       <RadioGroup row name="year" value={value} onChange={onChange}>
         {[1, 2, 3].map((year) => (
           <FormControlLabel
@@ -66,7 +78,7 @@ const YearSelection = React.memo(({ value, onChange }) => (
             value={year}
             control={<Radio />}
             label={`${year} Year`}
-            sx={{ color: 'black' }} // Set label color to black
+            sx={{ color: "black" }} // Set label color to black
           />
         ))}
       </RadioGroup>
@@ -74,10 +86,16 @@ const YearSelection = React.memo(({ value, onChange }) => (
   </Grid>
 ));
 
-
-YearSelection.displayName = 'YearSelection';
-const Register = ({ setEditForm, setEditAcc, user=null, setUser, isLoading }) => {
-  const [loading, setIsLoading] = useState(false)
+YearSelection.displayName = "YearSelection";
+const Register = ({
+  setEditForm,
+  setEditAcc,
+  user = null,
+  setUser,
+  isLoading,
+}) => {
+  const [isUpdatingBoard, setIsUpdatingBoard] = useState(false);
+  const [loading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.name || "",
     email: user?.email || "",
@@ -122,164 +140,292 @@ const Register = ({ setEditForm, setEditAcc, user=null, setUser, isLoading }) =>
       alert("Please enter a valid roll number");
       return false;
     }
-    
+
     if (phoneNumber.length !== 10) {
       alert("Please enter a valid Phone Number");
       return false;
     }
     return true;
-  }
+  };
 
-
-  const handleSubmit = useCallback(async (event) => {
-    event.preventDefault();
-    if (!validateForm(formData.email, formData.personalEmail, formData.rollNumber, formData.phoneNumber)) {
-      return;
-    }
-    if (formData.githubProfile !== "" && !formData.githubProfile.startsWith("https://github.com/")) {
-      formData.githubProfile = "https://github.com/" + formData.githubProfile;
-    }
-
-    if (formData.linkedinUrl !== "" && !formData.linkedinUrl.startsWith("https://www.linkedin.com/in/")) {
-      alert("Please enter a valid linkedinUrl");
-      return false;
-    }
-    formData.email = formData.email.toLowerCase()
-    setIsLoading(true)
-    try {
-      const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-      alert(data.message);
-      if (response.status === 201) {
-        navigate("/home");
+  const handleSubmit = useCallback(
+    async (event) => {
+      event.preventDefault();
+      if (
+        !validateForm(
+          formData.email,
+          formData.personalEmail,
+          formData.rollNumber,
+          formData.phoneNumber
+        )
+      ) {
+        return;
       }
-    } catch (error) {
-      console.error("Error registering user:", error);
-    }finally{
-      setIsLoading(false)
-    }
-  }, [formData, navigate]);
-
-  const handleEdit = useCallback(async (event) => {
-    event.preventDefault();
-    if (!validateForm(formData.email, formData.personalEmail, formData.rollNumber, formData.phoneNumber)) {
-      return;
-    }
-    if (formData.githubProfile !== "" && !formData.githubProfile.startsWith("https://github.com/")) {
-      formData.githubProfile = "https://github.com/" + formData.githubProfile;
-    }
-     if (formData.linkedinUrl !== "" && !formData.linkedinUrl.startsWith("https://www.linkedin.com/in/")) {
-      alert("Please enter a valid linkedinUrl");
-      return false;
-    }
-    try {
-      const response = await fetch(import.meta.env.VITE_BACKEND_URL + `/editProfile`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-      alert(data.message);
-      if (response.status === 200) {
-        setUser(data.user);
-        canceledit();
+      if (
+        formData.githubProfile !== "" &&
+        !formData.githubProfile.startsWith("https://github.com/")
+      ) {
+        formData.githubProfile = "https://github.com/" + formData.githubProfile;
       }
 
-    } catch (error) {
-      alert(`Network error: ${error.message}`);
-    }
-  }, [formData]);
+      if (
+        formData.linkedinUrl !== "" &&
+        !formData.linkedinUrl.startsWith("https://www.linkedin.com/in/")
+      ) {
+        alert("Please enter a valid linkedinUrl");
+        return false;
+      }
+      formData.email = formData.email.toLowerCase();
+      setIsLoading(true);
+      try {
+        const response = await fetch(
+          import.meta.env.VITE_BACKEND_URL + `/register`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(formData),
+          }
+        );
 
+        const data = await response.json();
+        alert(data.message);
+        if (response.status === 201) {
+          navigate("/home");
+        }
+      } catch (error) {
+        console.error("Error registering user:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [formData, navigate]
+  );
+
+  const handleEdit = useCallback(
+    async (event) => {
+      event.preventDefault();
+      if (
+        !validateForm(
+          formData.email,
+          formData.personalEmail,
+          formData.rollNumber,
+          formData.phoneNumber
+        )
+      ) {
+        return;
+      }
+      if (
+        formData.githubProfile !== "" &&
+        !formData.githubProfile.startsWith("https://github.com/")
+      ) {
+        formData.githubProfile = "https://github.com/" + formData.githubProfile;
+      }
+      if (
+        formData.linkedinUrl !== "" &&
+        !formData.linkedinUrl.startsWith("https://www.linkedin.com/in/")
+      ) {
+        alert("Please enter a valid linkedinUrl");
+        return false;
+      }
+      try {
+        setIsUpdatingBoard(true);
+        const response = await fetch(
+          import.meta.env.VITE_BACKEND_URL + `/editProfile`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(formData),
+          }
+        );
+
+        const data = await response.json();
+        setIsUpdatingBoard(false);
+        alert(data.message);
+        if (response.status === 200) {
+          setUser(data.user);
+          canceledit();
+        }
+      } catch (error) {
+        setIsUpdatingBoard(false);
+        alert(`Network error: ${error.message}`);
+      }
+    },
+    [formData]
+  );
 
   const canceledit = useCallback(() => {
     setEditForm(false);
     setEditAcc(false);
   }, [setEditForm, setEditAcc]);
 
-   if (loading || isLoading) {
-    return (
-      <OpacityLoader />
-    );
+  if (loading || isLoading || isUpdatingBoard) {
+    return <OpacityLoader />;
   }
-
   return (
-
     <ThemeProvider theme={theme}>
-      {loading && (
-          <OpacityLoader />
-      )}
+      {loading && <OpacityLoader />}
 
-      {<div className="mx-3 flex flex-col min-h-screen overflow-hidden mt-2 mb-2">
-      
-        <Container
-          component="main"
-          maxWidth="md"
-          className="mx-3 mt-2 mb-2 rounded-2xl relative z-10 bg-white "
-        >
-          <p className="text-red-600 ml-5 top-0 right-0 absolute mt-3 mr-3"> *Required</p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
+      {
+        <div className="mx-3 flex flex-col min-h-screen overflow-hidden mt-2 mb-2">
+          <Container
+            component="main"
+            maxWidth="md"
+            className="mx-3 mt-2 mb-2 rounded-2xl relative z-10 bg-white "
           >
-            <div elevation={3} className="p-6 rounded-lg">
-              <div className="mt-0 mb-1 flex justify-center items-center">
-                <motion.div
-                  initial={{ opacity: 0, y: -30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1 }}
-                  className="flex justify-center mb-2 mr-4 mt-0"
-                >
-                  <Lottie
-                    options={{
-                      loop: false,
-                      autoplay: playAnimation,
-                      animationData: cartoonProfile,
-                      rendererSettings: { preserveAspectRatio: "xMidYMid slice" },
-                    }}
-                    height={100}
-                    width={100}
-                  />
-                </motion.div>
-                <div className="flex items-center justify-center">
-                  <Typography component="h1" variant="h4" align="center" color="#10111f" className="mb-8">
-                    {!user ? "Join Us" : "Edit Profile"}
-                  </Typography>
+            <p className="text-red-600 ml-5 top-0 right-0 absolute mt-3 mr-3">
+              {" "}
+              *Required
+            </p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1 }}
+            >
+              <div elevation={3} className="p-6 rounded-lg">
+                <div className="mt-0 mb-1 flex justify-center items-center">
+                  <motion.div
+                    initial={{ opacity: 0, y: -30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1 }}
+                    className="flex justify-center mb-2 mr-4 mt-0"
+                  >
+                    <Lottie
+                      options={{
+                        loop: false,
+                        autoplay: playAnimation,
+                        animationData: cartoonProfile,
+                        rendererSettings: {
+                          preserveAspectRatio: "xMidYMid slice",
+                        },
+                      }}
+                      height={100}
+                      width={100}
+                    />
+                  </motion.div>
+                  <div className="flex items-center justify-center">
+                    <Typography
+                      component="h1"
+                      variant="h4"
+                      align="center"
+                      color="#10111f"
+                      className="mb-8"
+                    >
+                      {!user ? "Join Us" : "Edit Profile"}
+                    </Typography>
+                  </div>
                 </div>
-                
-              </div>
 
-              <form onSubmit={(e) => {
-                if (!user) {
-                  handleSubmit(e);
-                } else {
-                  handleEdit(e);
-                }
-              }}>
-                <Grid container spacing={2}>
-                  <FormField label="Name" name="name" value={formData.name} onChange={handleChange} required />
-                  <FormField label="Phone Number" name="phoneNumber" type="tel" value={formData.phoneNumber} onChange={handleChange} required/>
-                  <FormField label="NSUT Email" name="email" value={formData.email} onChange={handleChange} required disabled={!!user} />
-                  <FormField label="Password" name="password" type="password" value= {user? "******":formData.password} onChange={handleChange} required disabled={!!user} />
-                  <FormField label="Roll Number" name="rollNumber" value={formData.rollNumber} onChange={handleChange} required />
-                  <FormField label="LinkedIn URL" name="linkedinUrl" value={formData.linkedinUrl} onChange={handleChange} />
-                  <FormField label="Personal Email" name="personalEmail" value={formData.personalEmail} onChange={handleChange} />
-                  <FormField label="GitHub Username" name="githubProfile" value={formData.githubProfile} onChange={handleChange} />
-                  <FormField label="LeetCode Profile" name="leetcodeProfile" value={formData.leetcodeProfile} onChange={handleChange} />
-                  <FormField label="Codeforces Profile" name="codeforcesProfile" value={formData.codeforcesProfile} onChange={handleChange} />
-                  <YearSelection value={formData.year} onChange={handleChange} />
+                <form
+                  onSubmit={(e) => {
+                    if (!user) {
+                      handleSubmit(e);
+                    } else {
+                      handleEdit(e);
+                    }
+                  }}
+                >
+                  <Grid container spacing={2}>
+                    <FormField
+                      label="Name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                    />
+                    <FormField
+                      label="Phone Number"
+                      name="phoneNumber"
+                      type="tel"
+                      value={formData.phoneNumber}
+                      onChange={handleChange}
+                      required
+                    />
+                    <FormField
+                      label="NSUT Email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      disabled={!!user}
+                    />
+                    <FormField
+                      label="Password"
+                      name="password"
+                      type="password"
+                      value={user ? "******" : formData.password}
+                      onChange={handleChange}
+                      required
+                      disabled={!!user}
+                    />
+                    <FormField
+                      label="Roll Number"
+                      name="rollNumber"
+                      value={formData.rollNumber}
+                      onChange={handleChange}
+                      required
+                    />
+                    <FormField
+                      label="LinkedIn URL"
+                      name="linkedinUrl"
+                      value={formData.linkedinUrl}
+                      onChange={handleChange}
+                    />
+                    <FormField
+                      label="Personal Email"
+                      name="personalEmail"
+                      value={formData.personalEmail}
+                      onChange={handleChange}
+                    />
+                    <FormField
+                      label="GitHub Username"
+                      name="githubProfile"
+                      value={formData.githubProfile}
+                      onChange={handleChange}
+                    />
+                    <FormField
+                      label="LeetCode Profile"
+                      name="leetcodeProfile"
+                      value={formData.leetcodeProfile}
+                      onChange={handleChange}
+                    />
+                    <FormField
+                      label="Codeforces Profile"
+                      name="codeforcesProfile"
+                      value={formData.codeforcesProfile}
+                      onChange={handleChange}
+                    />
+                    <YearSelection
+                      value={formData.year}
+                      onChange={handleChange}
+                    />
 
-                  {setEditForm ? <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
+                    {setEditForm ? (
+                      <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            sx={{ width: "100%" }}
+                          >
+                            {user ? "Confirm" : "Register"}
+                          </Button>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <Button
+                            variant="contained"
+                            color="error"
+                            sx={{ width: "100%" }}
+                            onClick={canceledit}
+                          >
+                            Cancel
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    ) : (
                       <Button
                         type="submit"
                         variant="contained"
@@ -288,34 +434,13 @@ const Register = ({ setEditForm, setEditAcc, user=null, setUser, isLoading }) =>
                       >
                         {user ? "Confirm" : "Register"}
                       </Button>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <Button
-                        variant="contained"
-                        color="error"
-                        sx={{ width: "100%" }}
-                        onClick={canceledit}
-                      >
-                        Cancel
-                      </Button>
-                    </Grid>
-                  </Grid> :
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      sx={{ width: "100%" }}
-                    >
-                      {user ? "Confirm" : "Register"}
-                    </Button>}
-                </Grid>
-              </form>
-            </div>
-          </motion.div>
-          
-        </Container>
-         
-      </div>
+                    )}
+                  </Grid>
+                </form>
+              </div>
+            </motion.div>
+          </Container>
+        </div>
       }
     </ThemeProvider>
   );

@@ -23,10 +23,8 @@ import { emailVerify } from "../controllers/emailVerify.js";
 import { resetpass } from "../controllers/passreset.js";
 import {
   fetchLeaderboardData,
-  fetchAndSaveRankings,
   showAllUsers,
-  fetchAndSaveInDB,
-  deleteAllRankings,
+  deleteUser,
   showAllRankings,
   grantAdminAccess,
   fetchNewRanks,
@@ -42,7 +40,7 @@ router.get("/verify/:id", emailVerify);
 router.get("/getFeedbacks", getFeedback);
 
 router.get('/leaderBoard/allusers', showAllUsers);
-router.get('/leaderBoard/delete', deleteAllRankings );
+router.delete('/leaderBoard/delete/:name', deleteUser );
 // TO GEt ranking
 router.get('/leaderBoard/show', showAllRankings);
 // to update ranking

@@ -9,8 +9,7 @@ import {
   emailTemplate,
   passwordResetTemplate,
 } from "../constants/emailTemplate.js";
-import fetchQueue from "../services/queue.js";
-
+import { fetchUserRanking } from "../processors/fetchQueueProcessor.js";
 
 export const register = async (req, res, next) => {
   try {
@@ -65,6 +64,17 @@ export const register = async (req, res, next) => {
       await FormData.deleteOne({ email });
     }
 
+    let validLeetcodeProfile = null;
+    let validCodeforcesProfile = null;
+
+    if (leetcodeProfile !== undefined && leetcodeProfile !== "") {
+      validLeetcodeProfile = leetcodeProfile === "N/A" ? null : leetcodeProfile;
+    }
+    if (codeforcesProfile !== undefined && codeforcesProfile !== "") {
+      validCodeforcesProfile =
+        codeforcesProfile === "N/A" ? null : codeforcesProfile;
+    }
+
     // Create the new user, with admin status if applicable
     const isAdmin = !!Admin;
     user = await FormData.create({
@@ -73,8 +83,8 @@ export const register = async (req, res, next) => {
       personalEmail,
       phoneNumber,
       githubProfile,
-      leetcodeProfile,
-      codeforcesProfile,
+      leetcodeProfile: validLeetcodeProfile || "",
+      codeforcesProfile: validCodeforcesProfile || "",
       linkedinUrl,
       rollNumber,
       year,
@@ -82,6 +92,20 @@ export const register = async (req, res, next) => {
       admin: isAdmin,
       verified: false,
     });
+
+    let rankingUpdateResult = null;
+    if (validLeetcodeProfile || validCodeforcesProfile) {
+      try {
+        rankingUpdateResult = await fetchUserRanking(
+          user,
+          validCodeforcesProfile,
+          validLeetcodeProfile
+        );
+      } catch (error) {
+        console.error("Error in UserController:", error.message);
+        res.status(500).send({ error: error.message });
+      }
+    }
 
     const verificationLink = `${process.env.CLIENT_URL}/verify/${user.id}`;
     try {
@@ -101,25 +125,13 @@ export const register = async (req, res, next) => {
         error: emailError.message,
       });
     }
-
-    try {
-      const job = await fetchQueue.add({
-        user: {
-          _id: user._id,
-          name: user.name,
-          leetcodeProfile: user.leetcodeProfile,
-          codeforcesProfile: user.codeforcesProfile,
-        },
-      });
-      console.log(`Job added to the queue with ID: ${job.id}`);
-    } catch (jobError) {
-      console.error("Error adding job to the queue:", jobError.message);
+    if (rankingUpdateResult) {
+      sendToken(res, user, "Account registered and Leaderboard updated successfully", 200);
+    } else {
+      sendToken(res, user, "Account registered successfully", 200);
     }
-
-    res.status(201).send({
-      message: "Check your Inbox or spam folder to verify",
-    });
   } catch (error) {
+    console.log(error.message);
     return next(
       res.status(500).json({
         message: "Internal Server Error",
@@ -256,6 +268,7 @@ export const checkPassword = async (req, res, next) => {
   }
 };
 
+//TODO:  EDIT-PROFILE
 export const editProfile = async (req, res, next) => {
   try {
     const {
@@ -307,70 +320,71 @@ export const editProfile = async (req, res, next) => {
       }
     }
 
-        let updatedLeetcodeProfile = null;
-        let updatedCodeforcesProfile = null;
+    let updatedLeetcodeProfile = null;
+    let updatedCodeforcesProfile = null;
 
-        if (leetcodeProfile !== undefined && leetcodeProfile !== user.leetcodeProfile) {
-        updatedLeetcodeProfile =
-            leetcodeProfile === "N/A" || leetcodeProfile === ""
-            ? user.leetcodeProfile
-            : leetcodeProfile;
-        }
+    if (
+      leetcodeProfile !== undefined &&
+      leetcodeProfile !== user.leetcodeProfile
+    ) {
+      updatedLeetcodeProfile =
+        leetcodeProfile === "N/A" || leetcodeProfile === ""
+          ? user.leetcodeProfile
+          : leetcodeProfile;
+    }
 
-        if (codeforcesProfile !== undefined && codeforcesProfile !== user.codeforcesProfile) {
-        updatedCodeforcesProfile =
-            codeforcesProfile === "N/A" || codeforcesProfile === ""
-            ? user.codeforcesProfile 
-            : codeforcesProfile;
-        }
+    if (
+      codeforcesProfile !== undefined &&
+      codeforcesProfile !== user.codeforcesProfile
+    ) {
+      updatedCodeforcesProfile =
+        codeforcesProfile === "N/A" || codeforcesProfile === ""
+          ? user.codeforcesProfile
+          : codeforcesProfile;
+    }
 
+    // Overwrite user's information
+    user.name = name || user.name;
+    user.personalEmail = personalEmail || ""; // If not provided, set to previous
+    user.phoneNumber = phoneNumber || "";
+    user.githubProfile = githubProfile || "";
+    user.leetcodeProfile = leetcodeProfile || "";
+    user.codeforcesProfile = codeforcesProfile || "";
+    user.linkedinUrl = linkedinUrl || user.linkedinUrl;
+    user.rollNumber = rollNumber || user.rollNumber;
+    user.year = year || user.year;
 
-        // Overwrite user's information
-        user.name = name || user.name;
-        user.personalEmail = personalEmail || ""; // If not provided, set to previous
-        user.phoneNumber = phoneNumber || "";
-        user.githubProfile = githubProfile || "";
-        user.leetcodeProfile = leetcodeProfile || "";
-        user.codeforcesProfile = codeforcesProfile || "";
-        user.linkedinUrl = linkedinUrl || user.linkedinUrl;
-        user.rollNumber = rollNumber || user.rollNumber;
-        user.year = year || user.year;
+    // Save the updated user
+    await user.save();
 
-        // Save the updated user
-        await user.save();
-
-
-        //add the job to queue
-        console.log(updatedCodeforcesProfile);
-        console.log(updatedLeetcodeProfile);
-        if (updatedLeetcodeProfile || updatedCodeforcesProfile) {
-            try {
-              const job = await fetchQueue.add({
-                user: {
-                  _id: user._id,
-                  name: user.name,
-                  leetcodeProfile: updatedLeetcodeProfile || null,
-                  codeforcesProfile: updatedCodeforcesProfile || null,
-                },
-              });
-              console.log(`Job added to the queue with ID: ${job.id}`);
-            } catch (jobError) {
-              console.error("Error adding job to the queue:", jobError.message);
-            }
-          }
-
-        // Send token response after updating profile
-        sendToken(res, user, "Account Edited successfully", 200);
-      } catch (error) {
-        return next(
-          res.status(500).json({
-            message: "Internal Server Error",
-            error: error.message,
-          })
+    let rankingUpdatedResult;
+    if (updatedLeetcodeProfile || updatedCodeforcesProfile) {
+      try {
+        rankingUpdatedResult = await fetchUserRanking(
+          user,
+          updatedCodeforcesProfile,
+          updatedLeetcodeProfile
         );
-      }
-    };
 
+        if (rankingUpdatedResult) {
+          sendToken(res, user, "Leaderboard updated successfully", 200);
+        } else {
+          sendToken(res, user, "Account Edited successfully", 200);
+        }
+      } catch (error) {
+        console.error("Error in UserController:", error.message);
+        return res.status(500).send({ error: error.message });
+      }
+    }
+  } catch (error) {
+    return next(
+      res.status(500).json({
+        message: "Internal Server Error",
+        error: error.message,
+      })
+    );
+  }
+};
 
 export const changePassword = async (req, res, next) => {
   try {
