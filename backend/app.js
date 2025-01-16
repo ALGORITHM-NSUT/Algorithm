@@ -10,35 +10,10 @@ import { Server } from "socket.io";
 import http from "http";
 
 dotenv.config();
-
 const app = express();
-app.use(cors());
 const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
-  },
-});
+let io= null;
 
-app.use((req, res, next) => {
-  req.app.set('socketio', io);
-  next();
-});
-
-const PORT = 3001
-server.listen(PORT, () => {
-  console.log(`socket server is running on port ${PORT}`);
-});
-
-io.on('connection',(socket)=>{
-  console.log('A client connected:', socket.id);
-  socket.on('disconnect', () => {
-    console.log('Client disconnected:', socket.id);
-  });
-});
-
-export default io;
 
 // Middleware
 app.use(bodyParser.json({ limit: "10mb" }));
@@ -86,6 +61,35 @@ app.use("/", routes);
 app.use("/", userRoutes);
 
 // Start server
-app.listen(process.env.PORT || 5000, () => {
+server.listen(process.env.PORT || 5000, () => {
   console.log(`Server is listening on port: ${process.env.PORT || 5000}`);
 });
+
+export const initializeSocket = () => {
+  if (!io) {
+    io = new Server(server, {
+      cors: {
+        origin: process.env.CLIENT_URL,
+        methods: ["GET", "POST"],
+      },
+    });
+
+    io.on("connection", (socket) => {
+      console.log("Socket connected:", socket.id);
+      socket.on("disconnect", () => {
+        console.log("Socket disconnected:", socket.id);
+      });
+    });
+
+    console.log("Socket initialized");
+  }
+};
+
+export const terminateSocket = () => {
+  if (io) {
+    io.close(() => {
+      console.log("Socket terminated");
+      io = null; 
+    });
+  }
+};

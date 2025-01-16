@@ -1,17 +1,19 @@
-import React, { createContext, useState, useEffect, useCallback } from 'react';
-import {io} from 'socket.io-client';
+import React, { createContext, useState, useEffect, useCallback, useRef } from "react";
+import { io } from "socket.io-client";
 const LeaderboardContext = createContext();
 
 const LeaderboardProvider = ({ children }) => {
   const [leaderboard, setLeaderboard] = useState([]);
   const [leaderboardLoading, setLeaderboardLoading] = useState(true);
+  // const [socket, setSocket] = useState(null);
+  const socket = useRef(null);
 
   const fetchLeaderboard = useCallback(async () => {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/leaderboard/show`,
         {
-          method: 'GET',
+          method: "GET",
         }
       );
       const data = await response.json();
@@ -19,30 +21,38 @@ const LeaderboardProvider = ({ children }) => {
       const sortedData = data.data;
       sortedData.sort((a, b) => b.score - a.score);
 
-      sessionStorage.setItem('leaderboardData', JSON.stringify(sortedData));
+      sessionStorage.setItem("leaderboardData", JSON.stringify(sortedData));
       setLeaderboard(sortedData);
     } catch (error) {
-      console.error('Error fetching user:', error);
+      console.error("Error fetching user:", error);
     } finally {
       setLeaderboardLoading(false);
     }
-  });
+  }, []);
 
   useEffect(() => {
-    const socket = io(import.meta.env.SOCKET_BACKEND_URL);
-    fetchLeaderboard();
-    socket.on('connect', () => {
+    if (!socket.current) {
+      socket.current = io(import.meta.env.SOCKET_BACKEND_URL); // Initialize socket only once
       console.log('Connected to Socket.IO server');
-    });
 
-    socket.on('refresh-standings', (data)=>{
-      console.log('refreshing standings: ', data.message);
-      fetchLeaderboard();
-    });
+      socket.current.on('connect', () => {
+        console.log('Socket connected');
+      });
+
+      socket.current.on('refresh-standings', (data) => {
+        console.log('Refreshing standings:', data.message);
+        fetchLeaderboard(); 
+      });
+    }
+
+    fetchLeaderboard(); 
 
     return () => {
-      socket.off('refresh-standings');
-      socket.disconnect();
+      if (socket.current) {
+        socket.current.off('refresh-standings');
+        socket.current.disconnect();
+        console.log('Socket disconnected');
+      }
     };
   }, [fetchLeaderboard]);
 

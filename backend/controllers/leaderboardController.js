@@ -2,6 +2,7 @@ import axios from "axios";
 import FormData from "../models/formDataModel.js";
 import UserRanking from "../models/UserRanking.js";
 import pLimit from "p-limit";
+import { initializeSocket, terminateSocket } from "../app.js";
 
 const getusername = async (user) => {
   try {
@@ -14,9 +15,8 @@ const getusername = async (user) => {
   }
 };
 export const normalizeranks = async (arr, weight1 = 0.5, weight2 = 0.5) => {
-  console.log("inside normalise ranks");
-  console.log('Rankings:', arr, Array.isArray(arr)); 
- 
+  // console.log("Rankings:", arr, Array.isArray(arr));
+
   const leetcoderanks = arr
     .map((user) => user.leetcodeRank)
     .filter((rank) => rank !== null);
@@ -29,8 +29,8 @@ export const normalizeranks = async (arr, weight1 = 0.5, weight2 = 0.5) => {
   const minCodeforces = Math.min(...codeforcesranks);
   const maxCodeforces = Math.max(...codeforcesranks);
   // console.log("normalised-1", minCodeforces, maxLeetcode);
-  console.log({ leetcoderanks, codeforcesranks });
-  console.log({ minLeetcode, maxLeetcode, minCodeforces, maxCodeforces });
+  // console.log({ leetcoderanks, codeforcesranks });
+  // console.log({ minLeetcode, maxLeetcode, minCodeforces, maxCodeforces });
 
   // to avoid division by zero
   const normalize = (value, min, max) =>
@@ -72,25 +72,25 @@ export const normalizeranks = async (arr, weight1 = 0.5, weight2 = 0.5) => {
 
 export const fetchLeaderboardData = async (req, res) => {
   try {
-    console.log("before fetch");
-
+    console.log("hello");
     const updatedRankings = await fetchNewRanks();
-    console.log("fetched new ranks!!!");
-
     const rankings = await UserRanking.find({}).lean();
     // console.log(rankings);
 
     let data = await normalizeranks(rankings, 0.6, 0.4);
     console.log("normalised ranks: ", data);
 
-    const io = req.app.get('socketio');
-    io.emit('refresh-standings', {message: 'Refresh standings'});
+    initializeSocket();
+    const io = req.app.get("socketIO");
+    io.emit("refresh-standings", { message: "Refresh standings" });
+    setTimeout(() => terminateSocket(), 500);
 
     return res.status(200).json({
       message: "the normalised ranks",
       data: data,
     });
   } catch (error) {
+    terminateSocket();
     res.status(400).json({
       error: "couldn't normalised",
     });
@@ -101,20 +101,14 @@ export const fetchLeaderboardData = async (req, res) => {
 //TODO: FETCH AND SAVE IN DB_2 - only updates the users in UserRankingSchema
 export const fetchNewRanks = async (req, res) => {
   try {
-    console.log("Is res defined?", res !== undefined);
-
+    console.log("hello hello");
     const users = await UserRanking.find();
 
     if (!users || users.length === 0) {
       console.log("No users found in UserRanking.");
-      // return res.status(404).json({
-      //   message: "No users found in UserRanking.",
-      //   data: [],
-      // });
       return [];
     }
 
-    console.log("inside fetch-1");
     const batchSize = 10;
     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     const limit = pLimit(5);
@@ -578,7 +572,6 @@ export const grantAdminAccess = async (req, res) => {
 //TODO: TO VIEW THE CONTENTS OF THE DATABASE
 export const showAllRankings = async (req, res) => {
   try {
-    // console.log("yes");
     const rankings = await UserRanking.find({});
     return res.status(200).json({
       message: "Rankings retrieved successfully.",
@@ -592,3 +585,18 @@ export const showAllRankings = async (req, res) => {
     });
   }
 };
+
+export const deleteUser = async (req, res) => {
+  try {
+    const { name } = req.params;
+  const result = await UserRanking.deleteOne({ name });
+  if (result.deletedCount > 0) {
+    return res.status(200).json({ message: `Record with name ${name} deleted successfully.` });
+  } else {
+    return res.status(404).json({ message: `No record found with name ${name}.` });
+  }
+  } catch (error) {
+  return res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
+} 
+
