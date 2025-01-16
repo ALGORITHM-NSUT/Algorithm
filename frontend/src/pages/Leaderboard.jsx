@@ -84,7 +84,7 @@ const Leaderboard = () => {
         setCurrentPage={setCurrentPage}
       />
       {/* Conditionally render Join Now button if no user is logged in */}
-      {user && user?.admin && (
+      {user && user?.admin && user?.name === "Jagrit Jain" && (
           <button
             onClick={async () => {
               try {

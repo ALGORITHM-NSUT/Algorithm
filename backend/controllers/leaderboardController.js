@@ -591,12 +591,16 @@ export const deleteUser = async (req, res) => {
     const { name } = req.params;
   const result = await UserRanking.deleteOne({ name });
   if (result.deletedCount > 0) {
+    const rankings = await UserRanking.find({}).lean();
+    await normalizeranks(rankings, 0.6, 0.4);
     return res.status(200).json({ message: `Record with name ${name} deleted successfully.` });
   } else {
     return res.status(404).json({ message: `No record found with name ${name}.` });
   }
+
   } catch (error) {
   return res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
+  
 } 
 

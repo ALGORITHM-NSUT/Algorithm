@@ -1,5 +1,7 @@
-import React, { createContext, useState, useEffect, useCallback, useRef } from "react";
+import React, { createContext, useState, useEffect, useCallback, useRef, useContext } from "react";
 import { io } from "socket.io-client";
+import { UserContext } from "./UserProvider";
+
 const LeaderboardContext = createContext();
 
 const LeaderboardProvider = ({ children }) => {
