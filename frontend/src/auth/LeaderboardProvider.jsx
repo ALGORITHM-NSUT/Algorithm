@@ -1,5 +1,13 @@
-import React, { createContext, useState, useEffect, useCallback, useRef } from "react";
-import { io } from "socket.io-client";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useContext,
+} from 'react';
+import { io } from 'socket.io-client';
+import { UserContext } from './UserProvider';
 const LeaderboardContext = createContext();
 
 const LeaderboardProvider = ({ children }) => {
@@ -16,7 +24,7 @@ const LeaderboardProvider = ({ children }) => {
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/leaderboard/show`,
         {
-          method: "GET",
+          method: 'GET',
         }
       );
       const data = await response.json();
@@ -24,10 +32,10 @@ const LeaderboardProvider = ({ children }) => {
       const sortedData = data.data;
       sortedData.sort((a, b) => b.score - a.score);
 
-      sessionStorage.setItem("leaderboardData", JSON.stringify(sortedData));
+      sessionStorage.setItem('leaderboardData', JSON.stringify(sortedData));
       setLeaderboard(sortedData);
     } catch (error) {
-      console.error("Error fetching user:", error);
+      console.error('Error fetching user:', error);
     } finally {
       setLeaderboardLoading(false);
     }
@@ -44,11 +52,11 @@ const LeaderboardProvider = ({ children }) => {
 
       socket.current.on('refresh-standings', (data) => {
         console.log('Refreshing standings:', data.message);
-        fetchLeaderboard(); 
+        fetchLeaderboard();
       });
     }
 
-    fetchLeaderboard(); 
+    fetchLeaderboard();
 
     return () => {
       if (socket.current) {

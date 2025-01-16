@@ -38,22 +38,26 @@ const LeaderboardListMember = ({
 
   const isTopRank = rank <= 3;
 
-  const style = isFirstPage && isTopRank ? rankStyles[rank - 1] : {}; // for the border gradients (top 3 ranks)
+  const style = isTopRank ? rankStyles[rank - 1] : {}; // for the border gradients (top 3 ranks)
 
   return (
     <div
-      className={`${isTopRank ? topRankOutsideGlow[rank - 1] : ''}
-        ${
-          isUser ? 'shadow-[0_0px_16px_rgba(100,10,255,0.6)]' : ''
-        } overflow-hidden rounded-md my-1.5`}
+      className={`
+        ${isUser && !isTopRank ? 'shadow-[0_0px_8px_rgba(150,0,255,1)]' : ''} 
+        ${isTopRank ? topRankOutsideGlow[rank - 1] : ''}
+         overflow-hidden rounded-md my-1.5`}
     >
       <li
         onClick={() => toggleModal(member)}
         style={style}
         className={`${isTopRank ? topRankInsideGlow[rank - 1] : ''}
-          ${isUser ? 'shadow-[inset_0px_0px_35px_rgba(100,10,255,1)]' : ''}
-          overflow-hidden py-5 px-4 border-solid dark:bg-gray-700/60 rounded-sm
-							hover:bg-gray-50 dark:hover:bg-gray-600 my-[0px] transition-colors duration-75 backdrop-blur-md`}
+          ${
+            isUser
+              ? 'bg-gradient-to-r from-gray-700/60 via-slate-500/60 to-gray-700/60'
+              : 'dark:bg-gray-700/60'
+          }
+     
+          overflow-hidden py-5 px-4 border-solid  rounded-sm dark:hover:bg-gray-600 my-[0px] duration-75 backdrop-blur-md`}
       >
         <div className="flex items-center justify-between w-full">
           <span className="text-md font-bold text-gray-700 dark:text-gray-300 w-10">
@@ -65,8 +69,9 @@ const LeaderboardListMember = ({
             </p>
             {/* <p className="text-sm text-gray-500 dark:text-gray-400">
               {member.codeforcesHandle}
-            </p> */}
+              </p> */}
           </div>
+          {isUser && <p className="ml-2 font-semibold">(You)</p>}
           <div className="flex-grow">
             <p className="text-lg font-semibold text-blue-600 dark:text-blue-400 justify-self-end">
               {(Math.round(member.score * 10000) / 100).toFixed(2)}
@@ -80,3 +85,4 @@ const LeaderboardListMember = ({
 };
 
 export default LeaderboardListMember;
+// dark:hover:bg-gray-600 my-[0px] transition-colors duration-75
