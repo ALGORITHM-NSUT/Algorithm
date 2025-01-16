@@ -1,12 +1,5 @@
-import React, {
-  createContext,
-  useState,
-  useEffect,
-  useCallback,
-  useContext,
-} from 'react';
-import { UserContext } from './UserProvider';
-
+import React, { createContext, useState, useEffect, useCallback } from 'react';
+import { io } from 'socket.io-client';
 const LeaderboardContext = createContext();
 
 const LeaderboardProvider = ({ children }) => {
@@ -39,8 +32,22 @@ const LeaderboardProvider = ({ children }) => {
   });
 
   useEffect(() => {
+    const socket = io(import.meta.env.SOCKET_BACKEND_URL);
     fetchLeaderboard();
-  }, []);
+    socket.on('connect', () => {
+      console.log('Connected to Socket.IO server');
+    });
+
+    socket.on('refresh-standings', (data) => {
+      console.log('refreshing standings: ', data.message);
+      fetchLeaderboard();
+    });
+
+    return () => {
+      socket.off('refresh-standings');
+      socket.disconnect();
+    };
+  }, [fetchLeaderboard]);
 
   useEffect(() => {
     if (!isLoading && leaderboard.length > 0) {

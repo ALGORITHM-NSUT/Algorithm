@@ -1,84 +1,241 @@
 import axios from "axios";
 import FormData from "../models/formDataModel.js";
 import UserRanking from "../models/UserRanking.js";
+import pLimit from "p-limit";
 
-const getusername=async(user)=>{
+const getusername = async (user) => {
   try {
-     const target=await FormData.findOne({_id:user.userId});
-     
+    const target = await FormData.findOne({ _id: user.userId });
 
-     return target.name
+    return target.name;
   } catch (error) {
     console.log(error);
-    return null
-    
+    return null;
   }
-}
-const normalizeranks = async(arr, weight1 = 0.5, weight2 = 0.5) => {
+};
+export const normalizeranks = async (arr, weight1 = 0.5, weight2 = 0.5) => {
+  console.log("inside normalise ranks");
+  console.log('Rankings:', arr, Array.isArray(arr)); 
  
-  const leetcoderanks = arr.map((user) => user.leetcodeRank).filter((rank) => rank !== null);
-  const codeforcesranks = arr.map((user) => user.codeforcesRank).filter((rank) => rank !== null);
+  const leetcoderanks = arr
+    .map((user) => user.leetcodeRank)
+    .filter((rank) => rank !== null);
+  const codeforcesranks = arr
+    .map((user) => user.codeforcesRank)
+    .filter((rank) => rank !== null);
 
-  
   const minLeetcode = Math.min(...leetcoderanks);
   const maxLeetcode = Math.max(...leetcoderanks);
   const minCodeforces = Math.min(...codeforcesranks);
   const maxCodeforces = Math.max(...codeforcesranks);
+  // console.log("normalised-1", minCodeforces, maxLeetcode);
+  console.log({ leetcoderanks, codeforcesranks });
+  console.log({ minLeetcode, maxLeetcode, minCodeforces, maxCodeforces });
 
   // to avoid division by zero
-  const normalize = (value, min, max) => (max - min !== 0) ? (value - min) / (max - min) : 0;
+  const normalize = (value, min, max) =>
+    max - min !== 0 ? (value - min) / (max - min) : 0;
 
- let normalisedarr= await Promise.all(arr.map(async(user) => {
-    let normalizedLeetcode = user.leetcodeRank !== null 
-      ? normalize(user.leetcodeRank, minLeetcode, maxLeetcode) 
-      : 0.6; // worst rank(Assumption)
-    let normalizedCodeforces = user.codeforcesRank !== null 
-      ? normalize(user.codeforcesRank, minCodeforces, maxCodeforces) 
-      : 1; 
+  let normalisedarr = await Promise.all(
+    arr.map(async (user) => {
+      let normalizedLeetcode =
+        user.leetcodeRank !== null
+          ? normalize(user.leetcodeRank, minLeetcode, maxLeetcode)
+          : 0.6; // worst rank(Assumption)
+      let normalizedCodeforces =
+        user.codeforcesRank !== null
+          ? normalize(user.codeforcesRank, minCodeforces, maxCodeforces)
+          : 1;
 
-    let combinedRank = normalizedCodeforces * weight1 + normalizedLeetcode * weight2;
-    const username = await getusername(user); 
-    // updating score in db
-    let t=await UserRanking.updateOne({_id:user._id},{
-      score:combinedRank
+      let combinedRank =
+        normalizedCodeforces * weight1 + normalizedLeetcode * weight2;
+      const username = await getusername(user);
+      // updating score in db
+      let t = await UserRanking.updateOne(
+        { _id: user._id },
+        {
+          score: combinedRank,
+        }
+      );
+
+      return {
+        ...user,
+        ranks: combinedRank,
+        username: username,
+      };
     })
-   
-    return {
-      ...user,
-      ranks: combinedRank,
-      username:username,
-    };
-  })); 
-  return normalisedarr.sort((a,b)=>a.ranks-b.ranks);
+  );
+  return normalisedarr.sort((a, b) => a.ranks - b.ranks);
 };
-
 
 //TODO:  CONSTRUCT LEADERBOARD - here the formula to calculate score will come
 
 export const fetchLeaderboardData = async (req, res) => {
-  
   try {
-    // new date fetch(without score)
-    // await fetchAndSaveInDB();
-    // below lines to calculate score
+    console.log("before fetch");
+
+    const updatedRankings = await fetchNewRanks();
+    console.log("fetched new ranks!!!");
+
     const rankings = await UserRanking.find({}).lean();
- 
-    let data=await normalizeranks(rankings,0.6,0.4);
+    // console.log(rankings);
+
+    let data = await normalizeranks(rankings, 0.6, 0.4);
+    console.log("normalised ranks: ", data);
+
+    const io = req.app.get('socketio');
+    io.emit('refresh-standings', {message: 'Refresh standings'});
+
     return res.status(200).json({
-      message:"the normalised ranks",
-      data:data
-    })
+      message: "the normalised ranks",
+      data: data,
+    });
   } catch (error) {
     res.status(400).json({
-      error:"couldn't normalised"
-    })
-    console.log("couldn't fetch useranks",error)
+      error: "couldn't normalised",
+    });
+    // console.log("couldn't fetch useranks", error);
   }
-
-  
 };
 
-//TODO: FETCH AND RETURN RANKINGS
+//TODO: FETCH AND SAVE IN DB_2 - only updates the users in UserRankingSchema
+export const fetchNewRanks = async (req, res) => {
+  try {
+    console.log("Is res defined?", res !== undefined);
+
+    const users = await UserRanking.find();
+
+    if (!users || users.length === 0) {
+      console.log("No users found in UserRanking.");
+      // return res.status(404).json({
+      //   message: "No users found in UserRanking.",
+      //   data: [],
+      // });
+      return [];
+    }
+
+    console.log("inside fetch-1");
+    const batchSize = 10;
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    const limit = pLimit(5);
+    const updatedRankings = [];
+
+    async function fetchAndUpdateUser(user) {
+      const {
+        leetcodeHandle,
+        codeforcesHandle,
+        userId,
+        name,
+        leetcodeRank,
+        codeforcesRank,
+      } = user;
+
+      let newLeetcodeRank = leetcodeRank;
+      let newCodeforcesRank = codeforcesRank;
+
+      if (
+        leetcodeHandle &&
+        isValidHandle(leetcodeHandle) &&
+        leetcodeRank !== null
+      ) {
+        await limit(async () => {
+          try {
+            await delay(500);
+            const { rank } = await extractLeetCodeRank(leetcodeHandle);
+            if (!isNaN(Number(rank))) {
+              newLeetcodeRank = Number(rank);
+            }
+          } catch (error) {
+            console.error(
+              `Error fetching LeetCode rank for ${leetcodeHandle}:`,
+              error.message
+            );
+          }
+        });
+      }
+
+      if (
+        codeforcesHandle &&
+        isValidHandle(codeforcesHandle) &&
+        codeforcesRank !== null
+      ) {
+        try {
+          await delay(500);
+          const { rank } = await extractCodeforcesRank(codeforcesHandle);
+          if (rank !== null) {
+            newCodeforcesRank = rank;
+          }
+        } catch (error) {
+          console.error(
+            `Error fetching Codeforces rank for ${codeforcesHandle}:`,
+            error.message
+          );
+        }
+      }
+
+      const shouldUpdateLeetcode =
+        newLeetcodeRank !== null && newLeetcodeRank !== leetcodeRank;
+      const shouldUpdateCodeforces =
+        newCodeforcesRank !== null && newCodeforcesRank !== codeforcesRank;
+
+      if (shouldUpdateLeetcode || shouldUpdateCodeforces) {
+        const updatedUser = {
+          userId,
+          name,
+          leetcodeHandle,
+          leetcodeRank: shouldUpdateLeetcode ? newLeetcodeRank : leetcodeRank,
+          codeforcesHandle,
+          codeforcesRank: shouldUpdateCodeforces
+            ? newCodeforcesRank
+            : codeforcesRank,
+          timestamp: new Date(),
+        };
+
+        updatedRankings.push(updatedUser);
+
+        try {
+          await UserRanking.updateOne(
+            { userId },
+            { $set: updatedUser },
+            { upsert: true }
+          );
+          console.log(
+            `Rankings updated successfully for ${name || "Unknown"}.`
+          );
+        } catch (error) {
+          console.error(
+            `Error updating user ranking for ${name || "Unknown"}:`,
+            error.message
+          );
+        }
+      }
+    }
+
+    async function processBatch(batch) {
+      return Promise.all(batch.map(fetchAndUpdateUser));
+    }
+
+    for (let i = 0; i < users.length; i += batchSize) {
+      const batch = users.slice(i, i + batchSize);
+      await processBatch(batch);
+    }
+
+    // return res.status(200).json({
+    //   message: "Rankings updated successfully.",
+    //   data: updatedRankings,
+    // });
+    return updatedRankings;
+  } catch (error) {
+    console.error("Error in fetchNewRanks():", error);
+    // return res.status(500).json({
+    //   message: "An error occurred while updating rankings.",
+    //   error: error.message || "Unknown error occurred.",
+    // });
+    throw error;
+  }
+};
+
+//TODO: FETCH AND RETURN RANKINGS - fetches all rankings
 async function fetchAndSaveRankings(req, res) {
   try {
     const users = await FormData.find({
@@ -174,7 +331,7 @@ async function fetchAndSaveRankings(req, res) {
 }
 
 // four functions used in fetchAndSaveRankings() - extractHandle, isValidHandle, extractLCRank, extractCFRank
-function extractHandle(profile) {
+export const extractHandle = function (profile) {
   if (!profile) return null;
   profile = profile.trim();
 
@@ -191,31 +348,55 @@ function extractHandle(profile) {
     console.error(`Error parsing URL: ${profile}`, err.message);
     return null;
   }
-}
+};
 
 function isValidHandle(handle) {
   return handle && handle.trim().toLowerCase() !== "na";
 }
+const axiosInstance = axios.create({
+  timeout: 30000, // 30 seconds
+});
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-async function extractLeetCodeRank(handle) {
+async function fetchWithRetry(url, retries = 3, delayMs = 2000) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await axios.get(url);
+      return response;
+    } catch (error) {
+      if (error.response && error.response.status === 429) {
+        console.warn(`Rate limit hit. Retrying in ${delayMs}ms...`);
+        await delay(delayMs);
+      } else {
+        throw error; // Rethrow other errors
+      }
+    }
+  }
+  throw new Error("Max retries reached");
+}
+
+export const extractLeetCodeRank = async (handle) => {
   const url = `https://alfa-leetcode-api.onrender.com/${handle}/contest`;
 
   try {
-    const response = await axios.get(url);
+    const response = await fetchWithRetry(url);
+
+    // const response = await axios.get(url);
     // console.log("response.data :", response.data);
 
-    if (response.data.contestRating) {
+    if (response && response.data && response.data.contestRating) {
       return { rank: response.data.contestRating };
     } else {
       console.error("No rank data available for user:", handle);
-      return { rank: "N/A", error: "No rank data available" };
+      return { rank: null, error: "No rank data available" };
     }
   } catch (error) {
-    console.error("Error fetching LeetCode rank:", error.message);
-    return { rank: "N/A", error: error.message };
+    console.error(`Error fetching LeetCode rank for ${handle}:`, error.message);
+    return { rank: null, error: error.message };
   }
-}
-async function extractCodeforcesRank(handle) {
+};
+
+export const extractCodeforcesRank = async (handle) => {
   if (!handle) {
     console.log("Invalid Codeforces handle: ", handle);
     return { rank: "N/A", error: "Invalid handle" };
@@ -241,7 +422,7 @@ async function extractCodeforcesRank(handle) {
     );
     return { rank: "N/A", error: error.message };
   }
-}
+};
 export { fetchAndSaveRankings };
 //------------------------------------------------------------------------------
 
@@ -359,9 +540,45 @@ export const fetchAndSaveInDB = async (req, res) => {
   }
 };
 
+//  TODO: GRANT ADMIN ACCESS
+export const grantAdminAccess = async (req, res) => {
+  const { email } = req.query;
+
+  if (!email) {
+    return res.status(400).json({ error: "Email is required" });
+  }
+
+  try {
+    const updatedMember = await FormData.findOneAndUpdate(
+      { email },
+      { admin: true },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedMember) {
+      return res
+        .status(404)
+        .json({ error: `No member found with email: ${email}` });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Admin access granted", member: updatedMember });
+  } catch (error) {
+    console.error(
+      `Error granting admin access to email ${email}:`,
+      error.message
+    );
+    res
+      .status(500)
+      .json({ error: "Internal server error", details: error.message });
+  }
+};
+
 //TODO: TO VIEW THE CONTENTS OF THE DATABASE
 export const showAllRankings = async (req, res) => {
   try {
+    // console.log("yes");
     const rankings = await UserRanking.find({});
     return res.status(200).json({
       message: "Rankings retrieved successfully.",
@@ -374,30 +591,4 @@ export const showAllRankings = async (req, res) => {
       error: error.message,
     });
   }
-};
-
-//  TODO: GRANT ADMIN ACCESS
-export const grantAdminAccess = async (req, res) => {
-    const { email } = req.query;
-
-    if (!email) {
-        return res.status(400).json({ error: 'Email is required' });
-    }
-
-    try {
-        const updatedMember = await FormData.findOneAndUpdate(
-            { email }, 
-            { admin: true }, 
-            { new: true, runValidators: true }
-        );
-
-        if (!updatedMember) {
-            return res.status(404).json({ error: `No member found with email: ${email}` });
-        }
-
-        res.status(200).json({ message: 'Admin access granted', member: updatedMember });
-    } catch (error) {
-        console.error(`Error granting admin access to email ${email}:`, error.message);
-        res.status(500).json({ error: 'Internal server error', details: error.message });
-    }
 };

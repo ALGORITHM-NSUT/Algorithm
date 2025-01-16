@@ -24,7 +24,7 @@ const formDataSchema = new mongoose.Schema({
     resetPasswordExpires: { type: Date }
 }, { timestamps: true });
 
-formDataSchema.index({ email: 1 }, { unique: true });
+// formDataSchema.index({ email: 1 }, { unique: true });
 
 formDataSchema.pre("save", async function (next) {
     if (!this.isModified("password")) {
