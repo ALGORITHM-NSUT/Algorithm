@@ -1,10 +1,20 @@
-import React, { createContext, useState, useEffect, useCallback } from 'react';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useCallback,
+  useContext,
+} from 'react';
+import { UserContext } from './UserProvider';
 
 const LeaderboardContext = createContext();
 
 const LeaderboardProvider = ({ children }) => {
+  const { user, isLoading } = useContext(UserContext);
   const [leaderboard, setLeaderboard] = useState([]);
   const [leaderboardLoading, setLeaderboardLoading] = useState(true);
+
+  const [userIndex, setUserIndex] = useState(-1);
 
   const fetchLeaderboard = useCallback(async () => {
     try {
@@ -32,6 +42,17 @@ const LeaderboardProvider = ({ children }) => {
     fetchLeaderboard();
   }, []);
 
+  useEffect(() => {
+    if (!isLoading && leaderboard.length > 0) {
+      if (user) {
+        const index = leaderboard.findIndex((obj) => obj.name === user.name);
+        setUserIndex(index);
+      } else {
+        setUserIndex(-1); // No user logged in
+      }
+    }
+  }, [isLoading, user, leaderboard]);
+
   return (
     <LeaderboardContext.Provider
       value={{
@@ -40,6 +61,7 @@ const LeaderboardProvider = ({ children }) => {
         fetchLeaderboard,
         leaderboardLoading,
         setLeaderboardLoading,
+        userIndex,
       }}
     >
       {children}

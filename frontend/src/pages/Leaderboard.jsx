@@ -5,15 +5,18 @@ import { Link } from 'react-router-dom'; // Assuming you're using React Router f
 import Pagination from '../components/Leaderboard/Pagination';
 import { LeaderboardContext } from '../auth/LeaderboardProvider';
 import Loader from '../components/Loaders/Loader';
+import LeaderboardListMember from '../components/Leaderboard/LeaderboardListMember';
 
 const Leaderboard = () => {
   // Receive `user` as a prop or from context
+  const { user } = useContext(UserContext);
   const {
     leaderboard,
     fetchLeaderboard,
     setLeaderboard,
     leaderboardLoading,
     setLeaderboardLoading,
+    userIndex,
   } = useContext(LeaderboardContext);
 
   // PAGINATION
@@ -42,8 +45,6 @@ const Leaderboard = () => {
   }
 
   const currentPageData = leaderboard.slice(firstMemberIndex, lastMemberIndex);
-
-  const { user } = useContext(UserContext);
 
   return (
     <div className="flex-grow relative flex flex-col items-center justify-center text-center min-h-screen py-10">
