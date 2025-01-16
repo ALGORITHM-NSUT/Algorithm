@@ -35,18 +35,19 @@ export const LeaderboardList = ({
           Leaderboard
         </h1>
         <ul>
-          {user && userIndex !== -1 && currentPage == 1 && (
-            <div className="mb-4">
-              <p className="text-left px-1 text-lg font-semibold">You : </p>
-              <LeaderboardListMember
-                toggleModal={handleToggleModal}
-                member={leaderboard[userIndex]}
-                rank={userIndex + 1 + (currentPage - 1) * membersPerPage}
-                isFirstPage={currentPage === 1}
-                isUser={true}
-              />
-            </div>
-          )}
+          {user &&
+            userIndex !== -1 &&
+            currentPage !== Math.floor(userIndex / membersPerPage + 1) && (
+              <div className="mb-4">
+                <LeaderboardListMember
+                  toggleModal={handleToggleModal}
+                  member={leaderboard[userIndex]}
+                  rank={userIndex + 1}
+                  isFirstPage={currentPage === 1}
+                  isUser={true}
+                />
+              </div>
+            )}
           {currentPageData.map((member, index) => (
             <LeaderboardListMember
               key={index}
@@ -55,7 +56,8 @@ export const LeaderboardList = ({
               rank={index + 1 + (currentPage - 1) * membersPerPage}
               isFirstPage={currentPage === 1}
               isUser={
-                userIndex !== -1 && index + (currentPage - 1) * 10 === userIndex
+                userIndex !== -1 &&
+                index + (currentPage - 1) * membersPerPage === userIndex
               }
             />
           ))}
