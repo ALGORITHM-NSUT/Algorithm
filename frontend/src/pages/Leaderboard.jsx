@@ -1,19 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
-import { UserContext } from "../auth/UserProvider";
-import { LeaderboardList } from "../components/Leaderboard/LeaderboardList";
-import { Link } from "react-router-dom"; // Assuming you're using React Router for navigation
-import Pagination from "../components/Leaderboard/Pagination";
-import { LeaderboardContext } from "../auth/LeaderboardProvider";
-import Loader from "../components/Loaders/Loader";
+import React, { useContext, useEffect, useState } from 'react';
+import { UserContext } from '../auth/UserProvider';
+import { LeaderboardList } from '../components/Leaderboard/LeaderboardList';
+import { Link } from 'react-router-dom'; // Assuming you're using React Router for navigation
+import Pagination from '../components/Leaderboard/Pagination';
+import { LeaderboardContext } from '../auth/LeaderboardProvider';
+import Loader from '../components/Loaders/Loader';
+import LeaderboardListMember from '../components/Leaderboard/LeaderboardListMember';
 
 const Leaderboard = () => {
   // Receive `user` as a prop or from context
+  const { user } = useContext(UserContext);
   const {
     leaderboard,
     fetchLeaderboard,
     setLeaderboard,
     leaderboardLoading,
     setLeaderboardLoading,
+    userIndex,
   } = useContext(LeaderboardContext);
 
   // PAGINATION
@@ -22,7 +25,7 @@ const Leaderboard = () => {
   const lastMemberIndex = currentPage * membersPerPage;
   const firstMemberIndex = lastMemberIndex - membersPerPage;
 
-  const { user } = useContext(UserContext);
+  // const { user } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -66,8 +69,6 @@ const Leaderboard = () => {
   }
 
   const currentPageData = leaderboard.slice(firstMemberIndex, lastMemberIndex);
-
-  // const { user } = useContext(UserContext);
 
   return (
     <div className="flex-grow relative flex flex-col items-center justify-center text-center min-h-screen py-10">
