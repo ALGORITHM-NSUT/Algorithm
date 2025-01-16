@@ -7,7 +7,7 @@ const FloatingBackgroundCanvas = ({ children }) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     const shapes = [];
-    const maxShapes = window.innerWidth <= 768 ? 5 : 15;
+    const maxShapes = window.innerWidth <= 768 ? 7 : 20;
 
     // Set canvas size
     canvas.width = window.innerWidth;
@@ -30,7 +30,7 @@ const FloatingBackgroundCanvas = ({ children }) => {
       speed: Math.random() * 2 + 0.4, // Slower speed for upward animation
       borderRadius: 0, // Initial border radius (square)
       borderRadiusChange: Math.random() * 0.05 + 0.03, // Gradual change in border-radius
-      maxBorderRadius: Math.min(20)
+      maxBorderRadius: 20
     });
     
 
@@ -49,25 +49,22 @@ const FloatingBackgroundCanvas = ({ children }) => {
 
     let rotationAngle = 0;
     const draw = () => {
-      drawGradientBackground(); // Draw the gradient background
-
+      drawGradientBackground();
       shapes.forEach((shape, index) => {
-        // Update shape position and border-radius
         shape.y -= shape.speed;
-        shape.borderRadius = Math.min(shape.size / 2, shape.borderRadius + shape.borderRadiusChange); // Gradual morph to circle
-
-        // Reset shape position if it moves out of the canvas
+        shape.borderRadius = Math.min(shape.size / 2, shape.borderRadius + shape.borderRadiusChange);
+        const fadeFactor = Math.max(0, shape.y / canvas.height);
+        shape.opacity = 0.5 * fadeFactor; 
         if (shape.y < -shape.size) {
           shapes[index] = createShape(); // Reset the shape
         }
-        rotationAngle += 0.001;
-
-        // Draw the shape
+    
+        rotationAngle += Math.random() * 0.0005 + 0.0005;
         ctx.save(); // Save the current context
         ctx.translate(shape.x + shape.size / 2, shape.y + shape.size / 2); // Move to center of the shape
         ctx.rotate(rotationAngle); // Rotate based on size
-        ctx.translate(-shape.x - shape.size / 2, -shape.y - shape.size / 2); // R
-        ctx.globalAlpha = shape.opacity;
+        ctx.translate(-shape.x - shape.size / 2, -shape.y - shape.size / 2); // Reset translation
+        ctx.globalAlpha = shape.opacity; // Set the current shape opacity
         ctx.beginPath();
         ctx.moveTo(shape.x + shape.size / 2, shape.y);
         ctx.arcTo(
@@ -103,9 +100,10 @@ const FloatingBackgroundCanvas = ({ children }) => {
         ctx.fill();
         ctx.restore();
       });
-
+    
       requestAnimationFrame(draw);
     };
+    
 
     window.addEventListener('resize', resizeCanvas);
     draw();
