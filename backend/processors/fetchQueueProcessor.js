@@ -2,58 +2,55 @@ import {
   extractHandle,
   extractCodeforcesRank,
   extractLeetCodeRank,
-  normalizeranks,
 } from "../controllers/leaderboardController.js";
-import UserRanking from "../models/UserRanking.js";
 
+export const validateLeetcodeProfile = async (leetcodeProfile) => {
+  try {
+    if (!leetcodeProfile) {
+      throw new Error('LeetCode profile is empty.');
+    }
 
-export const fetchUserRanking = async(user, updatedCodeforcesProfile, updatedLeetcodeProfile)=>{
-  console.log("Fetching rankings for user...", user.name);
-        try {
-          // const { user } = user.data;
-          const leetcodeHandle = updatedLeetcodeProfile
-            ? await extractHandle(updatedLeetcodeProfile)
-            : null;
-          const codeforcesHandle = updatedCodeforcesProfile
-            ? await extractHandle(updatedCodeforcesProfile)
-            : null;
-    
-          const leetcodeRank = leetcodeHandle
-            ? (await extractLeetCodeRank(leetcodeHandle)).rank
-            : null;
-          const codeforcesRank = codeforcesHandle
-            ? (await extractCodeforcesRank(codeforcesHandle)).rank
-            : null;
-    
-          if (leetcodeRank || codeforcesRank) {
-            await UserRanking.findOneAndUpdate(
-              { userId: user._id },
-              {
-                $set: {
-                  name: user.name,
-                  leetcodeHandle,
-                  leetcodeRank,
-                  codeforcesHandle,
-                  codeforcesRank,
-                },
-              },
-              {
-                upsert: true,
-                new: true,
-              }
-            );
-    
-            const rankings = await UserRanking.find({}).lean();
-            await normalizeranks(rankings, 0.6, 0.4);
-          }
-    
-          console.log(`Rankings updated for user: ${user.name}`);
-          return `Rankings processed successfully for: ${user.name}`;
-        } catch (error) {
-          console.error("Error updating rankings:", error.message);
-          throw error; 
-        }
-}
+    const leetcodeHandle = await extractHandle(leetcodeProfile);
+    if (!leetcodeHandle) {
+      throw new Error('Invalid LeetCode handle extracted.');
+    }
 
+    const rankData = await extractLeetCodeRank(leetcodeHandle);
 
-export default fetchUserRanking;
+    if (rankData && rankData.error && rankData.error.includes('Max retries')) {
+      return { error: 'LeetCode rate limit hit, please try again later.', rateLimitError: true };
+    }
+    if (!rankData || !rankData.rank) {
+      throw new Error('LeetCode rank not found.');
+    }
+
+    return { handle: leetcodeHandle, rank: rankData.rank }; 
+  } catch (error) {
+    console.error(`Error validating LeetCode profile: ${error.message}`);
+    return { error: `Error fetching LeetCode rank: ${error.message}` }; 
+  }
+};
+
+export const validateCodeforcesProfile = async (codeforcesProfile) => {
+  try {
+    if (!codeforcesProfile) {
+      throw new Error('Codeforces profile is empty.');
+    }
+
+    const codeforcesHandle = await extractHandle(codeforcesProfile);
+    if (!codeforcesHandle) {
+      throw new Error('Invalid Codeforces handle extracted.');
+    }
+
+    const rankData = await extractCodeforcesRank(codeforcesHandle);
+    if (!rankData || !rankData.rank) {
+      throw new Error('Codeforces rank not found.');
+    }
+
+    return { handle: codeforcesHandle, rank: rankData.rank }; 
+  } catch (error) {
+    console.error(`Error validating Codeforces profile: ${error.message}`);
+    return { error: `Error fetching Codeforces rank: ${error.message}` }; 
+  }
+};
+

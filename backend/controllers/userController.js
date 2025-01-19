@@ -9,7 +9,11 @@ import {
   emailTemplate,
   passwordResetTemplate,
 } from "../constants/emailTemplate.js";
-import { fetchUserRanking } from "../processors/fetchQueueProcessor.js";
+import { validateCodeforcesProfile, validateLeetcodeProfile } from "../processors/fetchQueueProcessor.js";
+import UserRanking from "../models/UserRanking.js";
+import { normalizeranks } from "./leaderboardController.js";
+import { log } from "console";
+import { isNullOrUndefined } from "util";
 
 export const register = async (req, res, next) => {
   try {
@@ -67,12 +71,11 @@ export const register = async (req, res, next) => {
     let validLeetcodeProfile = null;
     let validCodeforcesProfile = null;
 
-    if (leetcodeProfile !== undefined && leetcodeProfile !== "") {
-      validLeetcodeProfile = leetcodeProfile === "N/A" ? null : leetcodeProfile;
+    if (leetcodeProfile && leetcodeProfile !== "N/A") {
+      validLeetcodeProfile = leetcodeProfile;
     }
-    if (codeforcesProfile !== undefined && codeforcesProfile !== "") {
-      validCodeforcesProfile =
-        codeforcesProfile === "N/A" ? null : codeforcesProfile;
+    if (codeforcesProfile && codeforcesProfile !== "N/A") {
+      validCodeforcesProfile = codeforcesProfile;
     }
 
     // Create the new user, with admin status if applicable
@@ -83,8 +86,8 @@ export const register = async (req, res, next) => {
       personalEmail,
       phoneNumber,
       githubProfile,
-      leetcodeProfile: validLeetcodeProfile || "",
-      codeforcesProfile: validCodeforcesProfile || "",
+      leetcodeProfile: validLeetcodeProfile || null,
+      codeforcesProfile: validCodeforcesProfile || null,
       linkedinUrl,
       rollNumber,
       year,
@@ -93,17 +96,40 @@ export const register = async (req, res, next) => {
       verified: false,
     });
 
-    let rankingUpdateResult = null;
     if (validLeetcodeProfile || validCodeforcesProfile) {
-      try {
-        rankingUpdateResult = await fetchUserRanking(
-          user,
-          validCodeforcesProfile,
-          validLeetcodeProfile
-        );
-      } catch (error) {
-        console.error("Error in UserController:", error.message);
-        res.status(500).send({ error: error.message });
+      let leetcodeRank = null;
+      let codeforcesRank = null;
+      let leetcodeHandle = null;
+      let codeforcesHandle = null;
+
+      if(validLeetcodeProfile){
+        const lcValidationResult = await validateLeetcodeProfile(validLeetcodeProfile)
+        if(lcValidationResult.error){
+          return sendToken(res, user, "Unable to fetch rankings due to invalid Leetcode handle.", 400)
+        }
+        leetcodeRank = lcValidationResult.rank
+        leetcodeHandle = lcValidationResult.handle;
+      }
+      if(validCodeforcesProfile){
+        const cfValidationResult = await validateCodeforcesProfile(validCodeforcesProfile)
+        if(cfValidationResult.error){
+          return sendToken(res, user, "Unable to fetch rankings due to invalid Codeforces handle.", 400)
+        }
+        codeforcesRank = cfValidationResult.rank
+        codeforcesHandle = cfValidationResult.handle;
+      }
+      if(leetcodeRank || codeforcesRank) {
+        await UserRanking.create({
+          userId: user._id,
+          name: user.name,
+          leetcodeHandle,
+          leetcodeRank,
+          codeforcesHandle,
+          codeforcesRank,
+        });
+        const rankings = await UserRanking.find({}).lean();
+        await normalizeranks(rankings, 0.6, 0.4);
+        return sendToken(res, user, "Account registered and Leaderboard updated successfully.",200);
       }
     }
 
@@ -125,11 +151,7 @@ export const register = async (req, res, next) => {
         error: emailError.message,
       });
     }
-    if (rankingUpdateResult) {
-      sendToken(res, user, "Account registered and Leaderboard updated successfully", 200);
-    } else {
-      sendToken(res, user, "Account registered successfully", 200);
-    }
+    return sendToken(res, user, "Account registered successfully.", 200);
   } catch (error) {
     console.log(error.message);
     return next(
@@ -320,63 +342,102 @@ export const editProfile = async (req, res, next) => {
       }
     }
 
-    let updatedLeetcodeProfile = null;
-    let updatedCodeforcesProfile = null;
+    const existingUserRanking = await UserRanking.findOne({ userId: user._id });
+    const existingLeetcodeProfile = existingUserRanking?.leetcodeHandle || null;
+    const existingCodeforcesProfile = existingUserRanking?.codeforcesHandle || null;
 
+    let updatedLeetcodeProfile = leetcodeProfile || existingLeetcodeProfile;
+    let updatedCodeforcesProfile = codeforcesProfile || existingCodeforcesProfile;
+    
+    console.log(updatedCodeforcesProfile);
+    console.log(updatedLeetcodeProfile);
+    // If no changes are made to both profiles
     if (
-      leetcodeProfile !== undefined &&
-      leetcodeProfile !== user.leetcodeProfile
+      updatedLeetcodeProfile === existingLeetcodeProfile &&
+      updatedCodeforcesProfile === existingCodeforcesProfile
     ) {
-      updatedLeetcodeProfile =
-        leetcodeProfile === "N/A" || leetcodeProfile === ""
-          ? user.leetcodeProfile
-          : leetcodeProfile;
+      return sendToken(res, user, "Account Edited successfully", 200);
     }
 
-    if (
-      codeforcesProfile !== undefined &&
-      codeforcesProfile !== user.codeforcesProfile
-    ) {
-      updatedCodeforcesProfile =
-        codeforcesProfile === "N/A" || codeforcesProfile === ""
-          ? user.codeforcesProfile
-          : codeforcesProfile;
+    let leetcodeRank = null;
+    let codeforcesRank = null;
+    // let rankUpdateSuccess = false;
+
+    // Validate and fetch rankings if profiles have been updated
+    if (updatedLeetcodeProfile !== existingLeetcodeProfile) {
+      try {
+        const lcValidation = await validateLeetcodeProfile(updatedLeetcodeProfile);
+        if (lcValidation.error) {
+          if (lcValidation.rateLimitError) {
+            return sendToken(res, user, 'LeetCode rate limit hit, please try again later.', 429); 
+          }
+          return sendToken(res, user, `Cannot fetch rankings for user: ${user.name} due to invalid LeetCode profile.`, 400);
+        }
+        leetcodeRank = lcValidation.rank;
+        updatedLeetcodeProfile = lcValidation.handle;
+      } catch (error) {
+        console.error("Error fetching Leetcode rank:", error);
+        return sendToken(res, user, `An error occurred while validating the LeetCode profile.`, 500);
+      }
     }
+
+    if (updatedCodeforcesProfile !== existingCodeforcesProfile) {
+      try {
+        cfValidation = await validateCodeforcesProfile(updatedCodeforcesProfile);
+        if (cfValidation.error) {
+          return sendToken(res, user, `Cannot fetch rankings for user: ${user.name} due to invalid Codeforces profile.`, 400);
+        }
+        codeforcesRank = cfValidation.rank;
+        updatedCodeforcesProfile = cfValidation.handle;
+      } catch (error) {
+        console.error("Error fetching Codeforces rank:", error);
+        return sendToken(res, user, `An error occurred while validating the Codeforces profile.`, 500);
+      }
+    }
+  // If rankings have been successfully fetched
+  if (leetcodeRank || codeforcesRank) {
+    await UserRanking.findOneAndUpdate(
+      { userId: user._id },
+      {
+        $set: {
+          name: user.name,
+          leetcodeHandle: updatedLeetcodeProfile,
+          leetcodeRank,
+          codeforcesHandle: updatedCodeforcesProfile,
+          codeforcesRank,
+        },
+      },
+      {
+        upsert: true,
+        new: true,
+      }
+    );
+
+    const rankings = await UserRanking.find({}).lean();
+    await normalizeranks(rankings, 0.6, 0.4);
+
+    user.leetcodeProfile = updatedLeetcodeProfile;
+    user.codeforcesProfile = updatedCodeforcesProfile;
+    await user.save();
+
+    return sendToken(res, user, "LeaderBoard updated successfully",200);
+  }
 
     // Overwrite user's information
     user.name = name || user.name;
     user.personalEmail = personalEmail || ""; // If not provided, set to previous
     user.phoneNumber = phoneNumber || "";
     user.githubProfile = githubProfile || "";
-    user.leetcodeProfile = leetcodeProfile || "";
-    user.codeforcesProfile = codeforcesProfile || "";
     user.linkedinUrl = linkedinUrl || user.linkedinUrl;
     user.rollNumber = rollNumber || user.rollNumber;
     user.year = year || user.year;
 
-    // Save the updated user
     await user.save();
-
-    let rankingUpdatedResult;
-    if (updatedLeetcodeProfile || updatedCodeforcesProfile) {
-      try {
-        rankingUpdatedResult = await fetchUserRanking(
-          user,
-          updatedCodeforcesProfile,
-          updatedLeetcodeProfile
-        );
-
-        if (rankingUpdatedResult) {
-          sendToken(res, user, "Leaderboard updated successfully", 200);
-        } else {
-          sendToken(res, user, "Account Edited successfully", 200);
-        }
-      } catch (error) {
-        console.error("Error in UserController:", error.message);
-        return res.status(500).send({ error: error.message });
-      }
-    }
-  } catch (error) {
+    return res.status(200).json({
+      message: "Account Edited successfully",
+    });
+  } 
+  catch (error) {
     return next(
       res.status(500).json({
         message: "Internal Server Error",

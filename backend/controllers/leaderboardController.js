@@ -68,6 +68,7 @@ export const normalizeranks = async (arr, weight1 = 0.5, weight2 = 0.5) => {
   return normalisedarr.sort((a, b) => a.ranks - b.ranks);
 };
 
+
 //TODO:  CONSTRUCT LEADERBOARD - here the formula to calculate score will come
 
 export const fetchLeaderboardData = async (req, res) => {
@@ -404,17 +405,17 @@ export const extractCodeforcesRank = async (handle) => {
     );
 
     if (response.data.status === "OK" && response.data.result.length > 0) {
-      const rating = response.data.result[0].rating || "N/A";
+      const rating = response.data.result[0].rating || null;
       return { rank: rating };
     }
 
-    return { rank: "No rating available", error: "No result found for user" };
+    return { rank: null, error: "No result found for user" };
   } catch (error) {
     console.error(
       "Error fetching Codeforces rank:",
       error.response ? error.response.data : error.message
     );
-    return { rank: "N/A", error: error.message };
+    return { rank: null, error: error.message };
   }
 };
 export { fetchAndSaveRankings };
@@ -589,18 +590,21 @@ export const showAllRankings = async (req, res) => {
 export const deleteUser = async (req, res) => {
   try {
     const { name } = req.params;
-  const result = await UserRanking.deleteOne({ name });
-  if (result.deletedCount > 0) {
-    const rankings = await UserRanking.find({}).lean();
-    await normalizeranks(rankings, 0.6, 0.4);
-    return res.status(200).json({ message: `Record with name ${name} deleted successfully.` });
-  } else {
-    return res.status(404).json({ message: `No record found with name ${name}.` });
-  }
-
+    const result = await UserRanking.deleteOne({ name });
+    if (result.deletedCount > 0) {
+      const rankings = await UserRanking.find({}).lean();
+      await normalizeranks(rankings, 0.6, 0.4);
+      return res
+        .status(200)
+        .json({ message: `Record with name ${name} deleted successfully.` });
+    } else {
+      return res
+        .status(404)
+        .json({ message: `No record found with name ${name}.` });
+    }
   } catch (error) {
-  return res.status(500).json({ message: 'Internal Server Error', error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
   }
-  
-} 
-
+};
