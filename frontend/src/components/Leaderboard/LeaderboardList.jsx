@@ -30,8 +30,8 @@ export const LeaderboardList = ({
 
   return (
     <>
-      <div className="w-8/12 mx-auto px-6">
-        <h1 className="md:text-[80px] md:leading-[6rem] leading-tight text-4xl font-bold text-gray-800 dark:text-gray-200 font-mono">
+      <div className="w-full md:w-8/12 mx-auto px-6">
+        <h1 className="md:text-[80px] mb-5 md:leading-[6rem] leading-tight text-4xl font-bold text-gray-800 dark:text-gray-200 font-mono">
           Leaderboard
         </h1>
         <ul>
