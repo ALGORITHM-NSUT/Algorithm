@@ -37,8 +37,8 @@ function calculateRankings(users, leetcodeWeight = 0.5, codeforcesWeight = 0.5) 
         if (a.combinedScore !== b.combinedScore) {
             return a.combinedScore - b.combinedScore; // Lower combined score first
         }
-        else if (a.codeforcesRating !== b.codeforcesRating) {
-            return a.codeforcesRating - b.codeforcesRating; // Higher Codeforces rating first
+        else if (a. codeforcesRank !== b. codeforcesRank) {
+            return a. codeforcesRank - b. codeforcesRank; // Higher Codeforces rating first
         }
         else if (a.leetcodeRank !== b.leetcodeRank) {
             return a.leetcodeRank - b.leetcodeRank; // Lower LeetCode rank first

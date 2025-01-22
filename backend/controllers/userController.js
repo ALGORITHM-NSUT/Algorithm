@@ -11,9 +11,10 @@ import {
 } from "../constants/emailTemplate.js";
 import { validateCodeforcesProfile, validateLeetcodeProfile } from "../processors/fetchQueueProcessor.js";
 import UserRanking from "../models/UserRanking.js";
-import { normalizeranks } from "./leaderboardController.js";
+
 import { log } from "console";
 import { isNullOrUndefined } from "util";
+import { updatecalculateRankings } from "./leaderboardController.js";
 
 export const register = async (req, res, next) => {
   try {
@@ -128,7 +129,7 @@ export const register = async (req, res, next) => {
           codeforcesRank,
         });
         const rankings = await UserRanking.find({}).lean();
-        await normalizeranks(rankings, 0.6, 0.4);
+        await updatecalculateRankings(rankings, 0.6, 0.4);
         return sendToken(res, user, "Account registered and Leaderboard updated successfully.",200);
       }
     }
@@ -414,7 +415,7 @@ export const editProfile = async (req, res, next) => {
     );
 
     const rankings = await UserRanking.find({}).lean();
-    await normalizeranks(rankings, 0.6, 0.4);
+    await updatecalculateRankings(rankings, 0.6, 0.4);
 
     user.leetcodeProfile = updatedLeetcodeProfile;
     user.codeforcesProfile = updatedCodeforcesProfile;
