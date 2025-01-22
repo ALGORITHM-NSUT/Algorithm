@@ -65,6 +65,7 @@ server.listen(process.env.PORT || 5000, () => {
   console.log(`Server is listening on port: ${process.env.PORT || 5000}`);
 });
 
+
 export const initializeSocket = () => {
   if (!io) {
     io = new Server(server, {
@@ -73,6 +74,7 @@ export const initializeSocket = () => {
         methods: ["GET", "POST"],
       },
     });
+    app.set("socketIO", io);
 
     io.on("connection", (socket) => {
       console.log("Socket connected:", socket.id);
@@ -84,7 +86,7 @@ export const initializeSocket = () => {
     console.log("Socket initialized");
   }
 };
-
+app.set("socketIO", io);
 export const terminateSocket = () => {
   if (io) {
     io.close(() => {
@@ -93,3 +95,6 @@ export const terminateSocket = () => {
     });
   }
 };
+ export const check=()=>{
+  io.emit("refresh-standings", { message: "Refresh standings" });
+}

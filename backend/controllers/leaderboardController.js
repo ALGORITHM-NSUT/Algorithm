@@ -2,8 +2,49 @@ import axios from "axios";
 import FormData from "../models/formDataModel.js";
 import UserRanking from "../models/UserRanking.js";
 import pLimit from "p-limit";
-import { initializeSocket, terminateSocket } from "../app.js";
+import { initializeSocket, terminateSocket,check } from "../app.js";
+function calculateRankings(users) {
+ 
+  function calculateRanking(ratings) {
+    // descending ranking
+      const sorted = [...ratings].sort((a, b) => b - a); 
+      const rankMap = new Map();
 
+      sorted.forEach((rating, index) => {
+          if (!rankMap.has(rating)) {
+              rankMap.set(rating, index + 1); 
+          }
+      });
+      return ratings.map(rating => rankMap.get(rating));
+  }
+
+
+  const leetcodeRatings = users.map(user => user.leetcodeRating);
+  const codeforcesRatings = users.map(user => user.codeforcesRating);
+
+  
+  const leetcodeRanks = calculateRanking(leetcodeRatings);
+  const codeforcesRanks = calculateRanking(codeforcesRatings);
+
+  
+  return users.map((user, index) => ({
+      userId: user.userId,
+      leetcodeRank: leetcodeRanks[index],
+      codeforcesRank: codeforcesRanks[index],
+      combinedScore: leetcodeRanks[index] + codeforcesRanks[index]
+  }));
+}
+
+// Example usage
+const users = [
+  { userId: 1, leetcodeRating: 1500, codeforcesRating: 1400 },
+  { userId: 2, leetcodeRating: 1600, codeforcesRating: 1350 },
+  { userId: 3, leetcodeRating: 1400, codeforcesRating: 1450 },
+  { userId: 4, leetcodeRating: 1450, codeforcesRating: 1400 }
+];
+
+const results = calculateRankings(users);
+console.log(results);
 const getusername = async (user) => {
   try {
     const target = await FormData.findOne({ _id: user.userId });
@@ -41,11 +82,11 @@ export const normalizeranks = async (arr, weight1 = 0.5, weight2 = 0.5) => {
       let normalizedLeetcode =
         user.leetcodeRank !== null
           ? normalize(user.leetcodeRank, minLeetcode, maxLeetcode)
-          : 0.6; // worst rank(Assumption)
+          : 0.5; // worst rank(Assumption)
       let normalizedCodeforces =
         user.codeforcesRank !== null
           ? normalize(user.codeforcesRank, minCodeforces, maxCodeforces)
-          : 1;
+          : 0.5;
 
       let combinedRank =
         normalizedCodeforces * weight1 + normalizedLeetcode * weight2;
@@ -78,12 +119,15 @@ export const fetchLeaderboardData = async (req, res) => {
     const rankings = await UserRanking.find({}).lean();
     // console.log(rankings);
 
-    let data = await normalizeranks(rankings, 0.6, 0.4);
+    let data = await normalizeranks(rankings, 0.55, 0.45);
     console.log("normalised ranks: ", data);
-
-    initializeSocket();
     const io = req.app.get("socketIO");
+    if (!io) {
+      console.error("SocketIO instance not found");
+      return res.status(500).json({ error: "SocketIO instance not found" });
+    }
     io.emit("refresh-standings", { message: "Refresh standings" });
+check();
     setTimeout(() => terminateSocket(), 500);
 
     return res.status(200).json({
@@ -92,10 +136,11 @@ export const fetchLeaderboardData = async (req, res) => {
     });
   } catch (error) {
     terminateSocket();
+    console.log("couldn't fetch useranks", error);
     res.status(400).json({
       error: "couldn't normalised",
     });
-    // console.log("couldn't fetch useranks", error);
+    
   }
 };
 
