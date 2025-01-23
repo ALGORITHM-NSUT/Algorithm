@@ -2,117 +2,129 @@ import axios from "axios";
 import FormData from "../models/formDataModel.js";
 import UserRanking from "../models/UserRanking.js";
 import pLimit from "p-limit";
-import { initializeSocket, terminateSocket,check } from "../app.js";
+import { initializeSocket, terminateSocket, check } from "../app.js";
 // new sorting
- export async function updatecalculateRankings (users, leetcodeWeight = 0.5, codeforcesWeight = 0.5) {
+export async function updatecalculateRankings(
+  users,
+  leetcodeWeight = 0.5,
+  codeforcesWeight = 0.5
+) {
   function calculateRanking(ratings) {
-      const sorted = [...ratings].sort((a, b) => {
-          if (a === null) return 1;
-          if (b === null) return -1;
-          return b - a;
-      });
-      const rankMap = new Map();
+    const sorted = [...ratings].sort((a, b) => {
+      if (a === null) return 1;
+      if (b === null) return -1;
+      return b - a;
+    });
+    const rankMap = new Map();
 
-      sorted.forEach((rating, index) => {
-          if (!rankMap.has(rating)) {
-              rankMap.set(rating, rating === null ? sorted.length + 1 : index + 1);
-          }
-      });
-      return ratings.map(rating => rankMap.get(rating));
+    sorted.forEach((rating, index) => {
+      if (!rankMap.has(rating)) {
+        rankMap.set(rating, rating === null ? sorted.length + 1 : index + 1);
+      }
+    });
+    return ratings.map((rating) => rankMap.get(rating));
   }
 
-  const leetcodeRatings = users.map(user => user.leetcodeRating);
-  const codeforcesRatings = users.map(user => user.codeforcesRating);
+  const leetcodeRatings = users.map((user) => user.leetcodeRank);
+  const codeforcesRatings = users.map((user) => user.codeforcesRank);
 
   const leetcodeRanks = calculateRanking(leetcodeRatings);
   const codeforcesRanks = calculateRanking(codeforcesRatings);
-  
-  return users.map(async (user, index) => {
+
+  const rankings = await Promise.all(
+    users.map(async (user, index) => {
       const leetcodeRank = leetcodeRanks[index];
       const codeforcesRank = codeforcesRanks[index];
-      const combinedScore = (leetcodeRank !== null ? leetcodeRank : (users.length + 1)) * leetcodeWeight + (codeforcesRank !== null ? codeforcesRank : (users.length + 1)) * codeforcesWeight;
+      const combinedScore =
+        (leetcodeRank !== null ? leetcodeRank : users.length + 1) *
+          leetcodeWeight +
+        (codeforcesRank !== null ? codeforcesRank : users.length + 1) *
+          codeforcesWeight;
       let t = await UserRanking.updateOne(
         { _id: user._id },
         {
           // to sort in descending in function itself
-          score: 100-combinedScore,
+          score: 100 - combinedScore,
         }
       );
-
       return {
-          name:user.name,
-          userId: user.userId,
-          leetcodeRank: leetcodeRank,
-          codeforcesRank: codeforcesRank,
-          combinedScore: combinedScore
+        name: user.name,
+        userId: user.userId,
+        leetcodeRank: leetcodeRank,
+        codeforcesRank: codeforcesRank,
+        combinedScore: combinedScore,
       };
-  }).sort((a, b) => {
+    })
+  );
+   return rankings.sort((a, b) => {
       if (a.combinedScore !== b.combinedScore) {
-          return a.combinedScore - b.combinedScore; // Lower combined score first
+        return a.combinedScore - b.combinedScore; // Lower combined score first
+      } else if (a.codeforcesRank !== b.codeforcesRank) {
+        return a.codeforcesRank - b.codeforcesRank; // Higher Codeforces rating first
+      } else if (a.leetcodeRank !== b.leetcodeRank) {
+        return a.leetcodeRank - b.leetcodeRank; // Lower LeetCode rank first
       }
-      else if (a. codeforcesRank !== b. codeforcesRank) {
-          return a. codeforcesRank - b. codeforcesRank; // Higher Codeforces rating first
-      }
-      else if (a.leetcodeRank !== b.leetcodeRank) {
-          return a.leetcodeRank - b.leetcodeRank; // Lower LeetCode rank first
-      }
-     
-      return a.userId - b.userId; // Lower userId first
-  });
 
-  
+      return a.userId - b.userId; // Lower userId first
+    });
 }
 
-function ogcalculateRankings(users, leetcodeWeight = 0.5, codeforcesWeight = 0.5) {
+function ogcalculateRankings(
+  users,
+  leetcodeWeight = 0.5,
+  codeforcesWeight = 0.5
+) {
   function calculateRanking(ratings) {
-      const sorted = [...ratings].sort((a, b) => {
-          if (a === null) return 1;
-          if (b === null) return -1;
-          return b - a;
-      });
-      const rankMap = new Map();
+    const sorted = [...ratings].sort((a, b) => {
+      if (a === null) return 1;
+      if (b === null) return -1;
+      return b - a;
+    });
+    const rankMap = new Map();
 
-      sorted.forEach((rating, index) => {
-          if (!rankMap.has(rating)) {
-              rankMap.set(rating, rating === null ? sorted.length + 1 : index + 1);
-          }
-      });
-      return ratings.map(rating => rankMap.get(rating));
+    sorted.forEach((rating, index) => {
+      if (!rankMap.has(rating)) {
+        rankMap.set(rating, rating === null ? sorted.length + 1 : index + 1);
+      }
+    });
+    return ratings.map((rating) => rankMap.get(rating));
   }
 
-  const leetcodeRatings = users.map(user => user.leetcodeRating);
-  const codeforcesRatings = users.map(user => user.codeforcesRating);
+  const leetcodeRatings = users.map((user) => user.leetcodeRating);
+  const codeforcesRatings = users.map((user) => user.codeforcesRating);
 
   const leetcodeRanks = calculateRanking(leetcodeRatings);
   const codeforcesRanks = calculateRanking(codeforcesRatings);
 
-  return users.map((user, index) => {
+  return users
+    .map((user, index) => {
       const leetcodeRank = leetcodeRanks[index];
       const codeforcesRank = codeforcesRanks[index];
-      const combinedScore = (leetcodeRank !== null ? leetcodeRank : (users.length + 1)) * leetcodeWeight + (codeforcesRank !== null ? codeforcesRank : (users.length + 1)) * codeforcesWeight;
+      const combinedScore =
+        (leetcodeRank !== null ? leetcodeRank : users.length + 1) *
+          leetcodeWeight +
+        (codeforcesRank !== null ? codeforcesRank : users.length + 1) *
+          codeforcesWeight;
 
       return {
-          name:user.name,
-          userId: user.userId,
-          leetcodeRank: leetcodeRank,
-          codeforcesRank: codeforcesRank,
-          combinedScore: combinedScore
+        name: user.name,
+        userId: user.userId,
+        leetcodeRank: leetcodeRank,
+        codeforcesRank: codeforcesRank,
+        combinedScore: combinedScore,
       };
-  }).sort((a, b) => {
+    })
+    .sort((a, b) => {
       if (a.combinedScore !== b.combinedScore) {
-          return a.combinedScore - b.combinedScore; // Lower combined score first
+        return a.combinedScore - b.combinedScore; // Lower combined score first
+      } else if (a.codeforcesRank !== b.codeforcesRank) {
+        return a.codeforcesRank - b.codeforcesRank; // Higher Codeforces rating first
+      } else if (a.leetcodeRank !== b.leetcodeRank) {
+        return a.leetcodeRank - b.leetcodeRank; // Lower LeetCode rank first
       }
-      else if (a. codeforcesRank !== b. codeforcesRank) {
-          return a. codeforcesRank - b. codeforcesRank; // Higher Codeforces rating first
-      }
-      else if (a.leetcodeRank !== b.leetcodeRank) {
-          return a.leetcodeRank - b.leetcodeRank; // Lower LeetCode rank first
-      }
-     
-      return a.userId - b.userId; // Lower userId first
-  });
 
-  
+      return a.userId - b.userId; // Lower userId first
+    });
 }
 
 const getusername = async (user) => {
@@ -126,16 +138,15 @@ const getusername = async (user) => {
   }
 };
 
-
 //TODO:  CONSTRUCT LEADERBOARD - here the formula to calculate score will come
 
 export const fetchLeaderboardData = async (req, res) => {
   try {
-    console.log("hello");
+    // console.log("hello");
     const updatedRankings = await fetchNewRanks();
     const rankings = await UserRanking.find({}).lean();
     // update the useranking model in mongodb
-      /* form   {
+    /* form   {
     name: 'Vivekanand Rai ',
     userId: '672e2fb1d3b287cf381690f6',
     leetcodeRank: 21,
@@ -144,13 +155,15 @@ export const fetchLeaderboardData = async (req, res) => {
   }*/
     let data = await updatecalculateRankings(rankings, 0.6, 0.4);
     console.log("normalised ranks: ", data);
+    initializeSocket();
+
     const io = req.app.get("socketIO");
     if (!io) {
       console.error("SocketIO instance not found");
       return res.status(500).json({ error: "SocketIO instance not found" });
     }
     io.emit("refresh-standings", { message: "Refresh standings" });
-check();
+    // check();
     setTimeout(() => terminateSocket(), 500);
 
     return res.status(200).json({
@@ -163,14 +176,13 @@ check();
     res.status(400).json({
       error: "couldn't normalised",
     });
-    
   }
 };
 
 //TODO: FETCH AND SAVE IN DB_2 - only updates the users in UserRankingSchema
 export const fetchNewRanks = async (req, res) => {
   try {
-    console.log("hello hello");
+    // console.log("hello hello");
     const users = await UserRanking.find();
 
     if (!users || users.length === 0) {
@@ -645,7 +657,7 @@ export const showAllRankings = async (req, res) => {
     return res.status(200).json({
       message: "Rankings retrieved successfully.",
       // without update
-      
+
       /* form   {
     name: 'Vivekanand Rai ',
     userId: '672e2fb1d3b287cf381690f6',
@@ -653,7 +665,7 @@ export const showAllRankings = async (req, res) => {
     codeforcesRank: 15,
     combinedScore: 17.4
   }*/
-      data: ogcalculateRankings(rankings, 0.6, 0.4),  
+      data: rankings,
     });
   } catch (error) {
     console.error("Error retrieving user rankings:", error.message);

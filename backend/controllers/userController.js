@@ -13,7 +13,6 @@ import { validateCodeforcesProfile, validateLeetcodeProfile } from "../processor
 import UserRanking from "../models/UserRanking.js";
 
 import { log } from "console";
-import { isNullOrUndefined } from "util";
 import { updatecalculateRankings } from "./leaderboardController.js";
 
 export const register = async (req, res, next) => {
@@ -346,6 +345,8 @@ export const editProfile = async (req, res, next) => {
     const existingUserRanking = await UserRanking.findOne({ userId: user._id });
     const existingLeetcodeProfile = existingUserRanking?.leetcodeHandle || null;
     const existingCodeforcesProfile = existingUserRanking?.codeforcesHandle || null;
+    const existingLeetcodeRank = existingUserRanking?.leetcodeRank || null;
+    const existingCodeforcesRank = existingUserRanking?.codeforcesRank ||null;
 
     let updatedLeetcodeProfile = leetcodeProfile || existingLeetcodeProfile;
     let updatedCodeforcesProfile = codeforcesProfile || existingCodeforcesProfile;
@@ -360,8 +361,8 @@ export const editProfile = async (req, res, next) => {
       return sendToken(res, user, "Account Edited successfully", 200);
     }
 
-    let leetcodeRank = null;
-    let codeforcesRank = null;
+    let leetcodeRank = existingLeetcodeRank || null;
+    let codeforcesRank = existingCodeforcesRank || null;
     // let rankUpdateSuccess = false;
 
     // Validate and fetch rankings if profiles have been updated
@@ -384,7 +385,7 @@ export const editProfile = async (req, res, next) => {
 
     if (updatedCodeforcesProfile !== existingCodeforcesProfile) {
       try {
-        cfValidation = await validateCodeforcesProfile(updatedCodeforcesProfile);
+        const cfValidation = await validateCodeforcesProfile(updatedCodeforcesProfile);
         if (cfValidation.error) {
           return sendToken(res, user, `Cannot fetch rankings for user: ${user.name} due to invalid Codeforces profile.`, 400);
         }

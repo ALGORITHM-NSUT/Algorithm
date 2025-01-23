@@ -72,7 +72,7 @@ const LeaderboardListMember = ({
           {isUser && <p className="ml-2 font-semibold">(You)</p>}
           <div className="flex-grow">
             <p className="text-lg font-semibold text-blue-600 dark:text-blue-400 justify-self-end">
-              {(Math.round(member.score * 10000) / 100).toFixed(2)}
+              {(Math.round(member.score * 100) / 100).toFixed(2)}
             </p>
           </div>
         </div>
