@@ -2,7 +2,7 @@ import axios from "axios";
 import FormData from "../models/formDataModel.js";
 import UserRanking from "../models/UserRanking.js";
 import pLimit from "p-limit";
-import { initializeSocket, terminateSocket, check } from "../app.js";
+// import { initializeSocket, terminateSocket, check } from "../app.js";
 // new sorting
 export async function updatecalculateRankings(
   users,
@@ -155,23 +155,23 @@ export const fetchLeaderboardData = async (req, res) => {
   }*/
     let data = await updatecalculateRankings(rankings, 0.6, 0.4);
     console.log("normalised ranks: ", data);
-    initializeSocket();
-
-    const io = req.app.get("socketIO");
-    if (!io) {
-      console.error("SocketIO instance not found");
-      return res.status(500).json({ error: "SocketIO instance not found" });
-    }
-    io.emit("refresh-standings", { message: "Refresh standings" });
-    // check();
-    setTimeout(() => terminateSocket(), 500);
+   
+    // initializeSocket();
+    // const io = req.app.get("socketIO");
+    // if (!io) {
+    //   console.error("SocketIO instance not found");
+    //   return res.status(500).json({ error: "SocketIO instance not found" });
+    // }
+    // io.emit("refresh-standings", { message: "Refresh standings" });
+    // // check();
+    // setTimeout(() => terminateSocket(), 500);
 
     return res.status(200).json({
       message: "the normalised ranks",
       data: data,
     });
   } catch (error) {
-    terminateSocket();
+    // terminateSocket();
     console.log("couldn't fetch useranks", error);
     res.status(400).json({
       error: "couldn't normalised",
@@ -682,7 +682,7 @@ export const deleteUser = async (req, res) => {
     const result = await UserRanking.deleteOne({ name });
     if (result.deletedCount > 0) {
       const rankings = await UserRanking.find({}).lean();
-      await normalizeranks(rankings, 0.6, 0.4);
+      await updatecalculateRankings(rankings, 0.6, 0.4);
       return res
         .status(200)
         .json({ message: `Record with name ${name} deleted successfully.` });

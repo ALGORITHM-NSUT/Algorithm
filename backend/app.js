@@ -86,7 +86,7 @@ export const initializeSocket = () => {
     console.log("Socket initialized");
   }
 };
-app.set("socketIO", io);
+// app.set("socketIO", io);
 export const terminateSocket = () => {
   if (io) {
     io.close(() => {

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useCallback, useRef, useContext } from "react";
-import { io } from "socket.io-client";
+// import { io } from "socket.io-client";
 import { UserContext } from "./UserProvider";
 
 const LeaderboardContext = createContext();
@@ -35,31 +35,34 @@ const LeaderboardProvider = ({ children }) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (!socket.current) {
-      socket.current = io(import.meta.env.SOCKET_BACKEND_URL); // Initialize socket only once
-      console.log('Connected to Socket.IO server');
+  // useEffect(() => {
+  //   if (!socket.current) {
+  //     socket.current = io(import.meta.env.SOCKET_BACKEND_URL); // Initialize socket only once
+  //     console.log('Connected to Socket.IO server');
 
-      socket.current.on('connect', () => {
-        console.log('Socket connected');
-      });
+  //     socket.current.on('connect', () => {
+  //       console.log('Socket connected');
+  //     });
 
-      socket.current.on('refresh-standings', (data) => {
-        console.log('Refreshing standings:', data.message);
-        fetchLeaderboard();
-      });
-    }
+  //     socket.current.on('refresh-standings', (data) => {
+  //       console.log('Refreshing standings:', data.message);
+  //       fetchLeaderboard();
+  //     });
+  //   }
 
-    fetchLeaderboard();
+  //   fetchLeaderboard();
 
-    return () => {
-      if (socket.current) {
-        socket.current.off('refresh-standings');
-        socket.current.disconnect();
-        console.log('Socket disconnected');
-      }
-    };
-  }, [fetchLeaderboard]);
+  //   return () => {
+  //     if (socket.current) {
+  //       socket.current.off('refresh-standings');
+  //       socket.current.disconnect();
+  //       console.log('Socket disconnected');
+  //     }
+  //   };
+  // }, [fetchLeaderboard]);
+    useEffect(() => {
+      fetchLeaderboard();
+    }, [fetchLeaderboard]);
 
   useEffect(() => {
     if (!isLoading && leaderboard.length > 0) {
