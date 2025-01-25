@@ -221,7 +221,7 @@ const AddProject = ({ refreshProjects, showadd = false, edit, setEditState, proj
       {/* Plus card to open form */}
       {showadd && (
         <div
-          className="absolute inset-0 w-full h-auto bg-gray-700/30 rounded-2xl shadow-lg cursor-pointer flex items-center justify-center text-white align-middle hover:bg-gray-700/60 md:backdrop-blur-xl transition duration-300 ease-in-out transform z-10"
+          className="absolute inset-0 w-full h-fit bg-gray-700/30 rounded-2xl shadow-lg cursor-pointer flex items-center justify-center text-white align-middle hover:bg-gray-700/60 md:backdrop-blur-xl transition duration-300 ease-in-out transform z-10"
           onClick={() => setShowForm(!showForm)}
         >
           <span className="text-5xl">+</span>
