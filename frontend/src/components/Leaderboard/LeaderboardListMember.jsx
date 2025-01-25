@@ -54,11 +54,11 @@ const LeaderboardListMember = ({
           ${isTopRank ? topRankInsideGlow[rank - 1] : ''} 
           ${
             isUser
-              ? 'bg-gradient-to-r from-gray-700/60 via-slate-500/60 to-gray-700/60'
-              : 'dark:bg-gray-700/60'
+              ? 'bg-gradient-to-r from-gray-700 via-slate-500 to-gray-700 md:from-gray-700 md:via-slate-500 md:to-gray-700'
+              : 'md:dark:bg-gray-800/60 dark:bg-gray-800'
           } 
           overflow-hidden py-5 px-4 border-solid rounded-sm 
-          dark:hover:bg-gray-600 my-[0px] duration-75 backdrop-blur-md`}
+          dark:hover:bg-gray-600 my-[0px] duration-75 md:backdrop-blur-md`}
       >
         <div className="flex items-center justify-between w-full">
           <span className="text-md font-bold text-gray-700 dark:text-gray-300 w-10">
