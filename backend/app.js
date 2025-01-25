@@ -11,8 +11,6 @@ import http from "http";
 
 dotenv.config();
 const app = express();
-const server = http.createServer(app);
-let io= null;
 
 
 // Middleware
@@ -60,41 +58,7 @@ mongoose
 app.use("/", routes);
 app.use("/", userRoutes);
 
-// Start server
-server.listen(process.env.PORT || 5000, () => {
+app.listen(process.env.PORT || 5000, () => {
   console.log(`Server is listening on port: ${process.env.PORT || 5000}`);
 });
 
-
-export const initializeSocket = () => {
-  if (!io) {
-    io = new Server(server, {
-      cors: {
-        origin: process.env.CLIENT_URL,
-        methods: ["GET", "POST"],
-      },
-    });
-    app.set("socketIO", io);
-
-    io.on("connection", (socket) => {
-      console.log("Socket connected:", socket.id);
-      socket.on("disconnect", () => {
-        console.log("Socket disconnected:", socket.id);
-      });
-    });
-
-    console.log("Socket initialized");
-  }
-};
-// app.set("socketIO", io);
-export const terminateSocket = () => {
-  if (io) {
-    io.close(() => {
-      console.log("Socket terminated");
-      io = null; 
-    });
-  }
-};
- export const check=()=>{
-  io.emit("refresh-standings", { message: "Refresh standings" });
-}
