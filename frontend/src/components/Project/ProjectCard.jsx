@@ -143,11 +143,12 @@ const ProjectCard = ({ project, isOngoing, refreshProjects, user }) => {
           background: 'linear-gradient(to right, #ffffff)',
           backgroundColor: '#15142F',
           borderRadius: 3,
+          overflow: !editProject ? 'hidden' : 'visible',
           boxShadow: 6,
           transition: 'all 0.3s ease-in-out',
-          overflow: 'hidden',
           cursor: 'pointer',
           zIndex: -2,
+          height: 'fit',
           color: 'black',
           '&:hover': {
             scale: 1.05,
@@ -182,7 +183,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects, user }) => {
             alignItems: 'center',
             position: 'relative',
             clipPath: 'path("M0,90 C200,150 400,0 600,90 L600,0 L0,0 Z")',
-            marginBottom: '0px',
+            marginBottom: '0px'
           }}
         >
           <Typography
