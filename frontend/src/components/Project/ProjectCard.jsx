@@ -133,7 +133,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects, user }) => {
   
   <div
     onClick={toggleExpand}
-    className={`relative p-1 w-full rounded-lg transition-all scale-95 duration-300 ease-in-out cursor-pointer ${
+    className={`relative p-2 w-full rounded-lg transition-all scale-95 duration-300 ease-in-out cursor-pointer ${
       isExpanded ? ' z-30' : 'z-10'
     }`}
   >
@@ -263,7 +263,7 @@ const ProjectCard = ({ project, isOngoing, refreshProjects, user }) => {
           
           <div
             className={`will-change-opacity overflow-hidden transition-[max-height,opacity] duration-500 ease-in-out ${
-              isExpanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+              isExpanded ? "max-h-[700px] opacity-100" : "max-h-0 opacity-0"
             }`}
           >
             <Suspense fallback={<Skeleton_loader />}>

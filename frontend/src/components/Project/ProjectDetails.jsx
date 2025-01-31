@@ -22,6 +22,34 @@ const ProjectDetails = ({ project, user, handleApplication, handleDeleteRequest,
   return (
     <Box>
       {/* Project Lead Section */}
+      
+      {user && project.lead._id === user._id && (
+        <Box className="w-fit relative right-0 flex gap-2 bg-white shadow-lg rounded-lg mb-2">
+          <Tooltip title="Delete" arrow>
+            <IconButton
+              className="bg-[#b91c1c] hover:bg-[#991b1b] transition-colors duration-300"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteRequest();
+              }}
+            >
+              <DeleteIcon fontSize="large" />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title={editProject ? 'Cancel Edit' : 'Edit'} arrow>
+            <IconButton
+              className="bg-[#f59e0b] hover:bg-[#d97706] transition-colors duration-300"
+              onClick={(e) => {
+                e.stopPropagation();
+                setEditProject((prev) => !prev);
+              }}
+            >
+              <EditIcon fontSize="large" />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      )}
       <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}>
         Project Lead:
       </Typography>
@@ -46,29 +74,27 @@ const ProjectDetails = ({ project, user, handleApplication, handleDeleteRequest,
       <ContributorsList project={project} handleViewProfile={handleOpenUserProfile} />
 
       {/* Applicants Section */}
-      <Box className="relative">
-  {/* Applicants Section */}
-  {project.applicants.length > 0 && (
+      {/* Applicants Section */}
+      {project.applicants.length > 0 && (
     <>
-      <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold' }}> 
+      <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold', mb: 2 }}>
         Applications:
       </Typography>
       <Box
-            sx={{
-              maxHeight: '100px',
-              overflowY: 'auto',
-              pr: 1,
-              scrollBehavior: 'smooth',
-              '&::-webkit-scrollbar': { width: '6px' },
-              '&::-webkit-scrollbar-thumb': { backgroundColor: '#aaa', borderRadius: '3px' },
-              '&::-webkit-scrollbar-thumb:hover': { backgroundColor: '#888' },
-               mt: 2, mb: 3
-            }}
-          >
+        sx={{
+          maxHeight: '200px',
+          overflowY: 'auto',
+          pr: 1,
+          scrollBehavior: 'smooth',
+          '&::-webkit-scrollbar': { width: '6px' },
+          '&::-webkit-scrollbar-thumb': { backgroundColor: '#aaa', borderRadius: '3px' },
+          '&::-webkit-scrollbar-thumb:hover': { backgroundColor: '#888' },
+        }}
+      >
         {project.applicants.map((applicant, index) => (
           <Box key={index} className="bg-white p-1 mb-1 rounded-lg flex justify-between items-center">
             <Box className="flex flex-col items-start">
-              <p className="font-semibold text-[#330080]">{applicant.name}</p>
+            <p className="font-semibold text-[#330080]">{applicant.name}</p>
               <a
                 href="#"
                 onClick={(e) => {
@@ -82,11 +108,11 @@ const ProjectDetails = ({ project, user, handleApplication, handleDeleteRequest,
               </a>
             </Box>
 
-            <Box className="flex">
+            <Box sx={{ display: 'flex', gap: 1 }}>
               <Button
                 variant="contained"
                 color="success"
-                className="mr-1 text-xs py-1 px-2 min-w-auto"
+                sx={{ fontSize: '0.75rem', py: 0.5, px: 1, minWidth: 'auto' }}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleApplication(applicant._id, 1);
@@ -97,7 +123,7 @@ const ProjectDetails = ({ project, user, handleApplication, handleDeleteRequest,
               <Button
                 variant="contained"
                 color="error"
-                className="text-xs py-1 px-2 min-w-auto"
+                sx={{ fontSize: '0.75rem', py: 0.5, px: 1, minWidth: 'auto' }}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleApplication(applicant._id, 0);
@@ -110,37 +136,9 @@ const ProjectDetails = ({ project, user, handleApplication, handleDeleteRequest,
         ))}
       </Box>
     </>
-  )}
-
+    )}
   {/* Edit and Delete Section (Fixed to Stay Below) */}
-  {user && project.lead._id === user._id && (
-    <Box className="absolute top-0 right-0 flex gap-2 bg-white shadow-lg rounded-lg scale-75">
-      <Tooltip title="Delete" arrow>
-        <IconButton
-          className="bg-[#b91c1c] hover:bg-[#991b1b] transition-colors duration-300"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleDeleteRequest();
-          }}
-        >
-          <DeleteIcon fontSize="large" />
-        </IconButton>
-      </Tooltip>
-
-      <Tooltip title={editProject ? 'Cancel Edit' : 'Edit'} arrow>
-        <IconButton
-          className="bg-[#f59e0b] hover:bg-[#d97706] transition-colors duration-300"
-          onClick={(e) => {
-            e.stopPropagation();
-            setEditProject((prev) => !prev);
-          }}
-        >
-          <EditIcon fontSize="large" />
-        </IconButton>
-      </Tooltip>
-    </Box>
-  )}
-</Box>
+  
 
 
       {/* User Profile Modal */}
