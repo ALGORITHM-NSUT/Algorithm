@@ -1,0 +1,28 @@
+name: expresstut
+version: 1.0.0
+description: Node.js application for Express tutorial
+entryPoint: app.js
+environment:
+  NODE_ENV: production
+  # Add other environment variables as needed
+dependencies:
+  - @octokit/rest
+  - @upstash/redis
+  - axios
+  - bcrypt
+  - body-parser
+  - bull
+  - bullmq
+  - cloudinary
+  - cookie-parser
+  - cors
+  - crypto
+  - dotenv
+  - express
+  - ioredis
+  - jsonwebtoken
+  - mongoose
+  - multer
+  - nodemailer
+  - socket.io
+  # Add any other dependencies as needed
