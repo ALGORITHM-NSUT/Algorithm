@@ -1,0 +1,501 @@
+openapi: 3.0.3
+info:
+  title: Choreo Sample - Project Management and Leaderboard API
+  description: >-
+    This is a sample API specification for a project management and leaderboard application
+    that allows users to manage projects and view rankings.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000
+tags:
+  - name: projects
+    description: Project management API
+  - name: leaderboard
+    description: Leaderboard management API
+  - name: users
+    description: User management API
+  - name: applications
+    description: Application management API
+  - name: coreMembers
+    description: Core members management API
+paths:
+  /projects:
+    get:
+      summary: Retrieve a list of projects
+      operationId: getProjects
+      tags:
+        - projects
+      responses:
+        "200":
+          description: A list of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    lead:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        linkedinUrl:
+                          type: string
+                        email:
+                          type: string
+                    description:
+                      type: string
+                    images:
+                      type: array
+                      items:
+                        type: string
+                    status:
+                      type: string
+                    liveLink:
+                      type: string
+                    contributors:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          linkedinUrl:
+                            type: string
+                          email:
+                            type: string
+                          rollNumber:
+                            type: string
+                          phoneNumber:
+                            type: string
+                          githubProfile:
+                            type: string
+        "500":
+          description: Internal server error
+
+  /addProject:
+    post:
+      summary: Add a new project
+      operationId: addProject
+      tags:
+        - projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                lead:
+                  type: string
+                githubUrl:
+                  type: string
+                liveLink:
+                  type: string
+                images:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        "201":
+          description: Project created successfully
+        "403":
+          description: Session expired
+        "401":
+          description: Unauthorized
+        "406":
+          description: Missing required fields
+        "404":
+          description: Lead user not found
+        "422":
+          description: URL outside organization
+        "500":
+          description: Internal server error
+
+  /updateProject:
+    post:
+      summary: Update an existing project
+      operationId: updateProject
+      tags:
+        - projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                lead:
+                  type: string
+                contributors:
+                  type: array
+                  items:
+                    type: string
+                githubUrl:
+                  type: string
+                images:
+                  type: array
+                  items:
+                    type: string
+                liveLink:
+                  type: string
+                status:
+                  type: string
+      responses:
+        "200":
+          description: Project updated successfully
+        "403":
+          description: Session expired
+        "401":
+          description: Unauthorized
+        "404":
+          description: Project not found
+        "406":
+          description: Check description
+        "500":
+          description: Internal server error
+
+  /deleteProject:
+    post:
+      summary: Delete a project
+      operationId: deleteProject
+      tags:
+        - projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+      responses:
+        "200":
+          description: Project deleted successfully
+        "403":
+          description: Session expired
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal server error
+
+  /leaderBoard/allusers:
+    get:
+      summary: Retrieve a list of all users in the leaderboard
+      operationId: showAllUsers
+      tags:
+        - leaderboard
+      responses:
+        "200":
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    email:
+                      type: string
+                    githubProfile:
+                      type: string
+                    leetcodeProfile:
+                      type: string
+                    codeforcesProfile:
+                      type: string
+                    admin:
+                      type: boolean
+                    verified:
+                      type: boolean
+
+  /leaderBoard/delete/{name}:
+    delete:
+      summary: Delete a user from the leaderboard
+      operationId: deleteUser
+      tags:
+        - leaderboard
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: Name of the user to delete
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User deleted successfully
+        "404":
+          description: No record found with the specified name
+        "500":
+          description: Internal server error
+
+  /leaderBoard/show:
+    get:
+      summary: Retrieve all rankings from the leaderboard
+      operationId: showAllRankings
+      tags:
+        - leaderboard
+      responses:
+        "200":
+          description: A list of rankings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    userId:
+                      type: string
+                    name:
+                      type: string
+                    leetcodeRank:
+                      type: integer
+                    codeforcesRank:
+                      type: integer
+                    combinedScore:
+                      type: number
+
+  /leaderBoard/save:
+    post:
+      summary: Fetch and update user rankings
+      operationId: fetchNewRanks
+      tags:
+        - leaderboard
+      responses:
+        "200":
+          description: Rankings updated successfully
+        "500":
+          description: Internal server error
+
+  /grant:
+    post:
+      summary: Grant admin access to a user
+      operationId: grantAdminAccess
+      tags:
+        - leaderboard
+      parameters:
+        - name: email
+          in: query
+          required: true
+          description: Email of the user to grant admin access
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Admin access granted successfully
+        "404":
+          description: No member found with the specified email
+        "400":
+          description: Email is required
+        "500":
+          description: Internal server error
+
+  /application:
+    post:
+      summary: Submit an application for a project
+      operationId: submitapplication
+      tags:
+        - applications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                lead:
+                  type: string
+      responses:
+        "201":
+          description: Application submitted successfully
+        "403":
+          description: Session expired
+        "500":
+          description: Internal server error
+
+  /handleApplication:
+    post:
+      summary: Handle the application process
+      operationId: handleApplication
+      tags:
+        - applications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                applicant:
+                  type: string
+                state:
+                  type: integer
+      responses:
+        "200":
+          description: Application handled successfully
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal server error
+
+  /core:
+    get:
+      summary: Retrieve a list of core members
+      operationId: getCoreMembers
+      tags:
+        - coreMembers
+      responses:
+        "200":
+          description: A list of core members
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    position:
+                      type: string
+
+  /verify/{id}:
+    get:
+      summary: Verify a user's email
+      operationId: emailVerify
+      tags:
+        - users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the user to verify
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Email verified successfully
+        "400":
+          description: Invalid link
+        "500":
+          description: Internal server error
+
+  /resetpass/{id}:
+    post:
+      summary: Reset the password for a user
+      operationId: resetpass
+      tags:
+        - users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Password reset token
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Password reset successfully
+        "400":
+          description: Invalid or expired token
+        "500":
+          description: Internal server error
+
+  /changePassword:
+    post:
+      summary: Initiate a password reset process
+      operationId: changePassword
+      tags:
+        - users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        "200":
+          description: Password reset link sent
+        "404":
+          description: User not registered
+        "500":
+          description: Internal server error
+
+  /editProfile:
+    post:
+      summary: Update the user's profile information
+      operationId: editProfile
+      tags:
+        - users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                personalEmail:
+                  type: string
+                phoneNumber:
+                  type: string
+                githubProfile:
+                  type: string
+                leetcodeProfile:
+                  type: string
+                codeforcesProfile:
+                  type: string
+                linkedinUrl:
+                  type: string
+                rollNumber:
+                  type: string
+                year:
+                  type: string
+      responses:
+        "200":
+          description: Profile updated successfully
+        "400":
+          description: Missing required fields
+        "404":
+          description: User not found
+        "500":
+          description: Internal server error
