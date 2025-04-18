@@ -57,7 +57,7 @@ const App = () => {
       <div className="flex flex-col min-h-screen">
         <Navbar />
         <main className="flex-grow relative">
-          <FloatingBackground className="absolute inset-0 flex flex-col items-center justify-center text-center" />
+          <FloatingBackground className="min-h-screen" />
           <div className="relative z-10">
             <AnimatedRoutes />
           </div>
